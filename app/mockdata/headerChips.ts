@@ -7,14 +7,33 @@ export const homeChips:Chips[] = [
     },
     {
         id: 2,
-        title: 'Analytics',
-        to: 'analytics'
+        title: 'Impact',
+        to: 'impact'
     },
     
 ]
 
 export const actionsChips:Chips[] = [
     {   id: 1, 
+        title: 'For You',
+        to: 'forYou'
+    },
+    {
+        id: 2,
+        title: 'Explore',
+        to: 'explore'
+    },
+    {
+        id: 3,
+        title: 'Habits',
+        to: 'habits'
+    },
+    {
+        id: 4,
+        title: 'My Library',
+        to:'myLibrary'
+    },
+{   id: 1, 
         title: 'For You',
         to: 'forYou'
     },

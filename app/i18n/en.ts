@@ -25,6 +25,7 @@ const en = {
     completed: 'Completed',
     inProgress: 'In Progress',
     uncompleted: 'Uncompleted',
+    impact: "Impact"
   },
   interestHive: {
     title: 'What does sustainability mean for you?',

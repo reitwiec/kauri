@@ -147,6 +147,8 @@ const $container: ViewStyle = {
   position: 'absolute',
   left: 0,
   top: 0,
+  borderBottomLeftRadius: 12,
+  borderBottomRightRadius: 12,
 };
 
 const $optionBtn: ViewStyle = {

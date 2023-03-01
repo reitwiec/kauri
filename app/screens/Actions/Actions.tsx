@@ -26,11 +26,12 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const flatRef = useRef<any>()
  
     const updateActionsState = useCallback((key:string) =>{
-        console.log(key)
-        flatRef.current.scrollToIndex({
-            index:key==='forYou'?0:1,
-            animated: true
-        })
+        if(flatRef.current){
+            flatRef.current.scrollToIndex({
+                index:key==='forYou'?0:1,
+                animated: true
+            })
+        }
         setTimeout(()=>{
                 setActionsState(key)
             },300)

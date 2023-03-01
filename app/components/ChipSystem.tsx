@@ -39,21 +39,22 @@ export const ChipSystem = observer(function ChipSystem({
     darkSelectedBackgroundRGBA.length - 3,
   );
 
-  const {assignRef, scrollToPos, indicatorRef} = useChipBarAnimation(selected);
+  const {assignRef, scrollToPos, indicatorRef, assignParentRef, parentRef} = useChipBarAnimation(selected);
 
   useEffect(() => {
     if (Object.keys(scrollToPos).length > 0) {
       if (scrollToPos.width === 0 || screen.length === 0){
         return;
       }
+
       chipFeaturesVal.value = {
-        x: scrollToPos.x-16,
-        y: 0,
+        x: scrollToPos.x -16,
+        y: scrollToPos.y,
         width: scrollToPos.width,
       };
-      svRef.current?.scrollTo({
+      parentRef.current?.scrollTo({
         x: scrollToPos.x - 0.1 * windowWidth,
-        y: 0,
+        y: scrollToPos.y,
         animated: true,
       });
       screenState(screen);
@@ -61,18 +62,6 @@ export const ChipSystem = observer(function ChipSystem({
   }, [chipFeaturesVal, scrollToPos, windowWidth]);
 
   const animatedChipIndicator = useAnimatedStyle(() => {
-    // if (initialMountOfChips.value === "MIDDLE") {
-    //   initialMountOfChips.value = "END";
-    //   return {
-    //     transform: [
-    //       {translateX: chipFeaturesVal.value.x},
-    //       {translateY:  chipFeaturesVal.value.y},
-    //     ],
-    //     width: chipFeaturesVal.value.width,
-    //     opacity: 0
-    //   };
-    // }
-
     if (initialMountOfChips.value === "START"){
       return {
         opacity: 0
@@ -111,7 +100,7 @@ export const ChipSystem = observer(function ChipSystem({
       bounces={false}
       showsHorizontalScrollIndicator={false}
       scrollEventThrottle={16}
-      ref={svRef}>
+      ref={assignParentRef}>
       <View
         style={{
           flexDirection: 'row',
@@ -130,12 +119,13 @@ export const ChipSystem = observer(function ChipSystem({
               }}
               key={index}
               style={[
-                {zIndex: 10},
+                {zIndex: 10, opacity: 1},
                 data.length <= 2 && {width: (windowWidth - 32) * 0.5},
               ]}
               ref={assignRef}
               onLayout={event => {
                 const {x, y, width} = event.nativeEvent.layout;
+                // console.log(x,y,width)
                 if (index !== 0) {
                   return;
                 }
@@ -188,6 +178,7 @@ export const ChipSystem = observer(function ChipSystem({
 
 function useChipBarAnimation(activeIndex) {
   const chipRefs = useRef<any>([]);
+  const parentRef = useRef<any>()
   const [scrollToPos, setScrollPos] = useState({
     x: 0,
     y:0,
@@ -199,15 +190,19 @@ function useChipBarAnimation(activeIndex) {
     chipRefs.current.push(ref);
   }
 
+  function assignParentRef(ref) {
+    parentRef.current = ref;
+  }
+
   useEffect(() => {
     const chipRef = chipRefs.current[activeIndex];
-    chipRef.measureInWindow((x,y,width)=>{
-      setScrollPos({x, y, width});
-    })
-    // chipRef.measure((x, y, width) => {
-    //   console.log(x,y,width);
-    // });
+    chipRef.measureLayout(
+      findNodeHandle(parentRef.current),
+      (x, y, width, height) => {
+        setScrollPos({x, y, width})
+      },
+    )
   }, [activeIndex]);
 
-  return {assignRef, scrollToPos, indicatorRef};
+  return {assignRef, scrollToPos, indicatorRef, assignParentRef, parentRef};
 }

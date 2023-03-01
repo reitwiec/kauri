@@ -30,8 +30,8 @@ export const Timeline = ({data, Header, translationY}) => {
     const _renderItem = useCallback(({ item, index }) =>{
     let content = (
       <View style={[$rowContainer]}>
-        {_renderEvent(item, index, updateX, x)}
-        {_renderCircle(x)}
+        {_renderEvent(item, index)}
+        {_renderCircle()}
       </View>
     );
     if(item.title === 'empty'){
@@ -44,7 +44,7 @@ export const Timeline = ({data, Header, translationY}) => {
     }
     return <View key={index}>{content}</View>;
   },[])
-  const _renderEvent = (rowData, rowID, updateX, x) => {
+  const _renderEvent = (rowData, rowID) => {
     const opStyle = {
           borderColor: defaultLineColor,
           borderLeftWidth: defaultLineWidth,
@@ -83,7 +83,7 @@ export const Timeline = ({data, Header, translationY}) => {
     );
   }
 
-  const _renderCircle = (x) => {
+  const _renderCircle = () => {
     var circleSize = defaultCircleSize;
     var circleColor = defaultCircleColor;
     var lineWidth = defaultLineWidth;
@@ -93,7 +93,7 @@ export const Timeline = ({data, Header, translationY}) => {
               height: circleSize,
               borderRadius: circleSize / 2,
               backgroundColor: circleColor,
-              left: x - circleSize / 2 + (lineWidth - 1) / 2,
+              left: x + (lineWidth - 1) / 2,
             };
     const dotSize =  circleSize / 2;
     let dotStyle = {
@@ -120,12 +120,6 @@ export const Timeline = ({data, Header, translationY}) => {
   const $containerInsets = useSafeAreaInsetsStyle(['bottom', 'top']);
   return (
     <View style={[$container]}>
-        {/* {
-        data.map((item, index) => (
-          <View key={index + ""}>{_renderItem({ item, index })}</View>
-        ))
-        } */}
-
       <Animated.FlatList
             data={data}
             maxToRenderPerBatch={10}
@@ -149,6 +143,7 @@ export const Timeline = ({data, Header, translationY}) => {
     flexDirection: "row",
     flex: 1,
     justifyContent: "center",
+    paddingLeft:defaultCircleSize/2
   }
 
   const $circle:ViewStyle = {

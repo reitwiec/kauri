@@ -10,7 +10,7 @@ import { designSystem, kauriColors } from "../../theme";
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { Overview } from "./Overview";
 import type { CompositeScreenProps } from "@react-navigation/native";
-import { Analytics } from "./Analytics";
+import { Impact } from "./Impact";
 import type { AppStackParamList } from "../../navigators";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -31,6 +31,8 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const winWidth = useWindowDimensions().width
 
     const flatRef = useRef<any>()
+    const overviewRef = useRef<any>()
+    const impactRef = useRef<any>()
     const updateHomeState = useCallback((key:string) =>{
         flatRef.current.scrollToIndex({
             index:key==='overview'?0:1,
@@ -38,6 +40,11 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
         })
         setTimeout(()=>{
                 setHomeState(key)
+                if(key === 'overview'){
+                    impactRef.current.scrollTo({x: 0, y: 0, animated: true})
+                }else{
+                    overviewRef.current.scrollTo({x: 0, y: 0, animated: true})
+                }
             },300)
     },[]);
  
@@ -72,15 +79,15 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const renderSubview = useCallback(({item})=>{
         if(item.name === 'overview'){
             return(
-                <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
+                <Animated.ScrollView ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
                     <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData}/>
             </Animated.ScrollView>
             )
         }else{
             return(
-                <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
-                    {/* <Analytics riveHeight={riveHeight}/> */}
-                    <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData}/>
+                <Animated.ScrollView ref={impactRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
+                    <Impact riveHeight={riveHeight}/>
+                    {/* <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData}/> */}
                 </Animated.ScrollView>
             )
         }
