@@ -78,10 +78,10 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
                         alignItems: 'center'
                     }}
                     // removeClippedSubviews={true}
-                    scrollEnabled={false}
+                    scrollEnabled={true}
                     horizontal
                     bounces={false}
-                    showsHorizontalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={true}
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={renderItem}
                 />
@@ -146,7 +146,7 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
                 transform: [
                     {translateX: withTiming(interpolate(activeIndexVal.value, inputRange, [winWidth/2,0,-winWidth/2]), {duration: 450, easing: Easing.inOut(Easing.ease)})},
                     {translateY:  withTiming(interpolate(activeIndexVal.value, inputRange, [12,0,12]), {duration: 450, easing: Easing.inOut(Easing.ease)})},
-                    {scale: isPressing.value?withTiming(0.95):withTiming(interpolate(activeIndexVal.value, inputRange, [0.92, 1, 0.92]), {duration: 450, easing: Easing.inOut(Easing.ease)})}
+                    {scale: isPressing.value?withTiming(0.98):withTiming(interpolate(activeIndexVal.value, inputRange, [0.92, 1, 0.92]), {duration: 450, easing: Easing.inOut(Easing.ease)})}
                 ],
                 opacity: withDelay(delay,withTiming(interpolate(activeIndexVal.value, inputRange, [1/4, 1, 1/4]), {duration: 450, easing: Easing.inOut(Easing.ease)})),
             }
@@ -156,7 +156,7 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
                 transform: [
                     {translateX: interpolate(activeIndexVal.value, inputRange, [winWidth/2,0,-winWidth/2])},
                     {translateY: interpolate(activeIndexVal.value, inputRange, [12,0,12])},
-                    {scale: isPressing.value?withTiming(0.95):interpolate(activeIndexVal.value, inputRange, [0.92, 1, 0.92])}
+                    {scale: isPressing.value?withTiming(0.98):interpolate(activeIndexVal.value, inputRange, [0.92, 1, 0.92])}
                 ],
                 opacity:interpolate(activeIndexVal.value, inputRange, [1/4, 1, 1/4]),
             }
@@ -165,8 +165,8 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
 
     const $overlayStyle = useAnimatedStyle(()=>{
         return {
-            opacity: isPressing.value?withTiming(0.2):withTiming(0),
-            backgroundColor: kauriColors.primary.dark
+            opacity: isPressing.value?withTiming(0.1):withTiming(0),
+            backgroundColor: kauriColors.secondary.lightBrown
         }
     }, [isPressing])
 

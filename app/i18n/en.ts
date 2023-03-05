@@ -37,11 +37,12 @@ const en = {
     personalisedRoadmapDescription:
       'A tailored roadmap just for you. Customized based on your interests to help you achieve your goals.',
     recreate: 'Re-create the roadmap',
+    roadmap: 'Roadmap',
   },
   home: {
     whatNext: 'What next?',
     whatNextDescription:
-      'Next action for you on your roadmap. Swipe left to see more.',
+      'Next action for you on your roadmap.',
   },
 };
 

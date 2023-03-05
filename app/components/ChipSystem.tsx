@@ -27,12 +27,10 @@ export const ChipSystem = observer(function ChipSystem({
   screenState,
 }: ChipSystemProps) {
   const windowWidth = useWindowDimensions().width;
-  const svRef = useRef<any>();
   const [selected, setSelected] = useState(0);
   const [screen, setScreen] = useState('')
   const chipFeaturesVal = useSharedValue({x: 0, y: 0, width: 0.1});
   const initialMountOfChips = useSharedValue<"START" | "MIDDLE" | "END">('START');
-  const [initMount, setInitMount] = useState(false)
   let darkSelectedBackgroundRGBA = hexToRGBA(kauriColors.primary.dark, 1);
   darkSelectedBackgroundRGBA = darkSelectedBackgroundRGBA.substring(
     0,
@@ -59,7 +57,7 @@ export const ChipSystem = observer(function ChipSystem({
       });
       screenState(screen);
     }
-  }, [chipFeaturesVal, scrollToPos, windowWidth]);
+  }, [chipFeaturesVal, scrollToPos]);
 
   const animatedChipIndicator = useAnimatedStyle(() => {
     if (initialMountOfChips.value === "START"){
@@ -112,7 +110,6 @@ export const ChipSystem = observer(function ChipSystem({
           return (
             <Pressable
               renderToHardwareTextureAndroid={true}
-              collapsable={false}
               onPress={() => {
                 setSelected(index);
                 setScreen(item.to)
@@ -125,7 +122,6 @@ export const ChipSystem = observer(function ChipSystem({
               ref={assignRef}
               onLayout={event => {
                 const {x, y, width} = event.nativeEvent.layout;
-                // console.log(x,y,width)
                 if (index !== 0) {
                   return;
                 }
@@ -198,7 +194,7 @@ function useChipBarAnimation(activeIndex) {
     const chipRef = chipRefs.current[activeIndex];
     chipRef.measureLayout(
       findNodeHandle(parentRef.current),
-      (x, y, width, height) => {
+      (x, y, width) => {
         setScrollPos({x, y, width})
       },
     )

@@ -169,4 +169,4 @@ export const Timeline = ({data, Header, translationY}) => {
     flex: 1,
   }
 
-  const $detail:ViewStyle = { paddingTop: 0, paddingBottom: 32 }
+  const $detail:ViewStyle = { paddingTop: 0, paddingBottom: 32, }

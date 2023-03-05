@@ -102,11 +102,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
 
   const $pressInAnim = useAnimatedStyle(() => {
     return {
-      transform: [{scale: pressIn.value ? withTiming(0.95) : withTiming(1)}],
-      backgroundColor: pressIn.value
-        ? kauriColors.primary.light
-        : 'transparent',
-      opacity: pressIn.value ? withTiming(0.85) : withTiming(1),
+      transform: [{scale: pressIn.value ? withTiming(0.98) : withTiming(1)}]
     };
   }, [pressIn]);
 
@@ -200,7 +196,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
       {!stacked && (
         <Animated.View
           style={[
-            {flexDirection: 'row', padding: 8, borderRadius: 10},
+            {flexDirection: 'row', padding: 8, borderRadius: 12 },
             $pressInAnim,
           ]}>
           <Pressable
