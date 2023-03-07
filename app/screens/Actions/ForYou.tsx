@@ -11,6 +11,7 @@ import { Timeline } from "./Timeline";
 import React from "react";
 import type Animated from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
+import { FeatureThumbnail } from "./FeatureThumbnail";
 
 export interface ForYouProps{
     riveHeight: number,
@@ -23,8 +24,14 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({riveHeight, t
     const Header = React.memo(()=>{
         return(
             <View style={{marginBottom: 24}}>
-                <StylisedTitle text={geti18n("actions.personalisedRoadmap")}/>
-                <Text style={{textAlign: 'left', color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.paragraph, marginTop: 8}}>
+                <View style={{marginBottom: 24}}>
+                    {/* <StylisedTitle text={geti18n("actions.nextActionForYou")} alt={true}/> */}
+                    <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark}}>
+                        {geti18n("actions.nextActionForYou")}
+                    </Text>
+                </View>
+                <FeatureThumbnail data={roadMap.nextAction}/>
+                {/*<Text style={{textAlign: 'left', color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.paragraph, marginTop: 8}}>
                     {geti18n("actions.personalisedRoadmapDescription")}
                 </Text>
                 <Pressable style={{marginTop: 24, flexDirection: 'row'}}>
@@ -34,7 +41,7 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({riveHeight, t
                     <Text style={{...designSystem.textStyles.captions, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
                         {geti18n("actions.recreate")}
                     </Text>
-                </Pressable>
+                </Pressable> */}
             </View>
         )
     })

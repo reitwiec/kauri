@@ -25,7 +25,12 @@ const en = {
     completed: 'Completed',
     inProgress: 'In Progress',
     uncompleted: 'Uncompleted',
-    impact: "Impact"
+    expense: 'Expense',
+    effort: "Effort",
+    impact: "Impact",
+    minimal: "Minimal",
+    high: "High",
+    medium: "Medium"
   },
   interestHive: {
     title: 'What does sustainability mean for you?',
@@ -38,6 +43,7 @@ const en = {
       'A tailored roadmap just for you. Customized based on your interests to help you achieve your goals.',
     recreate: 'Re-create the roadmap',
     roadmap: 'Roadmap',
+    nextActionForYou: 'Next action for you'
   },
   home: {
     whatNext: 'What next?',

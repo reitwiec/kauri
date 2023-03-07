@@ -1,0 +1,21 @@
+<svg width="18" height="34" viewBox="0 0 18 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 33C0 33.5523 4.02944 34 9 34C13.9706 34 18 33.5523 18 33V31H8H0V33Z" fill="#E6E5DB"/>
+<ellipse cx="9" cy="31" rx="9" ry="1" fill="#A1A191"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M9.93778 16.5C11.8457 15.4165 16 12.691 16 9.5C16 5.35786 12.866 2 9 2C5.13401 2 2 5.35786 2 9.5C2 12.691 6.15434 15.4165 8.06222 16.5C6.15434 17.5835 2 20.309 2 23.5C2 27.6421 5.13401 31 9 31C12.866 31 16 27.6421 16 23.5C16 20.309 11.8457 17.5835 9.93778 16.5Z" fill="#F0F0EA"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.03833 10C3.54923 13.3562 9.00003 16 9.00003 16C9.00003 16 14.4508 13.3562 14.9617 10H3.03833Z" fill="url(#paint0_linear_631_2811)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 28.1523L13 28.1523C11.9912 29.2911 10.572 30 9 30C7.42798 30 6.0088 29.2911 5 28.1523Z" fill="url(#paint1_linear_631_2811)"/>
+<ellipse cx="9" cy="10" rx="6" ry="1" fill="#CC7900"/>
+<ellipse cx="9" cy="28" rx="4" ry="1" fill="#CC7900"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 3C0 3.55228 4.02944 4 9 4C13.9706 4 18 3.55228 18 3V1H8H0V3Z" fill="#E6E5DB"/>
+<ellipse cx="9" cy="1" rx="9" ry="1" fill="#A1A191"/>
+<defs>
+<linearGradient id="paint0_linear_631_2811" x1="7.00003" y1="13" x2="12.5" y2="13.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFAA2E"/>
+<stop offset="1" stop-color="#CC7900"/>
+</linearGradient>
+<linearGradient id="paint1_linear_631_2811" x1="10.3419" y1="29.0761" x2="6.76163" y2="28.367" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFAA2E"/>
+<stop offset="1" stop-color="#CC7900"/>
+</linearGradient>
+</defs>
+</svg>

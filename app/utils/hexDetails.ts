@@ -1,15 +1,14 @@
 import {kauriColors} from '../theme';
 import {hexToRGBA} from './hexToRGBA';
 
-export const dimensionColorMap = (alpha: number) => {
+export const dimensionColorMap = () => {
   return {
-    dimension1: hexToRGBA('#9ABB9C', alpha),
-    dimension2: hexToRGBA('#D49A9A', alpha),
-    dimension3: hexToRGBA('#8CD9D4', alpha),
-    dimension4: hexToRGBA('#E4B281', alpha),
-    dimension5: hexToRGBA('#93A0D0', alpha),
-    dimension6: hexToRGBA('#C09CC9', alpha),
-    default: hexToRGBA(kauriColors.primary.chipBar, 0.3),
+    dimension1: "#BFD1B6",
+    dimension2: "#B7E3D7",
+    dimension3: "#E2BDB4",
+    dimension4: "#D6BED1",
+    dimension5: "#BBC0D5",
+    default: "#F6F6F2",
   };
 };
 

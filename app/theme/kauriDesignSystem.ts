@@ -17,7 +17,8 @@ type textStyles =
   | 'smallTextsBold'
   | 'titleNormal'
   | 'smallTextsSemi'
-  | 'smallSerif';
+  | 'smallSerif'
+  | 'smallSerifBigger'
 
 type textStylesMap = {[style in textStyles]: textSettings};
 
@@ -58,6 +59,10 @@ const textStyles: textStylesMap = {
     fontSize: 10,
     fontFamily: kauriTypography.primary.extraBold,
   },
+  smallSerifBigger: {
+    fontSize: 12,
+    fontFamily: kauriTypography.secondary.medium,
+  }, 
   smallSerif: {
     fontSize: 10,
     fontFamily: kauriTypography.secondary.medium,

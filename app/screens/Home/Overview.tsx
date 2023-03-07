@@ -13,6 +13,7 @@ import { Path, Svg } from "react-native-svg";
 import { dimensionColorMap } from "../../utils/hexDetails";
 import { StylisedTitle, Thumbnail } from "../../components";
 import { Directions, FlatList, FlingGestureHandler, Gesture, GestureDetector, gestureHandlerRootHOC, GestureHandlerRootView, State } from "react-native-gesture-handler";
+import { Hex } from "../../components/Hex";
 
 export interface OverviewProps {
     riveHeight: number,
@@ -91,7 +92,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
                 {
                     currentItem.topCauses.map((cause, index)=>{
                         return (
-                            <Hex dimension={cause.dimension} title={null} key={index}/>
+                                <Hex dimension={cause.dimension} title={null} key={index}/>
                             )
                         })   
                     }
@@ -107,7 +108,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
                 }
             </View>}
             {currentItem && <Text 
-                style={{textAlign: 'center',paddingHorizontal: 16, width: "90%", color: hexToRGBA(kauriColors.primary.dark, 0.7)}} numberOfLines={2}>
+                style={{textAlign: 'center',paddingHorizontal: 16, width: "90%", color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.captions}} numberOfLines={2}>
                 {currentItem.description}
             </Text>}
             <View style={{flexDirection: "row", justifyContent: 'space-evenly', paddingHorizontal: 16}}>
@@ -198,23 +199,6 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
     )
 })
 
-const Hex:FC<{title:string|null, dimension:string}> = React.memo(({title, dimension}) =>{
-    const svgFeatures = hex(32, 32/4)
-    return (
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-
-        <Svg width={svgFeatures.width} height={svgFeatures.height} fill={dimensionColorMap(0.6)[dimension]}>
-            <Path
-                d={svgFeatures.path}
-                />
-        </Svg>
-        {title &&<Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA((kauriColors.primary.dark), 0.7)}}>
-            {title}
-        </Text>}
-        </View>
-    )
-})
-
 export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData}){
     const windowWidth = useWindowDimensions().width
     const mostImpacted = getMostImpacted(3)
@@ -281,7 +265,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     key={index}
                     style={[{
                         height: height,
-                        backgroundColor: dimensionColorMap(0.6)[contribution.dimension],
+                        backgroundColor: dimensionColorMap()[contribution.dimension],
                         position: 'absolute',
                         top: 0,
                         left: `${tempPrevContribution}%`,
@@ -374,7 +358,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     userData.contributionsPerDimension.map((contribution, index)=>{
                         return (
                             <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 2}} key={index}>
-                                <View style={{width: 6, height: 6, borderRadius: 6, backgroundColor: dimensionColorMap(1)[contribution.dimension]}}/>
+                                <View style={{width: 6, height: 6, borderRadius: 6, backgroundColor: dimensionColorMap()[contribution.dimension]}}/>
                                 <Text style={{marginHorizontal: 8, ...designSystem.textStyles.smallTextsSemi, color: hexToRGBA((kauriColors.primary.dark), 0.7)}}>
                                     {contribution.dimension}
                                 </Text>
@@ -385,7 +369,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
             </View>
         </View>
         <View style={{marginTop: 24, paddingHorizontal: 16}}>
-            <StylisedTitle text={geti18n("home.whatNext")}/>
+            <StylisedTitle text={geti18n("home.whatNext")} alt={false}/>
             <Text style={{textAlign: 'left', color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.paragraph, marginTop: 8}}>
                     {geti18n("home.whatNextDescription")}
             </Text>

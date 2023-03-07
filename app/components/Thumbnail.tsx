@@ -266,29 +266,6 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
                 }}>
                 {title}
               </Text>
-              {actionType === 'habit' && type === 'large' && (
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 8,
-                    right: 8,
-                    borderRadius: 50,
-                    backgroundColor: hexToRGBA(
-                      kauriColors.primary.seaGreen,
-                      0.8,
-                    ),
-                    paddingHorizontal: 8,
-                    paddingVertical: 4,
-                  }}>
-                  <Text
-                    style={{
-                      color: kauriColors.primary.light,
-                      ...designSystem.textStyles.smallTexts,
-                    }}>
-                    {geti18n('common.habit')}
-                  </Text>
-                </View>
-              )}
             </View>
             <View style={{marginLeft: 16}}>
               <Text
@@ -347,9 +324,9 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
               height: height + 8,
               borderRadius: type === 'large' ? 16 : 12,
             }}
-            start={{x: 0.5, y: 1}}
+            start={{x: 1, y: 1}}
             end={{x: 0.5, y: 0}}
-            colors={['rgba(92,58,36,0.5)', 'rgba(92,58,36, 0.25)']}
+            colors={['rgba(92,58,36,0.8)', 'rgba(92,58,36, 0.25)']}
           />
         </Animated.View>
       )}

@@ -4,11 +4,11 @@ import {Path, Svg} from 'react-native-svg';
 import {designSystem, kauriColors} from '../theme';
 import React from 'react';
 
-export const StylisedTitle = ({text}) => {
+export const StylisedTitle = ({text, alt}) => {
   const [textWidth, setTextWidth] = useState(50);
   return (
-    <View>
-      <View style={{alignSelf: 'flex-start'}}>
+    <View style={alt?{alignItems: 'center'}:{}}>
+      <View style={alt?{justifyContent: 'center'}:{alignSelf: 'flex-start'}}>
         <Text
           style={{
             color: kauriColors.primary.dark,

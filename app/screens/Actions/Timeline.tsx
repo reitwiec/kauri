@@ -40,7 +40,8 @@ export const Timeline = ({data, Header, translationY}) => {
       )
     }
     if(index === 0 ){
-      return <Header/>
+      
+      return(<View style={{alignItems: 'center'}}><Header/></View>)
     }
     return <View key={index}>{content}</View>;
   },[])
