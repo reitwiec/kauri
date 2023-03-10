@@ -30,13 +30,14 @@ export interface ThumbnailProps {
   width: number;
   height: number;
   title: string;
-  type: 'small' | 'large';
+  type: 'small' | 'large' | 'compact';
   actionType: 'onetime' | 'habit';
   activeIndexVal: SharedValue<number> | null;
   index: number;
   pretty: boolean;
   stacked: boolean;
   status: 'uncompleted' | 'completed' | 'inProgress';
+  isNew?: boolean
 }
 
 export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
@@ -50,10 +51,9 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
   actionType,
   pretty,
   stacked,
-  status,
+  isNew
 }) {
   let {width: imageWidth, height: imageHeight} = Image.resolveAssetSource(src);
-  const pressIn = useSharedValue(false);
   if (imageWidth > imageHeight) {
     imageWidth = (height / imageHeight) * imageWidth;
     imageHeight = height;
@@ -82,29 +82,8 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
     };
   }, [activeIndexVal]);
 
-  const _statusColorMap = {
-    uncompleted: kauriColors.secondary.uncompleted,
-    completed: kauriColors.secondary.completed,
-    inProgress: kauriColors.secondary.inProgress,
-  };
-  const $statusConfig: ViewStyle = {
-    borderRadius: 50,
-    backgroundColor: hexToRGBA(_statusColorMap[status], 0.25),
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginLeft: actionType !== 'habit' ? 0 : 8,
-  };
 
-  const $statusTextConfig: TextStyle = {
-    color: _statusColorMap[status],
-    ...designSystem.textStyles.smallTexts,
-  };
 
-  const $pressInAnim = useAnimatedStyle(() => {
-    return {
-      transform: [{scale: pressIn.value ? withTiming(0.98) : withTiming(1)}]
-    };
-  }, [pressIn]);
 
   return (
     <Animated.View
@@ -194,27 +173,11 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
         </View>
       )}
       {!stacked && (
-        <Animated.View
-          style={[
-            {flexDirection: 'row', padding: 8, borderRadius: 12 },
-            $pressInAnim,
-          ]}>
-          <Pressable
-            style={{flexDirection: 'row'}}
-            onPressIn={() => {
-              pressIn.value = true;
-            }}
-            onPressOut={() => {
-              pressIn.value = false;
-            }}
-            onPress={() => {
-              console.log('pressed');
-            }}>
             <View
               style={{
                 width: width,
                 height: height,
-                borderRadius: type === 'large' ? 16 : 12,
+                borderRadius: type === 'large' ? 16 : type === 'compact'? 10 : 12,
                 overflow: 'hidden',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -223,7 +186,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
               <Image
                 source={src}
                 style={{
-                  borderRadius: type === 'large' ? 16 : 12,
+                  borderRadius: type === 'large' ? 16 : type === 'compact'? 10 : 12,
                   flex: 1,
                   width: imageWidth,
                   height: imageHeight,
@@ -254,37 +217,29 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
                 colors={['rgba(92,58,36,0.75)', 'rgba(92,58,36,0)']}
               />
               <Text
-                style={{
+                style={[{
                   position: 'absolute',
                   bottom: 8,
                   left: 8,
                   ...designSystem.textStyles.smallSerif,
                   width: '60%',
                   color: '#ffffff',
-                  fontSize: 6,
-                  lineHeight: 6,
-                }}>
+                  lineHeight: 10,
+                }, type==='compact' && {fontSize: 4, lineHeight: 4}, type === 'small' && {fontSize:6, lineHeight: 6}]}>
                 {title}
               </Text>
-            </View>
-            <View style={{marginLeft: 16}}>
-              <Text
-                style={{
-                  ...designSystem.textStyles.captionsBold,
-                  marginBottom: 8,
-                  color: hexToRGBA(kauriColors.primary.dark, 0.9),
-                }}>
-                {title}
-              </Text>
-              <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-                {actionType === 'habit' && (
+              <View style={{
+                    position: 'absolute',
+                    top: 8,
+                    right: 8,
+                    flexDirection: 'row'
+                    }}>
+
+                {actionType === 'habit' && type === 'large' && (
                   <View
                     style={{
                       borderRadius: 50,
-                      backgroundColor: hexToRGBA(
-                        kauriColors.primary.seaGreen,
-                        0.8,
-                      ),
+                      backgroundColor: hexToRGBA(kauriColors.primary.seaGreen, 0.8),
                       paddingHorizontal: 8,
                       paddingVertical: 4,
                     }}>
@@ -297,24 +252,26 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
                     </Text>
                   </View>
                 )}
-                <View style={{...$statusConfig}}>
-                  <Text style={{...$statusTextConfig}}>
-                    {geti18n(`common.${status}`)}
-                  </Text>
-                </View>
+                {isNew && type === 'large' && (
+                  <View
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: hexToRGBA(kauriColors.secondary.tanBrown, 0.9),
+                      paddingHorizontal: 8,
+                      paddingVertical: 4,
+                      marginLeft: 4
+                    }}>
+                    <Text
+                      style={{
+                        color: kauriColors.primary.light,
+                        ...designSystem.textStyles.smallTexts,
+                      }}>
+                      New
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
-          </Pressable>
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <OptionsDotsIcon />
-          </Pressable>
-        </Animated.View>
       )}
       {pretty && (
         <Animated.View style={[animStyle, {zIndex: 2}]}>
@@ -326,7 +283,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
             }}
             start={{x: 1, y: 1}}
             end={{x: 0.5, y: 0}}
-            colors={['rgba(92,58,36,0.8)', 'rgba(92,58,36, 0.25)']}
+            colors={['rgba(92,58,36,0.8)', kauriColors.primary.yellow,  'rgba(92,58,36, 0.25)']}
           />
         </Animated.View>
       )}

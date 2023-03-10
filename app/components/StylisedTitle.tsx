@@ -4,7 +4,7 @@ import {Path, Svg} from 'react-native-svg';
 import {designSystem, kauriColors} from '../theme';
 import React from 'react';
 
-export const StylisedTitle = ({text, alt}) => {
+export const StylisedTitle = ({text, alt, small}) => {
   const [textWidth, setTextWidth] = useState(50);
   return (
     <View style={alt?{alignItems: 'center'}:{}}>
@@ -12,7 +12,7 @@ export const StylisedTitle = ({text, alt}) => {
         <Text
           style={{
             color: kauriColors.primary.dark,
-            ...designSystem.textStyles.title,
+            ...designSystem.textStyles[`title${small?'Small':'Big'}`],
           }}
           onLayout={event => {
             setTextWidth(event.nativeEvent.layout.width);

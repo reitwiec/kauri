@@ -5,7 +5,7 @@ const palette = {
     yelllow_disabled: '#F0CF75',
     light: '#F6F6F2',
     chipBar: '#E0E0D2',
-    unselectedLight: '#D0D0C8',
+    unselectedLight: '#B8B8AC',
     seaGreen: '#648678',
   },
   secondary: {
@@ -13,6 +13,7 @@ const palette = {
     completed: '#2EBF7A',
     uncompleted: '#C7CBB4',
     inProgress: '#F3C649',
+    tanBrown: '#B56D4A'
   },
 } as const;
 

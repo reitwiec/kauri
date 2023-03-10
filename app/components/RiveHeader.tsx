@@ -1,4 +1,3 @@
-import {observer} from 'mobx-react-lite';
 import {createRef, FC} from 'react';
 import React from 'react';
 import {View, ViewStyle} from 'react-native';
@@ -14,6 +13,7 @@ import {Chips, ChipSystem} from './ChipSystem';
 import {CartIcon, CustomiseIcon, FilterIcon, SearchIcon} from '../svgs';
 import {hexToRGBA} from '../utils/hexToRGBA';
 import {kauriColors} from '../theme';
+import Lottie from 'lottie-react-native';
 
 type configOptions = 'customise' | 'filter' | 'search' | 'cart' | 'wishlist';
 
@@ -44,6 +44,7 @@ export const RiveHeader: FC<RiveHeaderProps> = React.memo(({
   const $containerInsets = useSafeAreaInsetsStyle(['top'], 'padding');
   const headerRef = createRef<Animated.View>();
   const $animated_container = useAnimatedStyle(() => {
+    // console.log(translationY.value)
     return {
       height: interpolate(
         translationY.value,
@@ -92,6 +93,15 @@ export const RiveHeader: FC<RiveHeaderProps> = React.memo(({
 
   return (
     <Animated.View style={[$container, $animated_container]} ref={headerRef}>
+      <View style={{ width: '100%', height: '100%', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+        <Lottie
+          source={require('./animation.json')}
+          autoPlay
+          speed={0.5}
+          loop
+          style={{position: 'absolute', height: 240}}
+          />
+      </View>
       <View style={{position: 'absolute', left: 0, bottom: 16, width: '100%'}}>
         <ChipSystem data={data} screenState={screenState} />
       </View>
@@ -143,16 +153,17 @@ export const RiveHeader: FC<RiveHeaderProps> = React.memo(({
 
 const $container: ViewStyle = {
   width: '100%',
-  backgroundColor: '#fff',
+  backgroundColor: 'rgba(255,255,255,1)',
   position: 'absolute',
   left: 0,
   top: 0,
   borderBottomLeftRadius: 12,
   borderBottomRightRadius: 12,
+  overflow: 'hidden',
 };
 
 const $optionBtn: ViewStyle = {
-  backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3),
+  backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.8),
   padding: 8,
   borderRadius: 50,
 };

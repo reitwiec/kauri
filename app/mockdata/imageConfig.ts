@@ -22,11 +22,13 @@ type resources = resource[]
 export interface thumbnail {
     count: number,
     resources: resources,
-    nextAction: resource
+    nextAction: resource,
+    completed:number
 }
 
 export const roadMap:thumbnail = {
     count: 24,
+    completed: 4,
     resources:[
         {
             id: 1,

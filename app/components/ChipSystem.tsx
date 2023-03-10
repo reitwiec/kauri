@@ -102,7 +102,7 @@ export const ChipSystem = observer(function ChipSystem({
       <View
         style={{
           flexDirection: 'row',
-          backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3),
+          backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.5),
           marginHorizontal: 16,
           borderRadius: 16,
         }}>

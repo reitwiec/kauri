@@ -1,19 +1,18 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { Pressable, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Easing, Extrapolate, interpolate, runOnJS, SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
+import React, { FC, useCallback, useEffect, useState } from "react";
+import { Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
+import Animated, { Easing, interpolate, runOnJS, SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { PositiveFocusIcon } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
 import { getMostImpacted, roadMap } from "../../mockdata";
-import { hex } from "../../utils/hexGenerator";
-import { Path, Svg } from "react-native-svg";
 import { dimensionColorMap } from "../../utils/hexDetails";
-import { StylisedTitle, Thumbnail } from "../../components";
-import { Directions, FlatList, FlingGestureHandler, Gesture, GestureDetector, gestureHandlerRootHOC, GestureHandlerRootView, State } from "react-native-gesture-handler";
+import { StylisedTitle, Thumbnail, TryBtn } from "../../components";
+import { Directions, FlatList, Gesture, GestureDetector, gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Hex } from "../../components/Hex";
+import { shadowGenerator } from "../../utils/shadowGenerator";
 
 export interface OverviewProps {
     riveHeight: number,
@@ -62,7 +61,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
     const flingGesture = Gesture.Race(flingLeft, flingRight)
     const renderItem = useCallback(({item, index}) =>{
         return(
-                <RoadmapThumbs item={item} index={index} key={index} activeIndexVal={activeIndexVal} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH}/>
+                <RoadmapThumbs item={item} index={index} key={index} activeIndexVal={activeIndexVal} activeIndex={activeIndex} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH}/>
         )
     },[])
     return (
@@ -112,11 +111,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
                 {currentItem.description}
             </Text>}
             <View style={{flexDirection: "row", justifyContent: 'space-evenly', paddingHorizontal: 16}}>
-                <Pressable style={{...$nextBtn, backgroundColor: kauriColors.secondary.lightBrown}}>
-                    <Text style={{color: kauriColors.primary.light, ...designSystem.textStyles.captionsBold}}>
-                        {geti18n("common.try")}
-                    </Text>
-                </Pressable>
+                <TryBtn/>
                 <Pressable style={{...$nextBtn, borderColor: kauriColors.primary.light, borderWidth:2}}>
                     <Text style={{color: hexToRGBA(kauriColors.primary.dark,0.7), ...designSystem.textStyles.captionsBold}}>
                     {geti18n("common.seeAll")} (86)
@@ -131,10 +126,11 @@ interface RoadmapThumbsProps {
     item: any,
     index: number,
     activeIndexVal: SharedValue<number>,
-    THUMBNAIL_WIDTH: number
+    THUMBNAIL_WIDTH: number,
+    activeIndex: number
 }
 
-const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, activeIndexVal, THUMBNAIL_WIDTH}){
+const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, activeIndexVal, THUMBNAIL_WIDTH, activeIndex}){
     const winWidth = useWindowDimensions().width
     const inputRange = [index -1, index, index+1]
     const isPressing = useSharedValue(false)
@@ -164,15 +160,8 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
         }
     }, [activeIndexVal, isPressing])
 
-    const $overlayStyle = useAnimatedStyle(()=>{
-        return {
-            opacity: isPressing.value?withTiming(0.1):withTiming(0),
-            backgroundColor: kauriColors.secondary.lightBrown
-        }
-    }, [isPressing])
-
     return (
-        <Pressable onPressIn={()=>{
+        <TouchableOpacity activeOpacity={0.9} onPressIn={()=>{
             if(index === activeIndexVal.value){
                 isPressing.value = true
             }
@@ -187,15 +176,16 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
                 console.log("on press")
             }
         }}
+        style={[{
+            ...shadowGenerator(5)
+        }]}
         >
-        <View style={[{width: "100%", alignItems: 'center', justifyContent: 'center'}]}>
-            <Animated.View style={[{position: 'absolute'}, $animStyle]}>
-                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={activeIndexVal} index={index} pretty={true} stacked={true} status={item.status}/>
-                    {activeIndexVal.value === index && <Animated.View style={[{margin: 4, width: THUMBNAIL_WIDTH, height: THUMBNAIL_WIDTH, position: 'absolute', borderRadius: 16}, $overlayStyle]}/>}
-
-            </Animated.View> 
-        </View>
-        </Pressable>
+            <View style={[{width: "100%", alignItems: 'center', justifyContent: 'center'}]}>
+                <Animated.View style={[{position: 'absolute'}, $animStyle]}>
+                        <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={activeIndexVal} index={index} pretty={true} stacked={true} status={item.status}/>
+                </Animated.View> 
+            </View>
+        </TouchableOpacity>
     )
 })
 
@@ -278,17 +268,6 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
         );
     }
     
-    // const opacity = useSharedValue(0)
-    // useEffect(() => {
-    //     opacity.value = withTiming(1, {duration:600})
-    //   }, [])
-      
-    //   const $fadeIn = useAnimatedStyle(()=>{
-    //       return {
-    //           opacity: opacity.value
-    //       }
-    //   })
-    
     
     return (
         <View style={{width: windowWidth}}>
@@ -319,7 +298,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                 </View>
             </View>
             <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>    
-                <Text style={{...designSystem.textStyles.title, color: kauriColors.primary.dark}}>{geti18n("common.feelingStuck")}?</Text>
+                <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.dark}}>{geti18n("common.feelingStuck")}?</Text>
                 <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.6), textAlign: 'center', paddingHorizontal:4}}>
                     {geti18n("common.positiveFocusDescription")}
                 </Text>
@@ -368,8 +347,8 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                 }
             </View>
         </View>
-        <View style={{marginTop: 24, paddingHorizontal: 16}}>
-            <StylisedTitle text={geti18n("home.whatNext")} alt={false}/>
+        <View style={{marginTop: 24, paddingHorizontal: 16, alignItems: 'center'}}>
+            <StylisedTitle text={geti18n("home.whatNext")} alt={true} small/>
             <Text style={{textAlign: 'left', color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.paragraph, marginTop: 8}}>
                     {geti18n("home.whatNextDescription")}
             </Text>

@@ -9,10 +9,14 @@ import ImpactMinimal from '../../svgs/ImpactIcons/impact.minimal.svg';
 import ExpenseHigh from '../../svgs/ImpactIcons/expense.high.svg';
 import EffortMinimal from '../../svgs/ImpactIcons/effort.minimal.svg';
 import { Hex } from "../../components/Hex"
-import Animated, { SensorType, useAnimatedSensor, useAnimatedStyle } from "react-native-reanimated"
+import Animated, { Extrapolate, interpolate, SensorType, SharedValue, useAnimatedSensor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
+import { TryBtn } from "../../components"
+import { shadowGenerator } from "../../utils/shadowGenerator"
+import { Path, Svg } from "react-native-svg"
 
 interface FeatureThumbnailProps {
-    data: resource
+    data: resource,
+    progress: SharedValue<number>
 }
 
 const StaggeredHex = ({topCauses, totalCauses}) => {
@@ -40,12 +44,60 @@ const StaggeredHex = ({topCauses, totalCauses}) => {
             </View>
     )
 }
-export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data}) =>{
+
+interface ArrowProps {
+    start: number,
+    end: number,
+    progress: SharedValue<number>
+}
+
+const Arrow:FC<ArrowProps> = ({start, end, progress}) => {
+    const $animatedStyles = {
+        progress: useAnimatedStyle(()=>{
+            const opacity = interpolate(
+                progress.value,
+                [start,start+(start-end)/2, end],
+                [0.2,1,0.2],
+                Extrapolate.CLAMP
+            )
+
+            const scale = interpolate(
+                progress.value,
+                [start,start+(start-end)/2, end],
+                [1, 1.2, 1],
+                Extrapolate.CLAMP
+            )
+
+            const translateY = interpolate(
+                progress.value,
+                [start,start+(start-end)/2, end],
+                [0, 2, 0],
+                Extrapolate.CLAMP
+            )
+            return {
+                opacity,
+                transform:[{rotate: '-90deg'},{scale}, {translateY}],
+            }
+        }, [progress.value])
+    }
+    return (
+        <Animated.View style={[$animatedStyles.progress, {alignItems: 'center', justifyContent: 'center'}]}>
+                        <Svg width="13" height="6" viewBox="0 0 13 6" fill="none">
+                            <Path d="M1 1L6.5 5L12 1" stroke={kauriColors.primary.yellow} strokeLinecap="round" strokeWidth={2}/>
+                        </Svg>
+        </Animated.View>
+    )
+}
+
+export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress}) =>{
     const {url, title, type, impactDist, description, topCauses, totalCauses} = data
     const winWidth = useWindowDimensions().width
     let {width: imageWidth, height: imageHeight} = Image.resolveAssetSource(url);
+    const arrows = [0,1,2]
+    const delta = 1/arrows.length
     const desiredImageHeight = winWidth - 24*2 - 8*2
     const desiredImageWidth = (desiredImageHeight/imageHeight) * imageWidth
+    const isPressing = useSharedValue(false)
     const impactMap = {
         impact: {
             minimal: <ImpactMinimal/>
@@ -58,11 +110,11 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data}) =>{
         }
     }
 
-    const sensor = useAnimatedSensor(SensorType.GYROSCOPE, {interval: 500})
+    const sensor = useAnimatedSensor(SensorType.ROTATION, {interval: 500})
 
     const cardStyle = useAnimatedStyle(()=>{
-        const {x:rotX, y:rotY} = sensor.sensor.value;
-        console.log(rotX.toFixed(2), rotY.toFixed(2))
+        // console.log(sensor.sensor.value);
+        // console.log(rotX.toFixed(2), rotY.toFixed(2))
 
         return {transform:[
             {perspective: 300},
@@ -71,6 +123,25 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data}) =>{
         ]}
     })
 
+    const $animatedStyles = {
+        scale: useAnimatedStyle(()=>{
+            return {
+                transform: [{scale: isPressing.value?withTiming(0.98):withTiming(1)}]
+            }
+        }, [isPressing]),
+        progress: useAnimatedStyle(()=>{
+            const opacity = interpolate(
+                progress.value,
+                [delta, 2*delta],
+                [0.5,1],
+                Extrapolate.CLAMP
+            )
+            return {
+                opacity,
+            }
+        }, [progress.value])
+    }
+
     // topLeft (10deg, -10deg)
     // topRight (10deg, 10deg)
     // bottomRight (-10deg, 10deg)
@@ -78,140 +149,163 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data}) =>{
 
     const [cardHeight, setCardHeight] = useState(desiredImageHeight)
     return (
-        <Animated.View style={{}}>
-            <View style={{width: desiredImageHeight+8, height: cardHeight+8, position: 'absolute',left:-4, top:-4, borderRadius:12}}>
-                <LinearGradient
-                    style={{
-                    borderRadius: 12,
-                    width: desiredImageHeight+8, height: cardHeight+8 
-                    }}
-                    start={{x: 1, y: 1}}
-                    end={{x: 0.5, y: 0}}
-                    colors={['rgba(92,58,36,0.8)', 'rgba(92,58,36, 0.25)']}
-                />
-            </View>
-            <View style={{width: desiredImageHeight, minHeight: desiredImageHeight, padding: 16, justifyContent: 'flex-end'}} onLayout={(e)=>{setCardHeight(e.nativeEvent.layout.height)}}>
-                <View style={{width: desiredImageHeight, overflow: 'hidden', borderRadius: 12, position: 'absolute', top: 0}}>
-                    <Image
-                        source={url}
-                        style={{
-                            flex: 1,
-                            width: desiredImageWidth,
-                            height: desiredImageHeight,
-                        }}
-                        />
-                    <View
-                        style={{
-                        top: 0,
-                        right: 0,
-                        left: 0,
-                        bottom: 0,
-                        flex: 1,
-                        backgroundColor: 'rgba(0,0,0,0.4)',
-                        position: 'absolute',
-                        }}
-                    />
+        <Animated.View style={{...$animatedStyles.scale}}>
+            <Pressable
+                onPressIn={()=>{
+                    isPressing.value = true
+                }}
+                onPressOut={()=>{
+                    if(isPressing.value === true){
+                        isPressing.value = false
+                    }
+                }}
+                onPress={()=>{
+                    console.log("on press")
+                }}
+            >
+                <View style={{...shadowGenerator(10), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+8, height: cardHeight+8, position: 'absolute',left:-4, top:-4, borderRadius:12}}>
                     <LinearGradient
                         style={{
-                        top: 0,
-                        right: 0,
-                        left: 0,
-                        bottom: 0,
-                        flex: 1,
-                        position: 'absolute',
+                        borderRadius: 12,
+                        width: desiredImageHeight+8, height: cardHeight+8 
                         }}
-                        start={{x: 0.5, y: 1}}
+                        start={{x: 1, y: 1}}
                         end={{x: 0.5, y: 0}}
-                        colors={['rgba(92,58,36,0.75)', 'rgba(92,58,36,0)']}
+                        colors={['rgba(92,58,36,0.8)', kauriColors.primary.yellow,  'rgba(92,58,36, 0.25)']}
                     />
                 </View>
-                <LinearGradient
-                        style={{
-                        top: 0,
-                        right: 0,
-                        left: 0,
-                        bottom: 0,
-                        flex: 1,
-                        position: 'absolute',
-                        borderRadius: 12
-                        }}
-                        locations={[0, 0.7, 1]}
-                        start={{x: 0.5, y: 0.7}}
-                        end={{x: 0.5, y: 0}}
-                        colors={['rgba(37,23,12,1)', 'rgba(37,23,12,0.64)', 'rgba(37,23,12,0)']}
-                />
-                <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 88, marginHorizontal:24}}>
-                    <View style={{width: '70%'}}>
-                    <Text style={{...designSystem.textStyles.title, color: kauriColors.primary.light, lineHeight: 24}}>
-                        {title}
-                    </Text>
-                    </View>
-                    {type === 'habit'&& (
-                        <View
-                        style={{
-                            borderRadius: 50,
-                            backgroundColor: hexToRGBA(kauriColors.primary.seaGreen, 0.8),
-                            paddingHorizontal: 8,
-                            paddingVertical: 4,
-                            marginHorizontal: 24
-                        }}>
-                        <Text
+                <View style={{width: desiredImageHeight, minHeight: desiredImageHeight, padding: 16, justifyContent: 'flex-end'}} onLayout={(e)=>{setCardHeight(e.nativeEvent.layout.height)}}>
+                    <View style={{width: desiredImageHeight, overflow: 'hidden', borderRadius: 12, position: 'absolute', top: 0}}>
+                        <Image
+                            source={url}
                             style={{
-                            color: kauriColors.primary.light,
-                            ...designSystem.textStyles.smallTexts,
-                            }}>
-                            {geti18n('common.habit')}
+                                flex: 1,
+                                width: desiredImageWidth,
+                                height: desiredImageHeight,
+                            }}
+                            />
+                        <View
+                            style={{
+                            top: 0,
+                            right: 0,
+                            left: 0,
+                            bottom: 0,
+                            flex: 1,
+                            backgroundColor: 'rgba(0,0,0,0.4)',
+                            position: 'absolute',
+                            }}
+                        />
+                        <LinearGradient
+                            style={{
+                            top: 0,
+                            right: 0,
+                            left: 0,
+                            bottom: 0,
+                            flex: 1,
+                            position: 'absolute',
+                            }}
+                            start={{x: 0.5, y: 1}}
+                            end={{x: 0.5, y: 0}}
+                            colors={['rgba(92,58,36,0.75)', 'rgba(92,58,36,0)']}
+                        />
+                    </View>
+                    <LinearGradient
+                            style={{
+                            top: 0,
+                            right: 0,
+                            left: 0,
+                            bottom: 0,
+                            flex: 1,
+                            position: 'absolute',
+                            borderRadius: 12
+                            }}
+                            locations={[0, 0.7, 1]}
+                            start={{x: 0.5, y: 0.7}}
+                            end={{x: 0.5, y: 0}}
+                            colors={['rgba(37,23,12,1)', 'rgba(37,23,12,0.64)', 'rgba(37,23,12,0)']}
+                    />
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 88, marginHorizontal:24}}>
+                        <View style={{width: '70%'}}>
+                        <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.light, lineHeight: 24}}>
+                            {title}
                         </Text>
                         </View>
-                    )}
-                </View>
-                {
-                impactDist && <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginTop: 24}}>
-                    <View style={$impactIcon}>
-                        {impactMap.impact[impactDist?.impact]}
-                        <Text style={$impactIconText}>
-                            {geti18n(`common.${impactDist?.impact}`)}
-                        </Text>
-                        <Text style={$impactIconSubText}>
-                            {geti18n('common.impact')}
-                        </Text>
+                        {type === 'habit'&& (
+                            <View
+                            style={{
+                                borderRadius: 50,
+                                backgroundColor: hexToRGBA(kauriColors.primary.seaGreen, 0.8),
+                                paddingHorizontal: 8,
+                                paddingVertical: 4,
+                                marginHorizontal: 24
+                            }}>
+                            <Text
+                                style={{
+                                color: kauriColors.primary.light,
+                                ...designSystem.textStyles.smallTexts,
+                                }}>
+                                {geti18n('common.habit')}
+                            </Text>
+                            </View>
+                        )}
                     </View>
-                    <View style={$impactIcon}>
-                        {impactMap.expense[impactDist?.expense]}
-                        <Text style={$impactIconText}>
-                            {geti18n(`common.${impactDist?.expense}`)}
-                        </Text>
-                        <Text style={$impactIconSubText}>
-                            {geti18n('common.expense')}
-                        </Text>
-                    </View>
-                    <View style={$impactIcon}>
-                        {impactMap.effort[impactDist?.effort]}
-                        <Text style={$impactIconText}>
-                            {geti18n(`common.${impactDist?.effort}`)}
-                        </Text>
-                        <Text style={$impactIconSubText}>
-                            {geti18n('common.effort')}
-                        </Text>
-                    </View>
-                    </View>
-                }
-                <Text 
-                    style={{marginTop: 8, textAlign: 'center',paddingHorizontal: 16, color: kauriColors.primary.light, ...designSystem.textStyles.captions}} numberOfLines={2}>
-                    {description}
-                </Text>
+                    {
+                    impactDist && <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginTop: 24}}>
+                        <View style={$impactIcon}>
+                            {impactMap.impact[impactDist?.impact]}
+                            <Text style={$impactIconText}>
+                                {geti18n(`common.${impactDist?.impact}`)}
+                            </Text>
+                            <Text style={$impactIconSubText}>
+                                {geti18n('common.impact')}
+                            </Text>
+                        </View>
+                        <View style={$impactIcon}>
+                            {impactMap.expense[impactDist?.expense]}
+                            <Text style={$impactIconText}>
+                                {geti18n(`common.${impactDist?.expense}`)}
+                            </Text>
+                            <Text style={$impactIconSubText}>
+                                {geti18n('common.expense')}
+                            </Text>
+                        </View>
+                        <View style={$impactIcon}>
+                            {impactMap.effort[impactDist?.effort]}
+                            <Text style={$impactIconText}>
+                                {geti18n(`common.${impactDist?.effort}`)}
+                            </Text>
+                            <Text style={$impactIconSubText}>
+                                {geti18n('common.effort')}
+                            </Text>
+                        </View>
+                        </View>
+                    }
+                    <Text 
+                        style={{marginTop: 8, textAlign: 'center',paddingHorizontal: 16, color: kauriColors.primary.light, ...designSystem.textStyles.captions}} numberOfLines={2}>
+                        {description}
+                    </Text>
 
-                <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', marginTop: 24}}>
-                    <Pressable style={{...$nextBtn, backgroundColor: kauriColors.secondary.lightBrown, flex:1}}>
-                        <Text style={{color: kauriColors.primary.light, ...designSystem.textStyles.captionsBold}}>
-                            {geti18n("common.try")}
-                        </Text>
-                    </Pressable>
-                    <StaggeredHex topCauses={topCauses} totalCauses={totalCauses}/>
+                    <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', marginTop: 24}}>
+                        <TryBtn/>
+                        <StaggeredHex topCauses={topCauses} totalCauses={totalCauses}/>
+                    </View>
+                    <View style={{flexDirection: 'row', width: '100%', position: 'absolute', top: 8, left:8}}>
+                                    {
+                                        arrows.map((i)=>{
+                                            const end = i * delta
+                                            const start = (i+1)*delta
+                                            return (
+                                                <Arrow start={start}  end={end} progress={progress} key={i}/>
+                                            )
+                                        })
+                                    }
+                                <Animated.Text style={[{...designSystem.textStyles.captionsBold, color: kauriColors.primary.light, marginLeft: 8}, $animatedStyles.progress]}>
+                                    {geti18n("actions.nextActionForYou")}
+                                </Animated.Text>
+                        </View>
                     
                 </View>
-                
-            </View>
+            </Pressable>
         </Animated.View>
     )
 }
@@ -230,11 +324,4 @@ const $impactIconSubText:TextStyle = {
     ...designSystem.textStyles.smallSerif,
     color: kauriColors.primary.light,
     textTransform: 'lowercase',
-}
-const $nextBtn:ViewStyle = {
-    flex:1,
-    margin: 16,
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderRadius: 12
 }

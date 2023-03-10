@@ -1,3 +1,4 @@
 export * from './headerChips';
 export * from './userData';
-export * from './imageConfig'
+export * from './imageConfig';
+export * from './exploreSection';

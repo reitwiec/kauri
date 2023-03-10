@@ -330,7 +330,7 @@ export const InterestSelectionHive: FC<InterestSelectionHiveProps> = observer(fu
                         setSwitchZIndex(false)
                         setCurrentPage(0);
                     }}>
-                        <BackArrow />
+                        <BackArrow color={"#3C3A38"}/>
                     </Pressable>
                 </Animated.View>
                 {currentPage === 0 && <Animated.View style={[$msgScreen, dissolveStyle]}>
@@ -387,7 +387,7 @@ const $row: ViewStyle = {
 }
 
 const $questionTitle: TextStyle = {
-    ...designSystem.textStyles.title,
+    ...designSystem.textStyles.titleBig,
     color: kauriColors.primary.dark,
     textAlign: 'center',
     width: '100%',

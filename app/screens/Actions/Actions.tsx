@@ -1,10 +1,10 @@
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { CompositeScreenProps } from "@react-navigation/native";
+import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
-import { FC, useCallback, useRef, useState } from "react";
-import { FlatList, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FlatList, StatusBar, Text, View, ViewStyle } from "react-native";
+import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { RiveHeader } from "../../components";
 import { actionsChips } from "../../mockdata";
 import type { AppStackParamList } from "../../navigators";
@@ -19,29 +19,40 @@ type ActionsProps = CompositeScreenProps<
 >
 export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const riveHeight = 240
-    const winWidth = useWindowDimensions().width
     const translationY = useSharedValue(0)
     const [actionsState, setActionsState] = useState('forYou');
     const actionsStateValue = useSharedValue('forYou')
+    
     const flatRef = useRef<any>()
- 
+    const exploreRef = useRef<any>()
+    const forYouRef = useRef<any>()
+    const states = {'forYou': {index: 0, ref: forYouRef}, 'explore': {index: 1, ref: exploreRef}, 'habits': {index: 2, ref: forYouRef}}
     const updateActionsState = useCallback((key:string) =>{
         if(flatRef.current){
             flatRef.current.scrollToIndex({
-                index:key==='forYou'?0:1,
+                index:states[key].index,
                 animated: true
             })
         }
         setTimeout(()=>{
+                const prevState = actionsStateValue.value
+                actionsStateValue.value = key
                 setActionsState(key)
+                if(states[prevState].ref){
+                    states[prevState].ref.current.scrollToOffset({offset:0, animated:true})
+                }
             },300)
     },[]);
-    const scrollHandler = useAnimatedScrollHandler({
-        onScroll: (event)=>{
-            translationY.value = event.contentOffset.y
-        }
-    })
     
+    const isFocused = useIsFocused()
+    
+    useEffect(() => {
+      return () => {
+        if(states[actionsState].ref){
+            states[actionsState].ref.current.scrollToOffset({offset:0, animated:true})
+        }
+      }
+    }, [isFocused])
 
     const $scrollContainer_animated = useAnimatedStyle(()=>{
         return {
@@ -59,18 +70,22 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
         if(item.name === 'forYou'){
             return(
                     <Animated.View style={$scrollContainer_animated}>
-                        <ForYou riveHeight={riveHeight} translationY={translationY}/>
+                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef}/>
                     </Animated.View>
             )
         }else{
             return(
-                <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
-                    <Explore riveHeight={riveHeight}/>
-                </Animated.ScrollView>
+                    <Animated.View style={$scrollContainer_animated}>
+                        <Explore riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={exploreRef}/>
+                    </Animated.View>
             )
         }
     },[])
     const isReady = useIsReady()
+    const onViewableItemsChanged = useRef(() => {
+        // console.log("Visible items are", viewableItems);
+        // console.log("Changed in this iteration", changed);
+    })
     return (
         <Animated.View style={[$container]} >
             <StatusBar barStyle={'dark-content'} backgroundColor="rgba(255,255,255,1)"/>
@@ -82,8 +97,13 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
                 ref={flatRef}
                 pagingEnabled
                 maxToRenderPerBatch={1}
+                initialNumToRender={1}
                 data={[{name: 'forYou'}, {name: 'explore'}]}
                 scrollEnabled={false}
+                onViewableItemsChanged={onViewableItemsChanged.current}
+                viewabilityConfig={{
+                    itemVisiblePercentThreshold: 50
+                }}
                 renderItem={renderSubview}
             />:<View>
             <Text>Busy</Text>
@@ -98,5 +118,3 @@ const $container:ViewStyle ={
     flex: 1
 }
 
-const $scrollContainer:ViewStyle = {
-}

@@ -8,26 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* kauriTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* kauriTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-kauri.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-kauri.a */; };
+		0942FB8F30404A25AAFCC1A8 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B858DB6681F44FB934470DB /* Manrope-Medium.ttf */; };
+		0CC9D4B598E34411A75830F0 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D58A124CA9B4E788B2A9EC6 /* Manrope-Regular.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-kauri-kauriTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-kauri-kauriTests.a */; };
+		212A4B3DC95145B4A504F7D2 /* Recoleta-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECBC34CBB38240E489ACC5C9 /* Recoleta-Regular.ttf */; };
+		3D9CE1ECBC294FDC12CFC005 /* libPods-kauri.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2E0FE8FB39D561D35235AF /* libPods-kauri.a */; };
+		3FB6467979704F7BAB2333F7 /* Recoleta-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FF1ABFCFC96410198C6C65D /* Recoleta-Thin.ttf */; };
+		63C67C6D2BE44C3F9D85EC53 /* libPods-kauri-kauriTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36CB13962F2964E5FCBF1E2D /* libPods-kauri-kauriTests.a */; };
+		74A318AD3F8042C9BAC33F18 /* Recoleta-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FCD7D454ACE489BA7FB15D0 /* Recoleta-Medium.ttf */; };
+		78427B8BEB6C488E93053DF2 /* Manrope-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA70B2B3069142AFB6CEC461 /* Manrope-Light.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		DB5FA90758364E6295F1FF16 /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */; };
+		936BAE028CF5464190B2D9E8 /* Recoleta-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 77C6036764964A998E99031C /* Recoleta-SemiBold.ttf */; };
+		9AEF31DB1DC04A9BBE44A02A /* Recoleta-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89263BC05C8043B78B51EC07 /* Recoleta-Black.ttf */; };
+		9E8A24BB7B834AFC84056158 /* Recoleta-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50E271E3BD6F4AC08D1F51BE /* Recoleta-Light.ttf */; };
 		AD9C2D3C7C064CBCBAB4EA29 /* Manrope-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 657FE927A47B4B2FB96B1759 /* Manrope-ExtraBold.ttf */; };
 		B53EDA211BFF444AADBD8949 /* Manrope-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35215CE00D6B4265A4B81BE8 /* Manrope-ExtraLight.ttf */; };
-		78427B8BEB6C488E93053DF2 /* Manrope-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA70B2B3069142AFB6CEC461 /* Manrope-Light.ttf */; };
-		0942FB8F30404A25AAFCC1A8 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B858DB6681F44FB934470DB /* Manrope-Medium.ttf */; };
-		0CC9D4B598E34411A75830F0 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D58A124CA9B4E788B2A9EC6 /* Manrope-Regular.ttf */; };
-		F9EA068501C746C78B8C2DFB /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 604B9F7BAC5140DE82E6E549 /* Manrope-SemiBold.ttf */; };
-		9AEF31DB1DC04A9BBE44A02A /* Recoleta-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89263BC05C8043B78B51EC07 /* Recoleta-Black.ttf */; };
+		DB5FA90758364E6295F1FF16 /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */; };
 		EB31624937DF449F810DFA7A /* Recoleta-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FC99BDBB0D44AC18A54961B /* Recoleta-Bold.ttf */; };
-		9E8A24BB7B834AFC84056158 /* Recoleta-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50E271E3BD6F4AC08D1F51BE /* Recoleta-Light.ttf */; };
-		74A318AD3F8042C9BAC33F18 /* Recoleta-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FCD7D454ACE489BA7FB15D0 /* Recoleta-Medium.ttf */; };
-		212A4B3DC95145B4A504F7D2 /* Recoleta-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECBC34CBB38240E489ACC5C9 /* Recoleta-Regular.ttf */; };
-		936BAE028CF5464190B2D9E8 /* Recoleta-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 77C6036764964A998E99031C /* Recoleta-SemiBold.ttf */; };
-		3FB6467979704F7BAB2333F7 /* Recoleta-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FF1ABFCFC96410198C6C65D /* Recoleta-Thin.ttf */; };
+		F9EA068501C746C78B8C2DFB /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 604B9F7BAC5140DE82E6E549 /* Manrope-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,28 +50,28 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = kauri/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = kauri/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = kauri/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-kauri-kauriTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kauri-kauriTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-kauri.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri.debug.xcconfig"; path = "Target Support Files/Pods-kauri/Pods-kauri.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-kauri.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri.release.xcconfig"; path = "Target Support Files/Pods-kauri/Pods-kauri.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-kauri-kauriTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri-kauriTests.debug.xcconfig"; path = "Target Support Files/Pods-kauri-kauriTests/Pods-kauri-kauriTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-kauri.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kauri.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FCD7D454ACE489BA7FB15D0 /* Recoleta-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-Medium.ttf"; path = "../assets/fonts/Recoleta-Medium.ttf"; sourceTree = "<group>"; };
+		35215CE00D6B4265A4B81BE8 /* Manrope-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-ExtraLight.ttf"; path = "../assets/fonts/Manrope-ExtraLight.ttf"; sourceTree = "<group>"; };
+		36CB13962F2964E5FCBF1E2D /* libPods-kauri-kauriTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kauri-kauriTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CEE87E63897580C2CD58EF1 /* Pods-kauri-kauriTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri-kauriTests.release.xcconfig"; path = "Target Support Files/Pods-kauri-kauriTests/Pods-kauri-kauriTests.release.xcconfig"; sourceTree = "<group>"; };
+		3D58A124CA9B4E788B2A9EC6 /* Manrope-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-Regular.ttf"; path = "../assets/fonts/Manrope-Regular.ttf"; sourceTree = "<group>"; };
+		4B858DB6681F44FB934470DB /* Manrope-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-Medium.ttf"; path = "../assets/fonts/Manrope-Medium.ttf"; sourceTree = "<group>"; };
+		4FF1ABFCFC96410198C6C65D /* Recoleta-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-Thin.ttf"; path = "../assets/fonts/Recoleta-Thin.ttf"; sourceTree = "<group>"; };
+		50E271E3BD6F4AC08D1F51BE /* Recoleta-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-Light.ttf"; path = "../assets/fonts/Recoleta-Light.ttf"; sourceTree = "<group>"; };
+		5C0CAEEC4E5AFD0D05406DB8 /* Pods-kauri-kauriTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri-kauriTests.debug.xcconfig"; path = "Target Support Files/Pods-kauri-kauriTests/Pods-kauri-kauriTests.debug.xcconfig"; sourceTree = "<group>"; };
+		604B9F7BAC5140DE82E6E549 /* Manrope-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-SemiBold.ttf"; path = "../assets/fonts/Manrope-SemiBold.ttf"; sourceTree = "<group>"; };
+		657FE927A47B4B2FB96B1759 /* Manrope-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-ExtraBold.ttf"; path = "../assets/fonts/Manrope-ExtraBold.ttf"; sourceTree = "<group>"; };
+		65FBDD7318E3BC1BC4036680 /* Pods-kauri.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri.release.xcconfig"; path = "Target Support Files/Pods-kauri/Pods-kauri.release.xcconfig"; sourceTree = "<group>"; };
+		77C6036764964A998E99031C /* Recoleta-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-SemiBold.ttf"; path = "../assets/fonts/Recoleta-SemiBold.ttf"; sourceTree = "<group>"; };
+		7FC99BDBB0D44AC18A54961B /* Recoleta-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-Bold.ttf"; path = "../assets/fonts/Recoleta-Bold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = kauri/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-kauri-kauriTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri-kauriTests.release.xcconfig"; path = "Target Support Files/Pods-kauri-kauriTests/Pods-kauri-kauriTests.release.xcconfig"; sourceTree = "<group>"; };
+		89263BC05C8043B78B51EC07 /* Recoleta-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-Black.ttf"; path = "../assets/fonts/Recoleta-Black.ttf"; sourceTree = "<group>"; };
+		ACC17C53B6B0B2B963C26CFB /* Pods-kauri.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kauri.debug.xcconfig"; path = "Target Support Files/Pods-kauri/Pods-kauri.debug.xcconfig"; sourceTree = "<group>"; };
+		DA70B2B3069142AFB6CEC461 /* Manrope-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-Light.ttf"; path = "../assets/fonts/Manrope-Light.ttf"; sourceTree = "<group>"; };
+		ECBC34CBB38240E489ACC5C9 /* Recoleta-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Recoleta-Regular.ttf"; path = "../assets/fonts/Recoleta-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */ = {isa = PBXFileReference; name = "Manrope-Bold.ttf"; path = "../assets/fonts/Manrope-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		657FE927A47B4B2FB96B1759 /* Manrope-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Manrope-ExtraBold.ttf"; path = "../assets/fonts/Manrope-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		35215CE00D6B4265A4B81BE8 /* Manrope-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Manrope-ExtraLight.ttf"; path = "../assets/fonts/Manrope-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		DA70B2B3069142AFB6CEC461 /* Manrope-Light.ttf */ = {isa = PBXFileReference; name = "Manrope-Light.ttf"; path = "../assets/fonts/Manrope-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4B858DB6681F44FB934470DB /* Manrope-Medium.ttf */ = {isa = PBXFileReference; name = "Manrope-Medium.ttf"; path = "../assets/fonts/Manrope-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		3D58A124CA9B4E788B2A9EC6 /* Manrope-Regular.ttf */ = {isa = PBXFileReference; name = "Manrope-Regular.ttf"; path = "../assets/fonts/Manrope-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		604B9F7BAC5140DE82E6E549 /* Manrope-SemiBold.ttf */ = {isa = PBXFileReference; name = "Manrope-SemiBold.ttf"; path = "../assets/fonts/Manrope-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		89263BC05C8043B78B51EC07 /* Recoleta-Black.ttf */ = {isa = PBXFileReference; name = "Recoleta-Black.ttf"; path = "../assets/fonts/Recoleta-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		7FC99BDBB0D44AC18A54961B /* Recoleta-Bold.ttf */ = {isa = PBXFileReference; name = "Recoleta-Bold.ttf"; path = "../assets/fonts/Recoleta-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		50E271E3BD6F4AC08D1F51BE /* Recoleta-Light.ttf */ = {isa = PBXFileReference; name = "Recoleta-Light.ttf"; path = "../assets/fonts/Recoleta-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		1FCD7D454ACE489BA7FB15D0 /* Recoleta-Medium.ttf */ = {isa = PBXFileReference; name = "Recoleta-Medium.ttf"; path = "../assets/fonts/Recoleta-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		ECBC34CBB38240E489ACC5C9 /* Recoleta-Regular.ttf */ = {isa = PBXFileReference; name = "Recoleta-Regular.ttf"; path = "../assets/fonts/Recoleta-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		77C6036764964A998E99031C /* Recoleta-SemiBold.ttf */ = {isa = PBXFileReference; name = "Recoleta-SemiBold.ttf"; path = "../assets/fonts/Recoleta-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4FF1ABFCFC96410198C6C65D /* Recoleta-Thin.ttf */ = {isa = PBXFileReference; name = "Recoleta-Thin.ttf"; path = "../assets/fonts/Recoleta-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-Bold.ttf"; path = "../assets/fonts/Manrope-Bold.ttf"; sourceTree = "<group>"; };
+		FD2E0FE8FB39D561D35235AF /* libPods-kauri.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kauri.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-kauri-kauriTests.a in Frameworks */,
+				63C67C6D2BE44C3F9D85EC53 /* libPods-kauri-kauriTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-kauri.a in Frameworks */,
+				3D9CE1ECBC294FDC12CFC005 /* libPods-kauri.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,8 +128,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-kauri.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-kauri-kauriTests.a */,
+				FD2E0FE8FB39D561D35235AF /* libPods-kauri.a */,
+				36CB13962F2964E5FCBF1E2D /* libPods-kauri-kauriTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -166,19 +166,8 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3B4392A12AC88292D35C810B /* Pods-kauri.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-kauri.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-kauri-kauriTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-kauri-kauriTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		9D02EB0F5D294A8AA410F14C /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */,
 				657FE927A47B4B2FB96B1759 /* Manrope-ExtraBold.ttf */,
@@ -196,8 +185,19 @@
 				4FF1ABFCFC96410198C6C65D /* Recoleta-Thin.ttf */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
 			path = "";
+			sourceTree = "<group>";
+		};
+		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ACC17C53B6B0B2B963C26CFB /* Pods-kauri.debug.xcconfig */,
+				65FBDD7318E3BC1BC4036680 /* Pods-kauri.release.xcconfig */,
+				5C0CAEEC4E5AFD0D05406DB8 /* Pods-kauri-kauriTests.debug.xcconfig */,
+				3CEE87E63897580C2CD58EF1 /* Pods-kauri-kauriTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -206,12 +206,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "kauriTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				04C81EE2BB59258A1B130812 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+				47891C073E8C5F76A419C6F6 /* [CP] Embed Pods Frameworks */,
+				5E45BFF72CBF4113A4425048 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -227,14 +227,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "kauri" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				0E1984F62835FA8B6DD36C08 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				795306F6F7A19355EDB871A9 /* [CP] Embed Pods Frameworks */,
+				984EC844EA7852FAC36757C7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -331,24 +331,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		04C81EE2BB59258A1B130812 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -370,7 +353,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		0E1984F62835FA8B6DD36C08 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -392,7 +375,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		47891C073E8C5F76A419C6F6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -409,24 +392,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kauri-kauriTests/Pods-kauri-kauriTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
+		5E45BFF72CBF4113A4425048 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -441,6 +407,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kauri-kauriTests/Pods-kauri-kauriTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		795306F6F7A19355EDB871A9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		984EC844EA7852FAC36757C7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kauri/Pods-kauri-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -495,7 +495,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-kauri-kauriTests.debug.xcconfig */;
+			baseConfigurationReference = 5C0CAEEC4E5AFD0D05406DB8 /* Pods-kauri-kauriTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -522,7 +522,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-kauri-kauriTests.release.xcconfig */;
+			baseConfigurationReference = 3CEE87E63897580C2CD58EF1 /* Pods-kauri-kauriTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -546,7 +546,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-kauri.debug.xcconfig */;
+			baseConfigurationReference = ACC17C53B6B0B2B963C26CFB /* Pods-kauri.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -573,7 +573,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-kauri.release.xcconfig */;
+			baseConfigurationReference = 65FBDD7318E3BC1BC4036680 /* Pods-kauri.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

@@ -7,9 +7,9 @@ type textSettings = {
   fontFamily: string;
 };
 type textStyles =
-  | 'title'
+  | 'titleBig'
+  | 'titleSmall'
   | 'paragraph'
-  | 'captions'
   | 'captions'
   | 'captionsBold'
   | 'subtitle'
@@ -19,12 +19,22 @@ type textStyles =
   | 'smallTextsSemi'
   | 'smallSerif'
   | 'smallSerifBigger'
+  | 'superTitle'
+  | 'captionsExtraBold'
 
 type textStylesMap = {[style in textStyles]: textSettings};
 
 const textStyles: textStylesMap = {
-  title: {
+  superTitle:{
+    fontSize: 32,
+    fontFamily: kauriTypography.secondary.medium,
+  },
+  titleBig: {
     fontSize: 24,
+    fontFamily: kauriTypography.secondary.medium,
+  },
+  titleSmall: {
+    fontSize: 22,
     fontFamily: kauriTypography.secondary.medium,
   },
   titleNormal: {
@@ -42,6 +52,10 @@ const textStyles: textStylesMap = {
   captionsBold: {
     fontSize: 12,
     fontFamily: kauriTypography.primary.semiBold,
+  },
+  captionsExtraBold: {
+    fontSize: 12,
+    fontFamily: kauriTypography.primary.extraBold,
   },
   subtitle: {
     fontSize: 14,
