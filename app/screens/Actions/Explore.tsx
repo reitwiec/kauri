@@ -3,6 +3,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import Animated, { runOnJS, SharedValue, useAnimatedScrollHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";
 import { StylisedTitle, Thumbnail } from "../../components";
+import { BusyIndicator } from "../../components/BusyIndicator";
 import { exploreSkeleton, newActions, singletonResource, skeleton } from "../../mockdata";
 import { designSystem, kauriColors } from "../../theme";
 import { hexToRGBA } from "../../utils/hexToRGBA";
@@ -42,13 +43,6 @@ export const Explore:FC<ExploreProps> = observer(function explore({actionsStateV
             translationY.value = event.contentOffset.y
         }
     })
-    const BusyIndicator = () => {
-        return (
-                <Text>
-                    Loading...
-                </Text>
-        )
-    }
 
     const SingletonItem = ({item, index, sectionLength, sectionIndex}) => {
         const THUMBNAIL_WIDTH = 136;

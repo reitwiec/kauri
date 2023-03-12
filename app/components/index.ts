@@ -5,3 +5,4 @@ export * from './Thumbnail';
 export * from './StylisedTitle';
 export * from './TryBtn';
 export * from './PlaylistListItem';
+export * from './BusyIndicator';

@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { FC, useEffect } from "react";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Thumbnail } from "./Thumbnail";
 import {View, Text, Pressable, ImageSourcePropType, TextStyle, ViewStyle} from 'react-native';
@@ -12,10 +12,11 @@ interface PlaylistListItemProps {
     title: string,
     status: 'uncompleted' | 'completed' | 'inProgress',
     type: 'onetime' | 'habit',
-    index: number
+    index: number,
+    onPress: (actionId: string) => void
 }
 
-export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, type, index}) =>{
+export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, type, index, onPress}) =>{
     const pressIn = useSharedValue(false)
     const _statusColorMap = {
         uncompleted: kauriColors.secondary.uncompleted,
@@ -46,6 +47,11 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
             }
         }, [pressIn])
     }
+
+    useEffect(() => {
+      console.log("render")
+    }, [])
+    
     return (
         <Animated.View
           style={[
@@ -64,6 +70,7 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
             }}
             onPress={() => {
               console.log('pressed');
+              onPress(index+"")
             }}> 
             <Thumbnail src={url} width={56} height={56} title={title} type={"compact"} pretty={false} actionType={type} index={index} activeIndexVal={null} stacked={false} status={status}/>
         </Pressable>
@@ -78,6 +85,7 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
                 }}
                 onPress={() => {
                     console.log('pressed');
+                    onPress(index+"")
                 }}
                 style={{
                         justifyContent: 'center',

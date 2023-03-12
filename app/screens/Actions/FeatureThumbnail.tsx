@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import {Image, Pressable, Text, TextStyle, useWindowDimensions, View, ViewStyle} from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import type { resource } from "../../mockdata"
@@ -16,7 +16,8 @@ import { Path, Svg } from "react-native-svg"
 
 interface FeatureThumbnailProps {
     data: resource,
-    progress: SharedValue<number>
+    progress: SharedValue<number>,
+    onPress: (actionId: string) => void
 }
 
 const StaggeredHex = ({topCauses, totalCauses}) => {
@@ -89,8 +90,8 @@ const Arrow:FC<ArrowProps> = ({start, end, progress}) => {
     )
 }
 
-export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress}) =>{
-    const {url, title, type, impactDist, description, topCauses, totalCauses} = data
+export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPress}) =>{
+    const {id:actionId, url, title, type, impactDist, description, topCauses, totalCauses} = data
     const winWidth = useWindowDimensions().width
     let {width: imageWidth, height: imageHeight} = Image.resolveAssetSource(url);
     const arrows = [0,1,2]
@@ -147,6 +148,10 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress}) =>{
     // bottomRight (-10deg, 10deg)
     // bottomLeft (-10deg, -10deg)
 
+    // useEffect(() => {
+    //     console.log('something updated')
+    // }, [])
+
     const [cardHeight, setCardHeight] = useState(desiredImageHeight)
     return (
         <Animated.View style={{...$animatedStyles.scale}}>
@@ -160,7 +165,8 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress}) =>{
                     }
                 }}
                 onPress={()=>{
-                    console.log("on press")
+                    //change to take string by default
+                    onPress(actionId+"")
                 }}
             >
                 <View style={{...shadowGenerator(10), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+8, height: cardHeight+8, position: 'absolute',left:-4, top:-4, borderRadius:12}}>
@@ -175,7 +181,7 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress}) =>{
                     />
                 </View>
                 <View style={{width: desiredImageHeight, minHeight: desiredImageHeight, padding: 16, justifyContent: 'flex-end'}} onLayout={(e)=>{setCardHeight(e.nativeEvent.layout.height)}}>
-                    <View style={{width: desiredImageHeight, overflow: 'hidden', borderRadius: 12, position: 'absolute', top: 0}}>
+                    <View style={{width: desiredImageHeight,overflow:"hidden", borderRadius: 12, position: 'absolute', top: 0}}>
                         <Image
                             source={url}
                             style={{

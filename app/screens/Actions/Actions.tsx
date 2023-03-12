@@ -10,19 +10,19 @@ import { actionsChips } from "../../mockdata";
 import type { AppStackParamList } from "../../navigators";
 import useIsReady from "../../utils/useIsReady";
 import type { TabStackParamList } from "../Tabs/Tabs";
+import type { ActionsStackParamList } from "./ActionsNavigator";
 import { Explore } from "./Explore";
 import { ForYou } from "./ForYou";
 
 type ActionsProps = CompositeScreenProps<
-    BottomTabScreenProps<TabStackParamList, 'actions'>,
-    NativeStackScreenProps<AppStackParamList>
+    NativeStackScreenProps<ActionsStackParamList, 'actionsLanding'>,
+    BottomTabScreenProps<TabStackParamList>
 >
 export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const riveHeight = 240
     const translationY = useSharedValue(0)
     const [actionsState, setActionsState] = useState('forYou');
     const actionsStateValue = useSharedValue('forYou')
-    
     const flatRef = useRef<any>()
     const exploreRef = useRef<any>()
     const forYouRef = useRef<any>()
@@ -44,15 +44,15 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
             },300)
     },[]);
     
-    const isFocused = useIsFocused()
+    // const isFocused = useIsFocused()
     
-    useEffect(() => {
-      return () => {
-        if(states[actionsState].ref){
-            states[actionsState].ref.current.scrollToOffset({offset:0, animated:true})
-        }
-      }
-    }, [isFocused])
+    // useEffect(() => {
+    //   return () => {
+    //     if(states[actionsState].ref){
+    //         states[actionsState].ref.current.scrollToOffset({offset:0, animated:true})
+    //     }
+    //   }
+    // }, [isFocused])
 
     const $scrollContainer_animated = useAnimatedStyle(()=>{
         return {
@@ -70,7 +70,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
         if(item.name === 'forYou'){
             return(
                     <Animated.View style={$scrollContainer_animated}>
-                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef}/>
+                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef} navigationProps={_props.navigation}/>
                     </Animated.View>
             )
         }else{
@@ -86,6 +86,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
         // console.log("Visible items are", viewableItems);
         // console.log("Changed in this iteration", changed);
     })
+
     return (
         <Animated.View style={[$container]} >
             <StatusBar barStyle={'dark-content'} backgroundColor="rgba(255,255,255,1)"/>

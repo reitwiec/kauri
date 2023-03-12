@@ -1,42 +1,72 @@
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
-import { Pressable, Text, useWindowDimensions, View } from "react-native";
+import { FlatList, NativeScrollEvent, NativeSyntheticEvent, Pressable, Text, useWindowDimensions, View } from "react-native";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { roadMap as mockRoadmap } from "../../mockdata";
-import { Timeline } from "./Timeline";
 import React from "react";
-import { Easing, Extrapolate, interpolate, SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import { Easing, SharedValue, useAnimatedScrollHandler, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { FeatureThumbnail } from "./FeatureThumbnail";
 import { RetryIcon } from "../../svgs";
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { PlaylistListItem, StylisedTitle } from "../../components";
 import { Completion } from "./Completion";
-import LinearGradient from "react-native-linear-gradient";
-import { Path, Svg } from "react-native-svg";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
-import { useIsFocused } from "@react-navigation/native";
+import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
 import { withPause } from "react-native-redash";
-import { action } from "mobx";
+import type { ActionsStackParamList } from "./ActionsNavigator";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { TabStackParamList } from "../Tabs/Tabs";
 
 export interface ForYouProps{
     riveHeight: number,
     translationY: SharedValue<number>,
     actionsStateValue: SharedValue<string>,
     scrollRef: React.MutableRefObject<any>,
+    navigationProps: CompositeNavigationProp<NativeStackNavigationProp<ActionsStackParamList, "actionsLanding", undefined>, BottomTabNavigationProp<TabStackParamList, keyof TabStackParamList, undefined>>
 }
 
-export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef}){
+interface HeaderProps {
+    onPress: (actionId: string) => void,
+    progress: SharedValue<number>,
+    roadMap: any
+
+}
+const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
+    return(
+        <View style={{ width: '100%', alignItems: 'center'}}>
+            <View style={{ width: '100%', alignItems: 'center', paddingBottom: 24, paddingTop: 16}}>
+                <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
+            </View>
+            <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16}}>
+                    <View>
+                        <StylisedTitle text={"Your full roadmap"} alt={true} small={false}/>
+                    </View>
+                    <Completion total={roadMap.count} completed={roadMap.completed}/>
+                    <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
+                        <View style={{opacity: 0.6}}>
+                            <RetryIcon/>
+                        </View>
+                        <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
+                            {geti18n("actions.recreate")}
+                        </Text>
+                    </Pressable>
+            </View>
+        </View>
+    )
+}
+
+export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps}){
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
     const [roadMap, setRoadMap] = useState(mockRoadmap)
     let data = [{title: "dummy"}].concat(roadMap.resources)
     data = data.concat([{title: 'empty'}])
-    const scrollHandler = useAnimatedScrollHandler({
-        onScroll: (event)=>{
-            translationY.value = event.contentOffset.y
-        }
-    })
+
+    const scrollHandler = ({nativeEvent}) => {
+        translationY.value = nativeEvent.contentOffset.y
+    }
     const $containerInsets = useSafeAreaInsetsStyle(['bottom', 'top']);
     const progress = useSharedValue(0)
     const isFocused = useIsFocused()
@@ -64,29 +94,13 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
         }), -1, true), isPaused)
     },[])
 
-    const Header = React.memo(()=>{
-        return(
-            <View style={{ width: '100%', alignItems: 'center'}}>
-                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 24, paddingTop: 16}}>
-                    <FeatureThumbnail data={roadMap.nextAction} progress={progress}/>
-                </View>
-                <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16}}>
-                        <View>
-                            <StylisedTitle text={"Your full roadmap"} alt={true} small={false}/>
-                        </View>
-                        <Completion total={roadMap.count} completed={roadMap.completed}/>
-                        <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
-                            <View style={{opacity: 0.6}}>
-                                <RetryIcon/>
-                            </View>
-                            <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
-                                {geti18n("actions.recreate")}
-                            </Text>
-                        </Pressable>
-                </View>
-            </View>
-        )
-    })
+
+    const goToActionDetails = (actionId: string) => {
+        navigationProps.navigate('actionDetails', {
+            actionId
+        })
+    }
+
 
     const _renderItem = ({item, index}) =>{
         if(item.title === 'empty'){
@@ -95,21 +109,21 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
             )
         }
         if(index === 0 ){
-            return(<Header/>)
+            return(<Header progress={progress} onPress={goToActionDetails} roadMap={roadMap}/>)
         }
         return (
-            <PlaylistListItem url={item.url} title={item.title} index={index} status={item.status} type={item.type}/>
+            <PlaylistListItem url={item.url} title={item.title} index={index} status={item.status} type={item.type} onPress={goToActionDetails}/>
         )
     }
     return (
             <View style={{ width: windowWidth}}>
-                <Animated.FlatList
+                <FlatList
                             data={data}
                             maxToRenderPerBatch={10}
                             bounces={false}
                             renderItem={_renderItem}
                             style={{ height:windowHeight-80-(56 + Number($containerInsets.paddingBottom))}}
-                            keyExtractor={(item, index) => index + ""}
+                            keyExtractor={(item, index) => index + "forYou"}
                             showsVerticalScrollIndicator={false}
                             scrollEventThrottle={16}
                             ref={scrollRef}

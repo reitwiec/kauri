@@ -1,4 +1,5 @@
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import type { NavigatorScreenParams } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useRef, useState } from "react";
@@ -6,6 +7,7 @@ import { Dimensions, EmitterSubscription, Keyboard, Platform, Text, View, ViewSt
 import { BottomTab } from "../../components";
 import type { AppStackParamList } from "../../navigators";
 import { Actions } from "../Actions/Actions";
+import { ActionsNavigator, ActionsStackParamList } from "../Actions/ActionsNavigator";
 import { Home } from "../Home/Home";
 import { Read } from "../Read/Read";
 import { Shop } from "../Shop/Shop";
@@ -19,7 +21,7 @@ type TabsProps = NativeStackScreenProps<AppStackParamList, "tabs">
 
 export type TabStackParamList={
     home: undefined,
-    actions: undefined,
+    actions: NavigatorScreenParams<ActionsStackParamList>,
     shop: undefined,
     read: undefined,
     you: undefined
@@ -74,7 +76,7 @@ export const Tabs:FC<TabsProps> = observer(function Tabs(_props){
             }}
             >
                 <Tab.Screen name="home" component={Home} />
-                <Tab.Screen name="actions" component={Actions}/>
+                <Tab.Screen name="actions" component={ActionsNavigator}/>
                 <Tab.Screen name="shop" component={Shop}/>
                 <Tab.Screen name="read" component={Read}/>
                 <Tab.Screen name="you" component={You}/>
