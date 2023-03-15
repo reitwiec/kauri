@@ -98,6 +98,7 @@ export const ChipSystem = observer(function ChipSystem({
       bounces={false}
       showsHorizontalScrollIndicator={false}
       scrollEventThrottle={16}
+      scrollEnabled={data.length<=2?false:true}
       ref={assignParentRef}>
       <View
         style={{

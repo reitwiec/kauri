@@ -1,6 +1,6 @@
 import type { ImageSourcePropType } from "react-native"
 
-type impacts = {
+export type impacts = {
     effort: 'minimal' | 'medium' | 'high',
     expense: 'minimal' | 'medium' | 'high',
     impact: 'minimal' | 'medium' | 'high'
@@ -31,7 +31,7 @@ export const roadMap:thumbnail = {
     completed: 4,
     resources:[
         {
-            id: 1,
+            id: 0,
             url: require("./thumb1.png"),
             title: "Wash on cold cycle",
             type: "habit",
@@ -54,7 +54,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 2,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -74,6 +74,32 @@ export const roadMap:thumbnail = {
                 },
                 {
                     dimension: "dimension3",
+                    subdimension: "subdimension_3",
+                    count: 17
+                },
+            ]
+        },
+        {
+            id: 2,
+            url: require("./thumb3.png"),
+            title: "Sustainable facemasks",
+            type: "onetime",
+            description: "Fugiat cupidatat in non cillum ut aliqua anim anim ut cupidatat. Quis reprehenderit consequat sunt pariatur proident ipsum id cupidatat ipsum. Et eu dolor proident commodo dolore aute dolor aliqua esse non laborum deserunt esse. Aliquip consequat quis exercitation sunt ea enim do in reprehenderit non culpa dolor labore amet. Qui veniam ullamco qui incididunt adipisicing. Non ea irure veniam in dolor consectetur aliquip est. Excepteur aliqua anim culpa nisi ad ex ad id laborum.",
+            totalCauses: 10,
+            status: 'uncompleted',
+            topCauses: [
+                {
+                    dimension: "dimension1",
+                    subdimension: "subdimension_1",
+                    count: 2
+                } ,
+                {
+                    dimension: "dimension1",
+                    subdimension: "subdimension_2",
+                    count: 1
+                },
+                {
+                    dimension: "dimension2",
                     subdimension: "subdimension_3",
                     count: 17
                 },
@@ -81,32 +107,6 @@ export const roadMap:thumbnail = {
         },
         {
             id: 3,
-            url: require("./thumb3.png"),
-            title: "Sustainable facemasks",
-            type: "onetime",
-            description: "Fugiat cupidatat in non cillum ut aliqua anim anim ut cupidatat. Quis reprehenderit consequat sunt pariatur proident ipsum id cupidatat ipsum. Et eu dolor proident commodo dolore aute dolor aliqua esse non laborum deserunt esse. Aliquip consequat quis exercitation sunt ea enim do in reprehenderit non culpa dolor labore amet. Qui veniam ullamco qui incididunt adipisicing. Non ea irure veniam in dolor consectetur aliquip est. Excepteur aliqua anim culpa nisi ad ex ad id laborum.",
-            totalCauses: 10,
-            status: 'uncompleted',
-            topCauses: [
-                {
-                    dimension: "dimension1",
-                    subdimension: "subdimension_1",
-                    count: 2
-                } ,
-                {
-                    dimension: "dimension1",
-                    subdimension: "subdimension_2",
-                    count: 1
-                },
-                {
-                    dimension: "dimension2",
-                    subdimension: "subdimension_3",
-                    count: 17
-                },
-            ]
-        },
-        {
-            id: 4,
             url: require("./thumb4.png"),
             title: "Nature friendly bandages",
             type: "onetime",
@@ -132,7 +132,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 5,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -158,7 +158,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 6,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -185,7 +185,7 @@ export const roadMap:thumbnail = {
         },
 
         {
-            id: 7,
+            id: 0,
             url: require("./thumb1.png"),
             title: "Wash on cold cycle",
             type: "habit",
@@ -208,7 +208,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 8,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -234,7 +234,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 9,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -260,7 +260,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 10,
+            id: 3,
             url: require("./thumb4.png"),
             title: "Nature friendly bandages",
             type: "onetime",
@@ -286,7 +286,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 11,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -312,7 +312,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 12,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -339,7 +339,7 @@ export const roadMap:thumbnail = {
         },
 
         {
-            id: 13,
+            id: 0,
             url: require("./thumb1.png"),
             title: "Wash on cold cycle",
             type: "habit",
@@ -362,7 +362,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 14,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -388,7 +388,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 15,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -414,7 +414,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 16,
+            id: 3,
             url: require("./thumb4.png"),
             title: "Nature friendly bandages",
             type: "onetime",
@@ -440,7 +440,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 17,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -466,7 +466,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 18,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -493,7 +493,7 @@ export const roadMap:thumbnail = {
         },
 
         {
-            id: 19,
+            id: 0,
             url: require("./thumb1.png"),
             title: "Wash on cold cycle",
             type: "habit",
@@ -516,7 +516,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 20,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -542,7 +542,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 21,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -568,7 +568,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 22,
+            id: 3,
             url: require("./thumb4.png"),
             title: "Nature friendly bandages",
             type: "onetime",
@@ -594,7 +594,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 23,
+            id: 1,
             url: require("./thumb2.png"),
             title: "Biodegradable toothbrush",
             type: "habit",
@@ -620,7 +620,7 @@ export const roadMap:thumbnail = {
             ]
         },
         {
-            id: 24,
+            id: 2,
             url: require("./thumb3.png"),
             title: "Sustainable facemasks",
             type: "onetime",
@@ -647,7 +647,7 @@ export const roadMap:thumbnail = {
         },
     ],
     nextAction: {
-        id: 1,
+        id: 0,
         url: require("./thumb1.png"),
         title: "Wash on cold cycle",
         type: "habit",

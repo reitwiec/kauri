@@ -6,3 +6,4 @@ export * from './StylisedTitle';
 export * from './TryBtn';
 export * from './PlaylistListItem';
 export * from './BusyIndicator';
+export * from './ImpactDistribution'

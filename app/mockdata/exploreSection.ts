@@ -24,24 +24,28 @@ export interface skeleton {
 }
 
 const singletonGenerator = (total: number) => {
-    const actionsAvailable:{url: ImageSourcePropType, title: string, description:string}[] = [
+    const actionsAvailable:{url: ImageSourcePropType, title: string, description:string, id: number}[] = [
                     {
                         url: require("./thumb1.png"),
+                        id: 0,
                         title: "Wash on cold cycle",
                         description: "Ultimate merciful insofar war marvelous passion evil abstract endless marvelous overcome. Ideal sea inexpedient depths grandeur spirit deceptions value derive right disgust love inexpedient."
                     },
                     {
                         url: require("./thumb2.png"),
+                        id: 1,
                         title: "Biodegradable toothbrush",
                         description: "Ultimate merciful insofar war marvelous passion evil abstract endless marvelous overcome. Ideal sea inexpedient depths grandeur spirit deceptions value derive right disgust love inexpedient."
                     },
                     {
                         url: require("./thumb3.png"),
+                        id: 2,
                         title: "Sustainable facemasks",
                         description: "Ultimate merciful insofar war marvelous passion evil abstract endless marvelous overcome. Ideal sea inexpedient depths grandeur spirit deceptions value derive right disgust love inexpedient."
                     },
                     {
                         url: require("./thumb4.png"),
+                        id: 3,
                         title: "Nature Friendly Bandages",
                         description: "Ultimate merciful insofar war marvelous passion evil abstract endless marvelous overcome. Ideal sea inexpedient depths grandeur spirit deceptions value derive right disgust love inexpedient."
                     }
@@ -57,7 +61,6 @@ const singletonGenerator = (total: number) => {
         if(action && type){
             const aggAction:singletonResource = {
                 ...action,
-                id: i,
                 type: type
             }
             generatedList.push(aggAction)

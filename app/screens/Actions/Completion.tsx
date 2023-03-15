@@ -10,6 +10,7 @@ interface CompletionProps{
 }
 export const Completion:FC<CompletionProps> = ({total, completed}) => {
     const progressBarHeight = 6
+    completed = completed>total?total:completed 
     return (
         <View style={{width: '100%', paddingHorizontal: 16, marginTop: 16}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

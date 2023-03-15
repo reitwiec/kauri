@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import type { FC } from "react";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Thumbnail } from "./Thumbnail";
 import {View, Text, Pressable, ImageSourcePropType, TextStyle, ViewStyle} from 'react-native';
@@ -13,10 +13,11 @@ interface PlaylistListItemProps {
     status: 'uncompleted' | 'completed' | 'inProgress',
     type: 'onetime' | 'habit',
     index: number,
+    id: number,
     onPress: (actionId: string) => void
 }
 
-export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, type, index, onPress}) =>{
+export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, id, title, status, type, index, onPress}) =>{
     const pressIn = useSharedValue(false)
     const _statusColorMap = {
         uncompleted: kauriColors.secondary.uncompleted,
@@ -48,10 +49,10 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
         }, [pressIn])
     }
 
-    useEffect(() => {
-      console.log("render")
-    }, [])
-    
+    const navigateToDetails = () => {
+      onPress(""+id)
+    }
+
     return (
         <Animated.View
           style={[
@@ -69,8 +70,7 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
               pressIn.value = false;
             }}
             onPress={() => {
-              console.log('pressed');
-              onPress(index+"")
+              navigateToDetails()
             }}> 
             <Thumbnail src={url} width={56} height={56} title={title} type={"compact"} pretty={false} actionType={type} index={index} activeIndexVal={null} stacked={false} status={status}/>
         </Pressable>
@@ -85,7 +85,7 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
                 }}
                 onPress={() => {
                     console.log('pressed');
-                    onPress(index+"")
+                    navigateToDetails()
                 }}
                 style={{
                         justifyContent: 'center',
@@ -122,9 +122,9 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, title, status, 
                     </View>
                     )}
                     <View style={{...$statusConfig}}>
-                    <Text style={{...$statusTextConfig}}>
-                        {geti18n(`common.${status}`)}
-                    </Text>
+                      <Text style={{...$statusTextConfig}}>
+                          {geti18n(`common.${status}`)}
+                      </Text>
                     </View>
                 </View>
             </Pressable>

@@ -91,6 +91,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
         {
           alignItems: stacked ? 'center' : 'flex-start',
           justifyContent: 'center',
+          padding: !stacked && pretty? 4:0
         },
       ]}>
       {stacked && (
@@ -256,7 +257,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
                   <View
                     style={{
                       borderRadius: 50,
-                      backgroundColor: hexToRGBA(kauriColors.secondary.tanBrown, 0.9),
+                      backgroundColor: hexToRGBA(kauriColors.primary.yellow, 0.8),
                       paddingHorizontal: 8,
                       paddingVertical: 4,
                       marginLeft: 4
@@ -266,7 +267,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
                         color: kauriColors.primary.light,
                         ...designSystem.textStyles.smallTexts,
                       }}>
-                      New
+                      {geti18n('common.new')}
                     </Text>
                   </View>
                 )}
@@ -274,7 +275,7 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
             </View>
       )}
       {pretty && (
-        <Animated.View style={[animStyle, {zIndex: 2}]}>
+        <Animated.View style={[animStyle, {zIndex: !stacked?-1:2, position: !stacked?'absolute':'relative', top:0}]}>
           <LinearGradient
             style={{
               width: width + 8,

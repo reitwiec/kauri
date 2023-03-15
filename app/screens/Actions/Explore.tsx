@@ -1,48 +1,67 @@
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { CompositeNavigationProp } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useState } from "react";
-import { FlatList, Pressable, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { Pressable, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import Animated, { runOnJS, SharedValue, useAnimatedScrollHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";
 import { StylisedTitle, Thumbnail } from "../../components";
 import { BusyIndicator } from "../../components/BusyIndicator";
 import { exploreSkeleton, newActions, singletonResource, skeleton } from "../../mockdata";
+import type { AppStackParamList } from "../../navigators";
 import { designSystem, kauriColors } from "../../theme";
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
+import type { TabStackParamList } from "../Tabs/Tabs";
 
 export interface ExploreProps{
     riveHeight: number,
     translationY: SharedValue<number>,
     actionsStateValue: SharedValue<string>,
     scrollRef: React.MutableRefObject<any>,
+    navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "actions", undefined>, NativeStackNavigationProp<AppStackParamList, 'collectionDetails', undefined>>,
 }
 
-export const Explore:FC<ExploreProps> = observer(function explore({actionsStateValue, translationY, scrollRef}){
+export const Explore:FC<ExploreProps> = observer(function explore({actionsStateValue, translationY, scrollRef, navigationProps}){
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
-    let skeleton = [newActions]
-    skeleton = [...skeleton, ...exploreSkeleton, {id:-1, type: 'singleton', title: '', resources :[]}]
+    const [skeleton, setSkeleton] = useState<any[]>([newActions, ...exploreSkeleton, {id:-1, type: 'singleton', title: '', resources :[]}])
+    
     const [busy, setBusy] = useState(true)
     const $containerInsets = useSafeAreaInsetsStyle(['bottom', 'top']);
 
     const fetchSkeleton = () => {
         setTimeout(()=>{
-            // console.log(JSON.stringify(skeleton))
             console.log("fetched skeleton successfully...")
             setBusy(false)
         }, 300)
     }
     useDerivedValue(()=>{
+        console.log(actionsStateValue.value)
         if(actionsStateValue.value === 'explore'){
             console.log("fetching skeleton...")
             //fetch promises here
             runOnJS(fetchSkeleton)()
         }
-    }, [actionsStateValue])
+    }, [actionsStateValue.value])
 
-    const scrollHandler = useAnimatedScrollHandler({
-        onScroll: (event)=>{
-            translationY.value = event.contentOffset.y
-        }
-    })
+    const scrollHandler = ({nativeEvent}) => {
+        translationY.value = nativeEvent.contentOffset.y
+    }
+
+    const goToActionDetails = (actionId: string) => {
+        navigationProps.navigate('actionDetails', {
+            actionId,
+            cameFrom: 'actions'
+        })
+    }
+
+
+    const goToCollectionDetails = (collectionId: string) => {
+        navigationProps.navigate('collectionDetails', {
+            collectionId
+        })
+    }
 
     const SingletonItem = ({item, index, sectionLength, sectionIndex}) => {
         const THUMBNAIL_WIDTH = 136;
@@ -67,7 +86,7 @@ export const Explore:FC<ExploreProps> = observer(function explore({actionsStateV
                             }
                         }}
                         onPress={()=>{
-                            console.log("on press")
+                            goToActionDetails(item.id)
                         }}
                         >
                         <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={null} index={index} pretty={false} stacked={false} status={"uncompleted"} isNew={sectionIndex === 0 && newActions.resources.length>0}/>
@@ -104,7 +123,7 @@ export const Explore:FC<ExploreProps> = observer(function explore({actionsStateV
                         }
                     }}
                     onPress={()=>{
-                        console.log("on press")
+                        goToCollectionDetails(resource.id)
                     }}
                     style={{flex:1, alignItems: 'center', marginBottom:24}}>
                     <View style={{flexDirection: "row", flexWrap: 'wrap', justifyContent: 'center'}} key={index}>
@@ -183,23 +202,63 @@ export const Explore:FC<ExploreProps> = observer(function explore({actionsStateV
             </View>
         )
     },[])
+    
     return (
         <View style={{width: windowWidth}}>
             {
                 busy?
                 <BusyIndicator/>:
-                <Animated.FlatList
-                    nestedScrollEnabled={true}
-                    data={skeleton}
-                    maxToRenderPerBatch={10}
-                    bounces={false}
-                    renderItem={_renderItem}
-                    keyExtractor={(item, index) => index + ""}
-                    showsVerticalScrollIndicator={false}
-                    scrollEventThrottle={16}
-                    ref={scrollRef}
-                    onScroll={scrollHandler}
-                />
+                <ScrollView scrollEventThrottle={16} onScroll={scrollHandler} ref={scrollRef} showsVerticalScrollIndicator={false}>
+                        {
+                            skeleton.map((sectionItem, sectionIndex) =>{
+                                if(sectionItem.id === -1){
+                                    return (
+                                        <View style={{height:200, width:'100%'}} key={sectionIndex}>
+                                        </View>
+                                    )
+                                }
+
+                                if(sectionItem.type === 'singleton'){
+                                    return (
+                                        <View style={[{marginBottom:40}, ]} key={sectionIndex}>
+                                            <View style={{paddingHorizontal: 16, marginBottom: 24}}>
+                                                <StylisedTitle text={sectionItem.title} alt={false} small/>
+                                            </View>
+                                            <FlatList
+                                                horizontal={true}
+                                                showsHorizontalScrollIndicator={false}
+                                                data={sectionItem.resources as singletonResource[]}
+                                                maxToRenderPerBatch={4}
+                                                keyExtractor={(item, index) => index + ""}
+                                                renderItem={({item, index}) => {
+                                                    return (
+                                                        <SingletonItem sectionLength={sectionItem.resources.length} sectionIndex={sectionIndex} index={index} item={item} key={index}/>
+                                                    )
+                                                }}
+                                            />
+                                        </View>
+                                    )
+                                }
+
+                                return (
+                                    <View style={{marginBottom:40-24}} key={sectionIndex}>
+                                        <View style={{paddingHorizontal: 16, marginBottom: 24}}>
+                                            <StylisedTitle text={sectionItem.title} alt={false} small/>
+                                        </View>
+                                        <View style={{flexDirection: "row", flex:1, flexWrap: 'wrap'}}>
+                                            {
+                                                sectionItem.resources.map((resource, index) => {
+                                                    return (
+                                                        <CollectionItem resource={resource} index={index} key={index}/>
+                                                    )
+                                                })
+                                            }
+                                        </View>
+                                    </View>
+                                )
+                            })
+                        }
+                </ScrollView>
             }
         </View>
     )

@@ -1,31 +1,30 @@
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
-import { FlatList, NativeScrollEvent, NativeSyntheticEvent, Pressable, Text, useWindowDimensions, View } from "react-native";
+import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { roadMap as mockRoadmap } from "../../mockdata";
 import React from "react";
-import { Easing, SharedValue, useAnimatedScrollHandler, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import { Easing, SharedValue, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { FeatureThumbnail } from "./FeatureThumbnail";
 import { RetryIcon } from "../../svgs";
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { PlaylistListItem, StylisedTitle } from "../../components";
 import { Completion } from "./Completion";
-import Animated from "react-native-reanimated";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
 import { withPause } from "react-native-redash";
-import type { ActionsStackParamList } from "./ActionsNavigator";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { TabStackParamList } from "../Tabs/Tabs";
+import type { AppStackParamList } from "../../navigators";
 
 export interface ForYouProps{
     riveHeight: number,
     translationY: SharedValue<number>,
     actionsStateValue: SharedValue<string>,
     scrollRef: React.MutableRefObject<any>,
-    navigationProps: CompositeNavigationProp<NativeStackNavigationProp<ActionsStackParamList, "actionsLanding", undefined>, BottomTabNavigationProp<TabStackParamList, keyof TabStackParamList, undefined>>
+    navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "actions", undefined>, NativeStackNavigationProp<AppStackParamList, "actionDetails", undefined>>
 }
 
 interface HeaderProps {
@@ -61,8 +60,8 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
 export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps}){
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
     const [roadMap, setRoadMap] = useState(mockRoadmap)
-    let data = [{title: "dummy"}].concat(roadMap.resources)
-    data = data.concat([{title: 'empty'}])
+    let data = [{id:-99, title: "dummy"}].concat(roadMap.resources)
+    data = data.concat([{id:-999, title: 'empty'}])
 
     const scrollHandler = ({nativeEvent}) => {
         translationY.value = nativeEvent.contentOffset.y
@@ -94,15 +93,14 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
         }), -1, true), isPaused)
     },[])
 
-
     const goToActionDetails = (actionId: string) => {
         navigationProps.navigate('actionDetails', {
-            actionId
+            actionId,
+            cameFrom: 'actions'
         })
     }
 
-
-    const _renderItem = ({item, index}) =>{
+    const _renderItem = ({item, index}:{item:any, index: number}) =>{
         if(item.title === 'empty'){
             return (
                 <View style={{width: '100%', height: 50}}/>
@@ -112,15 +110,15 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
             return(<Header progress={progress} onPress={goToActionDetails} roadMap={roadMap}/>)
         }
         return (
-            <PlaylistListItem url={item.url} title={item.title} index={index} status={item.status} type={item.type} onPress={goToActionDetails}/>
+            <PlaylistListItem id={item.id} url={item.url} title={item.title} index={index} status={item.status} type={item.type} onPress={goToActionDetails}/>
         )
     }
+
     return (
             <View style={{ width: windowWidth}}>
                 <FlatList
                             data={data}
                             maxToRenderPerBatch={10}
-                            bounces={false}
                             renderItem={_renderItem}
                             style={{ height:windowHeight-80-(56 + Number($containerInsets.paddingBottom))}}
                             keyExtractor={(item, index) => index + "forYou"}

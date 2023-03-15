@@ -5,7 +5,7 @@ import Animated, { Easing, interpolate, runOnJS, SharedValue, useAnimatedReactio
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { hexToRGBA } from "../../utils/hexToRGBA";
-import { PositiveFocusIcon } from "../../svgs";
+import { MindfulIcons } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
 import { getMostImpacted, roadMap } from "../../mockdata";
 import { dimensionColorMap } from "../../utils/hexDetails";
@@ -13,14 +13,20 @@ import { StylisedTitle, Thumbnail, TryBtn } from "../../components";
 import { Directions, FlatList, Gesture, GestureDetector, gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Hex } from "../../components/Hex";
 import { shadowGenerator } from "../../utils/shadowGenerator";
+import type { CompositeNavigationProp } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { TabStackParamList } from "../Tabs/Tabs";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { AppStackParamList } from "../../navigators";
 
 export interface OverviewProps {
     riveHeight: number,
     Greeting: ({}: {}) => JSX.Element,
     userData: any, //need to add user data type
+    navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "home", undefined>, NativeStackNavigationProp<AppStackParamList, "actionDetails", undefined>>
 }
 
-const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
+const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
     const activeIndexVal = useSharedValue(0)
     const THUMBNAIL_WIDTH = 144
     const flingLeft = Gesture.Fling()
@@ -61,7 +67,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
     const flingGesture = Gesture.Race(flingLeft, flingRight)
     const renderItem = useCallback(({item, index}) =>{
         return(
-                <RoadmapThumbs item={item} index={index} key={index} activeIndexVal={activeIndexVal} activeIndex={activeIndex} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH}/>
+                <RoadmapThumbs item={item} index={index} key={index} activeIndexVal={activeIndexVal} activeIndex={activeIndex} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH} onPress={onPress}/>
         )
     },[])
     return (
@@ -82,7 +88,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({}) => {
                     horizontal
                     bounces={false}
                     showsHorizontalScrollIndicator={true}
-                    keyExtractor={(item) => `${item.id}`}
+                    keyExtractor={(item, index) => `${index}`}
                     renderItem={renderItem}
                 />
             </GestureDetector>
@@ -127,10 +133,11 @@ interface RoadmapThumbsProps {
     index: number,
     activeIndexVal: SharedValue<number>,
     THUMBNAIL_WIDTH: number,
-    activeIndex: number
+    activeIndex: number,
+    onPress: any
 }
 
-const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, activeIndexVal, THUMBNAIL_WIDTH, activeIndex}){
+const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, activeIndexVal, THUMBNAIL_WIDTH, activeIndex, onPress}){
     const winWidth = useWindowDimensions().width
     const inputRange = [index -1, index, index+1]
     const isPressing = useSharedValue(false)
@@ -173,7 +180,7 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
         }}
         onPress={()=>{
             if(index === activeIndexVal.value){
-                console.log("on press")
+                onPress(item.id)
             }
         }}
         style={[{
@@ -189,7 +196,7 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
     )
 })
 
-export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData}){
+export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData, navigationProps}){
     const windowWidth = useWindowDimensions().width
     const mostImpacted = getMostImpacted(3)
     const ProgressBar = ({width}) =>{
@@ -269,6 +276,13 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
     }
     
     
+    const goToActionDetails = (actionId: string) => {
+        navigationProps.navigate('actionDetails', {
+            actionId,
+            cameFrom: 'home'
+        })
+    }
+
     return (
         <View style={{width: windowWidth}}>
 
@@ -305,7 +319,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                 <Pressable>
                     <LinearGradient start={{x: 0.0, y:0}} end={{x:1.0, y:1.0}} colors={["rgba(147,160,208,0.67)", "rgba(143,157,212,1)"]} style={{...$positiveFocusIcon}}>
 
-                    <PositiveFocusIcon/>
+                    <MindfulIcons type='positiveFocus' color={kauriColors.primary.light}/>
                     <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.palette.primary.light, marginLeft: 8}}>
                         {geti18n("common.positiveFocusBtn")}
                     </Text>
@@ -353,7 +367,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     {geti18n("home.whatNextDescription")}
             </Text>
         </View>
-        <WhatNext/>
+        <WhatNext onPress={goToActionDetails}/>
          <View style={{height:riveHeight, width:windowWidth}}>
          </View>
         </View>

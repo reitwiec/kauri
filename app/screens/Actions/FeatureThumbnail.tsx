@@ -5,12 +5,9 @@ import type { resource } from "../../mockdata"
 import { designSystem, kauriColors } from "../../theme"
 import { hexToRGBA } from "../../utils/hexToRGBA"
 import {translate as geti18n} from '../../i18n';
-import ImpactMinimal from '../../svgs/ImpactIcons/impact.minimal.svg';
-import ExpenseHigh from '../../svgs/ImpactIcons/expense.high.svg';
-import EffortMinimal from '../../svgs/ImpactIcons/effort.minimal.svg';
 import { Hex } from "../../components/Hex"
 import Animated, { Extrapolate, interpolate, SensorType, SharedValue, useAnimatedSensor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import { TryBtn } from "../../components"
+import { ImpactDistribution, TryBtn } from "../../components"
 import { shadowGenerator } from "../../utils/shadowGenerator"
 import { Path, Svg } from "react-native-svg"
 
@@ -99,17 +96,6 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
     const desiredImageHeight = winWidth - 24*2 - 8*2
     const desiredImageWidth = (desiredImageHeight/imageHeight) * imageWidth
     const isPressing = useSharedValue(false)
-    const impactMap = {
-        impact: {
-            minimal: <ImpactMinimal/>
-        },
-        expense: {
-            high: <ExpenseHigh/>
-        },
-        effort:{
-            minimal: <EffortMinimal/>
-        }
-    }
 
     const sensor = useAnimatedSensor(SensorType.ROTATION, {interval: 500})
 
@@ -169,7 +155,7 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                     onPress(actionId+"")
                 }}
             >
-                <View style={{...shadowGenerator(10), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+8, height: cardHeight+8, position: 'absolute',left:-4, top:-4, borderRadius:12}}>
+                <View style={{...shadowGenerator(5), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+8, height: cardHeight+8, position: 'absolute',left:-4, top:-4, borderRadius:12}}>
                     <LinearGradient
                         style={{
                         borderRadius: 12,
@@ -256,36 +242,7 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                         )}
                     </View>
                     {
-                    impactDist && <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginTop: 24}}>
-                        <View style={$impactIcon}>
-                            {impactMap.impact[impactDist?.impact]}
-                            <Text style={$impactIconText}>
-                                {geti18n(`common.${impactDist?.impact}`)}
-                            </Text>
-                            <Text style={$impactIconSubText}>
-                                {geti18n('common.impact')}
-                            </Text>
-                        </View>
-                        <View style={$impactIcon}>
-                            {impactMap.expense[impactDist?.expense]}
-                            <Text style={$impactIconText}>
-                                {geti18n(`common.${impactDist?.expense}`)}
-                            </Text>
-                            <Text style={$impactIconSubText}>
-                                {geti18n('common.expense')}
-                            </Text>
-                        </View>
-                        <View style={$impactIcon}>
-                            {impactMap.effort[impactDist?.effort]}
-                            <Text style={$impactIconText}>
-                                {geti18n(`common.${impactDist?.effort}`)}
-                            </Text>
-                            <Text style={$impactIconSubText}>
-                                {geti18n('common.effort')}
-                            </Text>
-                        </View>
-                        </View>
-                    }
+                    impactDist && <ImpactDistribution impactDist={impactDist} style={"light"}/>}
                     <Text 
                         style={{marginTop: 8, textAlign: 'center',paddingHorizontal: 16, color: kauriColors.primary.light, ...designSystem.textStyles.captions}} numberOfLines={2}>
                         {description}
@@ -314,20 +271,4 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
             </Pressable>
         </Animated.View>
     )
-}
-
-const $impactIcon:ViewStyle = {
-    alignItems: 'center'
-}
-
-const $impactIconText:TextStyle = {
-    marginTop: 8,
-    ...designSystem.textStyles.smallSerifBigger,
-    color: kauriColors.primary.light
-}
-
-const $impactIconSubText:TextStyle = {
-    ...designSystem.textStyles.smallSerif,
-    color: kauriColors.primary.light,
-    textTransform: 'lowercase',
 }

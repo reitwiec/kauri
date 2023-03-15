@@ -10,5 +10,8 @@ export * from './CartIcon';
 // export * from './WishlistIcon'
 export * from './PlusIcon';
 export * from './RetryIcon';
-export * from './PositiveFocusIcon';
 export * from './OptionsDotsIcon';
+export * from './CrossIcon'
+export * from './LockIcon'
+export * from './InfoIcon'
+export * from './MindfulIcons'

@@ -33,7 +33,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const flatRef = useRef<any>()
     const overviewRef = useRef<any>()
     const impactRef = useRef<any>()
-    const states = {'overview': {index: 0, ref: overviewRef}, 'impact': {index: 1, ref: impactRef}}
+    const states = {'overview': {index: 0, ref: overviewRef, scrollToTop: () => overviewRef.current.scrollTo({x: 0, y: 0, animated: true})}, 'impact':  {index: 1, ref: impactRef, scrollToTop: () => impactRef.current.scrollTo({x: 0, y: 0, animated: true})}}
     const updateHomeState = useCallback((key:string) =>{
         flatRef.current.scrollToIndex({
             index:states[key].index,
@@ -42,7 +42,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
         setTimeout(()=>{
                 const prevState = homeState
                 setHomeState(key)
-                states[prevState].ref.current.scrollTo({x: 0, y: 0, animated: true})
+                states[prevState].scrollToTop()
             },300)
     },[]);
 
@@ -56,7 +56,9 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     
     useEffect(() => {
       return () => {
-        states[homeState].ref.current.scrollTo({x: 0, y: 0, animated: true})
+        if(states[homeState].ref.current){
+            states[homeState].scrollToTop()
+        }
       }
     }, [isFocused])
     
@@ -86,7 +88,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
         if(item.name === 'overview'){
             return(
                 <Animated.ScrollView bounces={false} ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
-                    <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData}/>
+                    <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData} navigationProps={_props.navigation}/>
                 </Animated.ScrollView>
             )
         }else{
@@ -117,7 +119,11 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
             />:<View>
             <Text>Busy</Text>
         </View>}
-            <RiveHeader translationY={translationY} data={homeChips} config={{right: ["customise"], height: riveHeight}} screenState={updateHomeState}/>
+            <RiveHeader translationY={translationY} data={homeChips} config={{ right: ["customise"], height: riveHeight }} screenState={updateHomeState} isSearching={false} searchClicked={function (override: any, searchPhrase: string): void {
+                throw new Error("Function not implemented.");
+            } } updateSearchPhrase={function (phrase: string): void {
+                throw new Error("Function not implemented.");
+            } } searchPhrase={""}/>
         </View>
     )
 })

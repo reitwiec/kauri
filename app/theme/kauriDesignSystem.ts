@@ -43,7 +43,7 @@ const textStyles: textStylesMap = {
   },
   paragraph: {
     fontSize: 14,
-    fontFamily: kauriTypography.primary.normal,
+    fontFamily: kauriTypography.primary.medium,
   },
   captions: {
     fontSize: 12,

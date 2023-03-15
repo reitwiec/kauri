@@ -1,32 +1,22 @@
-/**
- * The app navigator (formerly "AppNavigator" and "MainNavigator") is used for the primary
- * navigation flows of your app.
- * Generally speaking, it will contain an auth flow (registration, login, forgot password)
- * and a "main" flow which the user will use once logged in.
- */
 import {NavigationContainer, NavigatorScreenParams} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {StackScreenProps} from '@react-navigation/stack';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {InterestSelectionHive, Tabs, TabStackParamList} from '../screens';
+import { ActionDetails } from '../screens/Actions/ActionDetails';
+import { CollectionDetails } from '../screens/Actions/CollectionDetails';
 
-/**
- * This type allows TypeScript to know what routes are defined in this navigator
- * as well as what properties (if any) they might take when navigating to them.
- *
- * If no params are allowed, pass through `undefined`. Generally speaking, we
- * recommend using your MobX-State-Tree store(s) to keep application state
- * rather than passing state through navigation params.
- *
- * For more information, see this documentation:
- *   https://reactnavigation.org/docs/params/
- *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
- *   https://reactnavigation.org/docs/typescript/#organizing-types
- */
 export type AppStackParamList = {
   onboarding_interests_hive: {totalDimensions: number};
   tabs: NavigatorScreenParams<TabStackParamList>;
+  actionDetails: {
+    actionId: string,
+    cameFrom: 'home' | 'actions' | 'shop' | 'read' | 'you'
+  },
+  collectionDetails: {
+    collectionId: string
+  }
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -46,6 +36,14 @@ const AppStack = observer(function AppStack() {
         name="tabs"
         component={Tabs}
         options={{animation: 'fade'}}
+      />
+      <Stack.Screen
+          name="actionDetails"
+          component={ActionDetails}
+      />
+      <Stack.Screen
+          name="collectionDetails"
+          component={CollectionDetails}
       />
     </Stack.Navigator>
   );

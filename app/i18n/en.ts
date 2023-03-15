@@ -25,12 +25,16 @@ const en = {
     completed: 'Completed',
     inProgress: 'In Progress',
     uncompleted: 'Uncompleted',
+    kauriUsersContribution: `Kauri users' contribution`,
     expense: 'Expense',
     effort: "Effort",
     impact: "Impact",
     minimal: "Minimal",
     high: "High",
-    medium: "Medium"
+    medium: "Medium",
+    new: "New",
+    problemStatement: 'Problem Statement',
+    solution: 'Solution',
   },
   interestHive: {
     title: 'What does sustainability mean for you?',
@@ -43,7 +47,17 @@ const en = {
       'A tailored roadmap just for you. Customized based on your interests to help you achieve your goals.',
     recreate: 'Re-create the roadmap',
     roadmap: 'Roadmap',
-    nextActionForYou: 'Next action for you'
+    causesImpactedHighest: 'Most impacted causes',
+    nextActionForYou: 'Next action for you',
+    searchMessage: {
+      forYou: 'Search for actions in your roadmap',
+      explore: 'Search every action on Kauri',
+      habits: 'Search all the ongoing habits',
+      myLibrary: 'Search everything you have completed, saved or created'
+    },
+    startHabit: "Start Habit",
+    noHistory: "It seems like you haven't given this action a try just yet.",
+    historyTitle: "Action History"
   },
   home: {
     whatNext: 'What next?',
