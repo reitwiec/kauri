@@ -119,9 +119,50 @@ const SingletonItem = ({item, index, sectionLength, sectionIndex, goToActionDeta
    ) 
 }
 
+const SkeletonItem = ({item:sectionItem, index: sectionIndex, goToActionDetails, goToCollectionDetails, windowWidth}) => {
+    if(sectionItem.type === 'singleton'){
+        return (
+            <View style={[{marginBottom:40}, ]} key={sectionIndex}>
+                <View style={{paddingHorizontal: 16, marginBottom: 24}}>
+                    <StylisedTitle text={sectionItem.title} alt={false} small/>
+                </View>
+                <FlashList
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={sectionItem.resources as singletonResource[]}
+                    estimatedItemSize={140}
+                    keyExtractor={(item, index) => index + ""}
+                    renderItem={({item, index}) => {
+                        return (
+                            <SingletonItem goToActionDetails={goToActionDetails} sectionLength={sectionItem.resources.length} sectionIndex={sectionIndex} index={index} item={item} key={index}/>
+                        )
+                    }}
+                />
+            </View>
+        )
+    }
+
+    return (
+        <View style={{marginBottom:40-24}} key={sectionIndex}>
+            <View style={{paddingHorizontal: 16, marginBottom: 24}}>
+                <StylisedTitle text={sectionItem.title} alt={false} small/>
+            </View>
+            <View style={{flexDirection: "row", flex:1, flexWrap: 'wrap'}}>
+                {
+                    sectionItem.resources.map((resource, index) => {
+                        return (
+                            <CollectionItem resource={resource} index={index} key={index} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>
+                        )
+                    })
+                }
+            </View>
+        </View>
+    )
+
+}
 export const Explore:FC<ExploreProps> = observer(function explore({translationY, scrollRef, navigationProps, data}){
-    const {width:windowWidth} = useWindowDimensions()
-    data.push({id:-1, type: 'singleton', title: '', resources :[]})
+    const {width:windowWidth, height: windowHeight} = useWindowDimensions()
+    // data.push({id:-1, type: 'singleton', title: '', resources :[]})
 
     const scrollHandler = ({nativeEvent}) => {
         translationY.value = nativeEvent.contentOffset.y
@@ -143,11 +184,22 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
     }
 
     return (
-        <View style={{width: windowWidth}}>
+        <View style={{width: windowWidth, height: windowHeight}}>
             {
                 data.length===1?
                 <BusyIndicator/>:
-                <ScrollView scrollEventThrottle={16} onScroll={scrollHandler} ref={scrollRef} showsVerticalScrollIndicator={false}>
+                <>
+                <FlashList
+                    data={data}
+                    estimatedItemSize={200}
+                    getItemType={(item) => item.type}
+                    onScroll={scrollHandler}
+                    scrollEventThrottle={16}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
+                    ListFooterComponent={<View style={{height:200, width:'100%'}}/>}
+                />
+                {/* <ScrollView scrollEventThrottle={16} onScroll={scrollHandler} ref={scrollRef} showsVerticalScrollIndicator={false}>
                         {
                             data.map((sectionItem, sectionIndex) =>{
                                 if(sectionItem.id === -1){
@@ -196,7 +248,8 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                                 )
                             })
                         }
-                </ScrollView>
+                </ScrollView> */}
+                </>
             }
         </View>
     )

@@ -72,7 +72,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
 
     const HeaderComponent = () =>{
         return (
-            <View style={{paddingTop: 40}}>
+            <View style={{paddingTop: 40, marginBottom: 24}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <View style={[{flexBasis:"50%",}]}>
                                 <View style={{flexDirection: "row", flexWrap: 'wrap', justifyContent: 'center'}}>

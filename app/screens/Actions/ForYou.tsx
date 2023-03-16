@@ -18,6 +18,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import type { AppStackParamList } from "../../navigators";
+import { FlashList } from "@shopify/flash-list";
 
 export interface ForYouProps{
     riveHeight: number,
@@ -65,13 +66,12 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
 
 export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps, data}){
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
-    let resources = [{id:-99, title: "dummy"}].concat(data.resources)
-    resources = resources.concat([{id:-999, title: 'empty'}])
+    let resources = data.resources
 
     const scrollHandler = ({nativeEvent}) => {
         translationY.value = nativeEvent.contentOffset.y
     }
-    const $containerInsets = useSafeAreaInsetsStyle(['bottom', 'top']);
+
     const progress = useSharedValue(0)
     const isFocused = useIsFocused()
     const isPaused = useSharedValue(isFocused)
@@ -106,34 +106,27 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
     }
 
     const _renderItem = ({item, index}:{item:any, index: number}) =>{
-        if(item.title === 'empty'){
-            return (
-                <View style={{width: '100%', height: 50}}/>
-            )
-        }
-        if(index === 0 ){
-            return(<Header progress={progress} onPress={goToActionDetails} roadMap={data}/>)
-        }
         return (
             <PlaylistListItem id={item.id} url={item.url} title={item.title} index={index} status={item.status} type={item.type} onPress={goToActionDetails}/>
         )
     }
 
     return (
-            <View style={{ width: windowWidth}}>
+            <View style={{ width: windowWidth, height:windowHeight}}>
                 {
                     data.resources.length ===0? 
                     <BusyIndicator/>:
-                    <FlatList
-                                data={resources}
-                                maxToRenderPerBatch={10}
-                                renderItem={_renderItem}
-                                style={{ height:windowHeight-80-(56 + Number($containerInsets.paddingBottom))}}
-                                keyExtractor={(item, index) => index + "forYou"}
-                                showsVerticalScrollIndicator={false}
-                                scrollEventThrottle={16}
-                                ref={scrollRef}
-                                onScroll={scrollHandler}
+                    <FlashList
+                        data={resources}
+                        renderItem={_renderItem}
+                        keyExtractor={(item, index) => index+""}
+                        scrollEventThrottle={16}
+                        showsVerticalScrollIndicator={false}
+                        ref={scrollRef}
+                        ListHeaderComponent={<Header progress={progress} onPress={goToActionDetails} roadMap={data}/>}
+                        estimatedItemSize={80}
+                        onScroll={scrollHandler}
+                        ListFooterComponent={<View style={{height:200, width:'100%'}}/>}
                     />
                 }
             </View>

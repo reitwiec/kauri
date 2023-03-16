@@ -155,7 +155,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
             { busy?
                 <BusyIndicator/>:
                 <>
-                    <Animated.ScrollView showsVerticalScrollIndicator={false} onScroll={scrollHandler} scrollEventThrottle={16} style={{paddingTop: 40}}>
+                    <Animated.ScrollView onScroll={scrollHandler} showsVerticalScrollIndicator={false} scrollEventThrottle={16} style={{paddingTop: 40}}>
                         
                         <View style={{paddingHorizontal: 16}}>
                             <View style={{flexDirection: 'row'}}>
