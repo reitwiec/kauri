@@ -2,10 +2,9 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type { CompositeScreenProps } from '@react-navigation/native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { observer } from 'mobx-react-lite'
-import { FC, useEffect, useState } from 'react'
-import {StatusBar, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import { BusyIndicator, ChipSystem, ImpactDistribution, StylisedTitle, Thumbnail } from '../../components'
+import { FC, memo, useEffect, useState } from 'react'
+import {Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
+import { BusyIndicator, ChipSystem, Header, ImpactDistribution, StylisedTitle, Thumbnail } from '../../components'
 import { actionDetail, getActionDetails, milestone } from '../../mockdata/actionDetails'
 import type { AppStackParamList } from '../../navigators'
 import { designSystem, kauriColors } from '../../theme'
@@ -13,19 +12,17 @@ import { hexToRGBA } from '../../utils/hexToRGBA'
 import { useSafeAreaInsetsStyle } from '../../utils/useSafeAreaInsetsStyle'
 import type { TabStackParamList } from '../Tabs/Tabs'
 import {translate as geti18n} from '../../i18n';
-import { BackArrow, CrossIcon, InfoIcon, Lock, MindfulIcons } from '../../svgs'
+import { InfoIcon, Lock, MindfulIcons } from '../../svgs'
 import { Completion } from './Completion'
 import { Hex } from '../../components/Hex'
-import { shadowGenerator } from '../../utils/shadowGenerator'
-import LinearGradient from 'react-native-linear-gradient'
-import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 
 type ActionDetailsProps = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'actionDetails'>,
     BottomTabScreenProps<TabStackParamList>
 >
 
-export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number}> = ({milestones, kauriUsersCompleted}) =>{
+export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number}> = memo(({milestones, kauriUsersCompleted}) =>{
     const [selected, setSelected] = useState(0)
     useEffect(()=>{
         let startIndex = 0
@@ -82,7 +79,7 @@ export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number
             </View>
         </View>
     )
-}
+})
 
 export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
     const THUMBNAIL_WIDTH = 136
@@ -153,27 +150,12 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
         }
     })
 
-    const $headerAnim = useAnimatedStyle(()=>{
-        const opacity = interpolate(translationY.value, [0, 150], [0,1], Extrapolate.CLAMP)
-        return {
-            opacity: opacity
-        }
-    }, [translationY])
-
-    const $headerAnimReverse = useAnimatedStyle(()=>{
-        const opacity = interpolate(translationY.value, [0, 150], [1,0], Extrapolate.CLAMP)
-        return {
-            opacity: opacity
-        }
-    }, [translationY])
-
-    console.log(_props.navigation.getParent())
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
             { busy?
                 <BusyIndicator/>:
                 <>
-                    <Animated.ScrollView showsVerticalScrollIndicator={false} onScroll={scrollHandler} scrollEventThrottle={16} style={{paddingTop: 24}}>
+                    <Animated.ScrollView showsVerticalScrollIndicator={false} onScroll={scrollHandler} scrollEventThrottle={16} style={{paddingTop: 40}}>
                         
                         <View style={{paddingHorizontal: 16}}>
                             <View style={{flexDirection: 'row'}}>
@@ -260,7 +242,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                 {geti18n('actions.noHistory')}
                             </Text>
                         </View>}
-                        <View style={{width: '100%', height:100}}/>
+                        <View style={{width: '100%', height:150}}/>
                     </Animated.ScrollView>
                     <View style={[{
                             paddingBottom: $containerInsets.paddingBottom,
@@ -277,26 +259,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                             {geti18n('actions.startHabit')}
                         </Text>
                     </View>
-                    <Animated.View style={[$headerAnim, {position: 'absolute', top:$containerInsets.paddingTop, height: 32, width: '100%', backgroundColor: "#fff", alignItems: 'center', justifyContent: 'center'}]}>
-                        <Text style={{...designSystem.textStyles.smallTextsBold, color: kauriColors.primary.unselectedLight}}>
-                            {item.title}
-                        </Text>
-                    </Animated.View>
-                    <Animated.View style={[$headerAnimReverse, {position: 'absolute', top:$containerInsets.paddingTop, left:16}]}>
-                        <TouchableOpacity 
-                                        onPress={()=>{
-                                            _props.navigation.goBack()
-                                        }}
-                                        activeOpacity={0.9} 
-                                        style={{ flexDirection: 'row', alignItems: 'center'}}>
-                                        <View style={{height:12, marginRight:8}}>
-                                            <BackArrow color={kauriColors.primary.dark} alt/>
-                                        </View>
-                                        <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark}}>
-                                            {geti18n(`common.${cameFrom}`)}
-                                        </Text>
-                        </TouchableOpacity>
-                    </Animated.View>
+                    <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title}(${item.kauriUsersCompleted} ${geti18n('common.completed').toLowerCase()})`} translationY={translationY}/>
                 </>
                 }
         </View>

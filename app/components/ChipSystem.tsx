@@ -1,5 +1,5 @@
 import {observer} from 'mobx-react-lite';
-import {useEffect, useRef, useState} from 'react';
+import {memo, useEffect, useRef, useState} from 'react';
 import {findNodeHandle, Pressable, Text, useWindowDimensions, View} from 'react-native';
 import {designSystem, kauriColors} from '../theme';
 import {hexToRGBA} from '../utils/hexToRGBA';
@@ -17,15 +17,15 @@ export interface Chips {
   to: string;
   isGreen?: boolean;
 }
-interface ChipSystemProps {
+export interface ChipSystemProps {
   data: Chips[];
   screenState: (key: string) => void;
 }
 
-export const ChipSystem = observer(function ChipSystem({
+export const ChipSystem = memo(({
   data,
   screenState,
-}: ChipSystemProps) {
+}: ChipSystemProps) => {
   const windowWidth = useWindowDimensions().width;
   const [selected, setSelected] = useState(0);
   const [screen, setScreen] = useState('')

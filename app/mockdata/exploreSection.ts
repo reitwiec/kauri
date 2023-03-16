@@ -5,7 +5,8 @@ export interface singletonResource {
     title: string,
     url: ImageSourcePropType,
     type: "habit" | "onetime",
-    description: string
+    description: string,
+    status: "uncompleted" | "inProgress" | "completed"
 }
 
 export interface collectionsResource {
@@ -23,7 +24,7 @@ export interface skeleton {
     resources: collectionsResource[] | singletonResource[]
 }
 
-const singletonGenerator = (total: number) => {
+export const singletonGenerator = (total: number) => {
     const actionsAvailable:{url: ImageSourcePropType, title: string, description:string, id: number}[] = [
                     {
                         url: require("./thumb1.png"),
@@ -52,16 +53,19 @@ const singletonGenerator = (total: number) => {
     ]
 
     const types:('onetime'|'habit')[] = ["onetime", "habit"]
+    const allStatus:("uncompleted" | "inProgress" | "completed")[] = ["uncompleted", "inProgress", "completed"]
 
     const generatedList:singletonResource[] = []
 
     for(let i=1; i<=total; i++){
         const action = actionsAvailable[Math.floor(Math.random() * actionsAvailable.length)];
         const type = types[Math.floor(Math.random() * types.length)]
-        if(action && type){
+        const status = allStatus[Math.floor(Math.random() * allStatus.length)]
+        if(action && type && status){
             const aggAction:singletonResource = {
                 ...action,
-                type: type
+                type: type,
+                status: status
             }
             generatedList.push(aggAction)
         }
@@ -77,28 +81,28 @@ export const exploreSkeleton: skeleton[] = [
         type: "collections",
         resources: [
             {
-                id: 1,
+                id: 0,
                 title: "Easy-peasy actions",
                 total: 28,
                 featured: singletonGenerator(3),
                 description: "Simple and easy to actions."
             },
             {
-                id: 2,
+                id: 1,
                 title: "For students",
                 total: 12,
                 featured: singletonGenerator(3),
                 description: "A collection of actions tailored toward students and for those who are on a tight budget."
             },
             {
-                id: 3,
+                id: 2,
                 title: "Fashion-able actions",
                 total: 5,
                 featured: singletonGenerator(3),
                 description: "A collection for every fashion conscious buyer."
             },
             {
-                id: 4,
+                id: 3,
                 title: "Home Essentials",
                 total: 23,
                 featured: singletonGenerator(3),
@@ -130,28 +134,28 @@ export const exploreSkeleton: skeleton[] = [
         type: "collections",
         resources: [
             {
-                id: 1,
+                id: 0,
                 title: "Easy-peasy actions",
                 total: 28,
                 featured: singletonGenerator(3),
                 description: "Simple and easy to actions."
             },
             {
-                id: 2,
+                id: 1,
                 title: "For students",
                 total: 12,
                 featured: singletonGenerator(3),
                 description: "A collection of actions tailored toward students and for those who are on a tight budget."
             },
             {
-                id: 3,
+                id: 2,
                 title: "Fashion-able actions",
                 total: 5,
                 featured: singletonGenerator(3),
                 description: "A collection for every fashion conscious buyer."
             },
             {
-                id: 4,
+                id: 3,
                 title: "Home Essentials",
                 total: 23,
                 featured: singletonGenerator(3),

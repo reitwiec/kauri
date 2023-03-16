@@ -7,15 +7,17 @@ import {InterestSelectionHive, Tabs, TabStackParamList} from '../screens';
 import { ActionDetails } from '../screens/Actions/ActionDetails';
 import { CollectionDetails } from '../screens/Actions/CollectionDetails';
 
+type mainScreens = 'home' | 'actions' | 'shop' | 'read' | 'you'
 export type AppStackParamList = {
   onboarding_interests_hive: {totalDimensions: number};
   tabs: NavigatorScreenParams<TabStackParamList>;
   actionDetails: {
     actionId: string,
-    cameFrom: 'home' | 'actions' | 'shop' | 'read' | 'you'
+    cameFrom: mainScreens
   },
   collectionDetails: {
-    collectionId: string
+    collectionId: string,
+    cameFrom: mainScreens
   }
 };
 

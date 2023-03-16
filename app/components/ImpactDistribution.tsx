@@ -4,10 +4,10 @@ import {translate as geti18n} from '../i18n';
 import ImpactMinimal from '../svgs/ImpactIcons/impact.minimal.svg';
 import ExpenseHigh from '../svgs/ImpactIcons/expense.high.svg';
 import EffortMinimal from '../svgs/ImpactIcons/effort.minimal.svg';
-import type { FC } from 'react';
+import { FC, memo } from 'react';
 import type { impacts } from '../mockdata';
 
-export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> = ({impactDist, style}) => {
+export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> = memo(({impactDist, style}) => {
     const impactMap = {
         impact: {
             minimal: <ImpactMinimal/>
@@ -51,7 +51,7 @@ export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> =
             </View>
         </View>
     )
-}
+})
 
 const $impactIcon:ViewStyle = {
     alignItems: 'center'

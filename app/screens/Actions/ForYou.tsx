@@ -9,7 +9,7 @@ import { Easing, SharedValue, useDerivedValue, useSharedValue, withRepeat, withT
 import { FeatureThumbnail } from "./FeatureThumbnail";
 import { RetryIcon } from "../../svgs";
 import { hexToRGBA } from "../../utils/hexToRGBA";
-import { PlaylistListItem, StylisedTitle } from "../../components";
+import { BusyIndicator, PlaylistListItem, StylisedTitle } from "../../components";
 import { Completion } from "./Completion";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
@@ -24,6 +24,10 @@ export interface ForYouProps{
     translationY: SharedValue<number>,
     actionsStateValue: SharedValue<string>,
     scrollRef: React.MutableRefObject<any>,
+    data: {count: number,
+        resources: any[],
+        nextAction: any,
+        completed:number},
     navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "actions", undefined>, NativeStackNavigationProp<AppStackParamList, "actionDetails", undefined>>
 }
 
@@ -39,29 +43,30 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
             <View style={{ width: '100%', alignItems: 'center', paddingBottom: 24, paddingTop: 16}}>
                 <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
             </View>
-            <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16}}>
+            <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16, }}>
                     <View>
                         <StylisedTitle text={"Your full roadmap"} alt={true} small={false}/>
                     </View>
-                    <Completion total={roadMap.count} completed={roadMap.completed}/>
-                    <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
-                        <View style={{opacity: 0.6}}>
-                            <RetryIcon/>
-                        </View>
-                        <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
-                            {geti18n("actions.recreate")}
-                        </Text>
-                    </Pressable>
+                    <View style={{...designSystem.card, marginTop:16, marginHorizontal:8}}>
+                        <Completion total={roadMap.count} completed={roadMap.completed}/>
+                        <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
+                            <View style={{opacity: 0.6}}>
+                                <RetryIcon/>
+                            </View>
+                            <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
+                                {geti18n("actions.recreate")}
+                            </Text>
+                        </Pressable>
+                    </View>
             </View>
         </View>
     )
 }
 
-export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps}){
+export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps, data}){
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
-    const [roadMap, setRoadMap] = useState(mockRoadmap)
-    let data = [{id:-99, title: "dummy"}].concat(roadMap.resources)
-    data = data.concat([{id:-999, title: 'empty'}])
+    let resources = [{id:-99, title: "dummy"}].concat(data.resources)
+    resources = resources.concat([{id:-999, title: 'empty'}])
 
     const scrollHandler = ({nativeEvent}) => {
         translationY.value = nativeEvent.contentOffset.y
@@ -107,7 +112,7 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
             )
         }
         if(index === 0 ){
-            return(<Header progress={progress} onPress={goToActionDetails} roadMap={roadMap}/>)
+            return(<Header progress={progress} onPress={goToActionDetails} roadMap={data}/>)
         }
         return (
             <PlaylistListItem id={item.id} url={item.url} title={item.title} index={index} status={item.status} type={item.type} onPress={goToActionDetails}/>
@@ -116,17 +121,21 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
 
     return (
             <View style={{ width: windowWidth}}>
-                <FlatList
-                            data={data}
-                            maxToRenderPerBatch={10}
-                            renderItem={_renderItem}
-                            style={{ height:windowHeight-80-(56 + Number($containerInsets.paddingBottom))}}
-                            keyExtractor={(item, index) => index + "forYou"}
-                            showsVerticalScrollIndicator={false}
-                            scrollEventThrottle={16}
-                            ref={scrollRef}
-                            onScroll={scrollHandler}
-                />
+                {
+                    data.resources.length ===0? 
+                    <BusyIndicator/>:
+                    <FlatList
+                                data={resources}
+                                maxToRenderPerBatch={10}
+                                renderItem={_renderItem}
+                                style={{ height:windowHeight-80-(56 + Number($containerInsets.paddingBottom))}}
+                                keyExtractor={(item, index) => index + "forYou"}
+                                showsVerticalScrollIndicator={false}
+                                scrollEventThrottle={16}
+                                ref={scrollRef}
+                                onScroll={scrollHandler}
+                    />
+                }
             </View>
     )
 })

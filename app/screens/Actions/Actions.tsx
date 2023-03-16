@@ -5,7 +5,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, ScrollView, StatusBar, Text, View, ViewStyle } from "react-native";
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { RiveHeader } from "../../components";
-import { actionsChips } from "../../mockdata";
+import { actionsChips, exploreSkeleton, newActions, roadMap } from "../../mockdata";
 import useIsReady from "../../utils/useIsReady";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import { translate as geti18n } from "../../i18n"
@@ -27,12 +27,30 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const actionsStateValue = useSharedValue('forYou')
     const [filterState, setFilterState] = useState({})
     const [isSearching, setIsSearching] = useState(false)
+    const [busy, setBusy] = useState(true)
     const [searchPhrase, setSearchPhrase] = useState('')
+
+    const [pageConfig, setPageConfig] = useState<any[]>([{
+        name: 'forYou', 
+        data: { count: 0,
+                resources: [],
+                nextAction: {},
+                completed:0
+        }}, 
+        {name: 'explore', data: []}])
+
+    const [forYouData, setForYouData] = useState<any>({ count: 0,
+            resources: [],
+            nextAction: {},
+            completed:0
+    })
+    const [exploreData, setExploreData] = useState<any>([])
 
     const flatRef = useRef<any>()
     const exploreRef = useRef<any>()
     const forYouRef = useRef<any>()
     const states = {'forYou': {index: 0, ref: forYouRef, scrollToTop: () => forYouRef.current.scrollToOffset({offset:0, animated:false})}, 'explore': {index: 1, ref: exploreRef, scrollToTop: () => exploreRef.current.scrollTo({x: 0, y: 0, animated: true})}, 'habits': {index: 2, ref: forYouRef}}
+    
     const updateActionsState = useCallback((key:any) =>{
         if(flatRef.current){
             flatRef.current.scrollToIndex({
@@ -40,24 +58,45 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
                 animated: true
             })
         }
+        const prevState = actionsStateValue.value
+        if(states[prevState].ref.current){
+            states[prevState].scrollToTop()
+        }
         setTimeout(()=>{
-                const prevState = actionsStateValue.value
                 actionsStateValue.value = key
                 setActionsState(key)
-                if(states[prevState].ref){
-                    states[prevState].scrollToTop()
-                }
-            },300)
+        },300)
     },[]);
 
+
     useEffect(()=>{
+        switch(actionsState){
+            case 'forYou':
+                if(!forYouData.resources.length){
+                    const prevStateConfig = pageConfig
+                    prevStateConfig[0].data = roadMap
+                    setPageConfig(prevStateConfig)
+                    setForYouData(roadMap)
+                }
+                break
+            case 'explore':
+                if(!exploreData.length){
+                    const prevStateConfig = pageConfig
+                    prevStateConfig[1].data = [newActions, ...exploreSkeleton]
+                    setPageConfig(prevStateConfig)
+                    setExploreData([newActions, ...exploreSkeleton])
+                }
+                break
+            case 'habits':
+            case 'myLibrary':
+        }
         fetchFilteredData(filterState, actionsState)
     }, [actionsState])
 
     const isReady = useIsReady()
     const filteredData = []
-    const onViewableItemsChanged = useRef(() => {
-        // console.log("Visible items are", viewableItems);
+    const onViewableItemsChanged = useRef((viewChange) => {
+        // console.log("Visible items are", viewChange.viewableItems);
         // console.log("Changed in this iteration", changed);
     })
 
@@ -75,7 +114,6 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
             [key]: value,
         }
         setFilterState(config);
-        console.log(pageType)
         fetchFilteredData(config, pageType)
     }
 
@@ -120,13 +158,13 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
         if(item.name === 'forYou'){
             return(
                     <Animated.View style={$scrollContainer_animated}>
-                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef} navigationProps={_props.navigation} />
+                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef} navigationProps={_props.navigation} data={item.data}/>
                     </Animated.View>
             )
         }else{
             return(
                     <Animated.View style={$scrollContainer_animated}>
-                        <Explore riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={exploreRef} navigationProps={_props.navigation}/>
+                        <Explore riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={exploreRef} navigationProps={_props.navigation} data={item.data}/>
                     </Animated.View>
             )
         }
@@ -134,14 +172,14 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
 
     const isFocused = useIsFocused()
 
-    useEffect(()=>{
-        if(!isFocused){
-            const activeRef = states[actionsState]
-            setTimeout(()=>{
-                activeRef.scrollToTop()
-            }, 300)
-        }
-    }, [isFocused])
+    // useEffect(()=>{
+    //     if(!isFocused){
+    //         const activeRef = states[actionsState]
+    //         setTimeout(()=>{
+    //             activeRef.scrollToTop()
+    //         }, 300)
+    //     }
+    // }, [isFocused])
 
     return (
         <Animated.View style={[$container]} >
@@ -155,8 +193,9 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
                 pagingEnabled
                 maxToRenderPerBatch={1}
                 initialNumToRender={1}
-                data={[{name: 'forYou'}, {name: 'explore'}]}
+                data={pageConfig}
                 scrollEnabled={false}
+                onViewableItemsChanged={onViewableItemsChanged.current}
                 viewabilityConfig={{
                     itemVisiblePercentThreshold: 50
                 }}
@@ -186,7 +225,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
                     />
                 }
             </Animated.View>}
-            <RiveHeader translationY={translationY} data={actionsChips} config={{right: ["customise"],left:["filter", "search"], height: riveHeight}} screenState={updateActionsState} isSearching={isSearching} searchClicked={searchClicked} updateSearchPhrase={updateSearchPhrase} searchPhrase={searchPhrase}/>
+            <RiveHeader translationY={translationY} data={actionsChips} config={{right: ["customise"],left:["filter", "search"], height: riveHeight}} screenState={updateActionsState} isSearching={isSearching} searchClicked={searchClicked} updateSearchPhrase={updateSearchPhrase}/>
         </Animated.View>
     )
 })

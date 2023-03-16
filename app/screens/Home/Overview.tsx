@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
 import Animated, { Easing, interpolate, runOnJS, SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
@@ -27,6 +27,8 @@ export interface OverviewProps {
 }
 
 const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
+    
+    const $contentColor = useMemo(() => hexToRGBA(kauriColors.primary.dark, 0.7), [])
     const activeIndexVal = useSharedValue(0)
     const THUMBNAIL_WIDTH = 144
     const flingLeft = Gesture.Fling()
@@ -105,7 +107,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
                     currentItem.totalCauses - currentItem.topCauses.length>0 && <View>
                         <Hex dimension={"default"} title={null}/>
                         <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                            <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor}}>
                                 +{currentItem.totalCauses - currentItem.topCauses.length}
                             </Text>
                         </View>
@@ -113,7 +115,7 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
                 }
             </View>}
             {currentItem && <Text 
-                style={{textAlign: 'center',paddingHorizontal: 16, width: "90%", color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.captions}} numberOfLines={2}>
+                style={{textAlign: 'center',paddingHorizontal: 16, width: "90%", color: $contentColor, ...designSystem.textStyles.captions}} numberOfLines={2}>
                 {currentItem.description}
             </Text>}
             <View style={{flexDirection: "row", justifyContent: 'space-evenly', paddingHorizontal: 16}}>
@@ -196,86 +198,86 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
     )
 })
 
-export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData, navigationProps}){
-    const windowWidth = useWindowDimensions().width
-    const mostImpacted = getMostImpacted(3)
-    const ProgressBar = ({width}) =>{
-        const widthVal = useSharedValue(0)
-        useEffect(() => {
-          widthVal.value = withTiming(width, {
-            duration: 450,
-            easing: Easing.inOut(Easing.ease)
-          })
-        }, [])
-        
-        const height = 6
+const ProgressBar = memo(({width}:{width:number}) =>{
+    const widthVal = useSharedValue(0)
+    useEffect(() => {
+      widthVal.value = withTiming(width, {
+        duration: 450,
+        easing: Easing.inOut(Easing.ease)
+      })
+    }, [])
+    
+    const height = 6
 
-        const progressAnim = useAnimatedStyle(()=>{
-            return {
-                width: `${widthVal.value}%`
-            }
-        }, [widthVal])
-        return (
-            <View
-                style={{
-                    width: '100%',
-                    height: height,
-                    backgroundColor: 'rgba(251, 210, 93, 0.15)',
-                    borderRadius: height,
-                    overflow: 'hidden',
-                }}
-            >
-                <Animated.View
-                    style={[{
-                        height: height,
-                        backgroundColor: 'rgba(251, 210, 93, 1)',
-                        borderRadius: height,
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                    }, progressAnim]}
-                />
-            </View>
-        )
-    }
-
-    const ContributionBar = ({contributions, totalContributions}) => {
-        const height = 6
-        let previousContribution = 0;
-        return (
-            <View
+    const progressAnim = useAnimatedStyle(()=>{
+        return {
+            width: `${widthVal.value}%`
+        }
+    }, [widthVal])
+    return (
+        <View
             style={{
                 width: '100%',
                 height: height,
-                backgroundColor: 'transparent',
+                backgroundColor: 'rgba(251, 210, 93, 0.15)',
                 borderRadius: height,
                 overflow: 'hidden',
             }}
         >
-            {
-                contributions.map((contribution, index)=>{
-                    const contributionPercentage = contribution.value*100/totalContributions 
-                    const width = previousContribution + contribution.value*100/totalContributions;
-                    const tempPrevContribution = previousContribution
-                    previousContribution = width;
-                    return (<Animated.View
-                    key={index}
-                    style={[{
-                        height: height,
-                        backgroundColor: dimensionColorMap()[contribution.dimension],
-                        position: 'absolute',
-                        top: 0,
-                        left: `${tempPrevContribution}%`,
-                        width: `${contributionPercentage}%`,
-                    }, ]}
-                />)
-                })
-            }
-        </View> 
-        );
-    }
-    
-    
+            <Animated.View
+                style={[{
+                    height: height,
+                    backgroundColor: 'rgba(251, 210, 93, 1)',
+                    borderRadius: height,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                }, progressAnim]}
+            />
+        </View>
+    )
+})
+
+const ContributionBar = memo(({contributions, totalContributions}:{contributions: any[], totalContributions: number}) => {
+    const height = 6
+    let previousContribution = 0;
+    return (
+        <View
+        style={{
+            width: '100%',
+            height: height,
+            backgroundColor: 'transparent',
+            borderRadius: height,
+            overflow: 'hidden',
+        }}
+    >
+        {
+            contributions.map((contribution, index)=>{
+                const contributionPercentage = contribution.value*100/totalContributions 
+                const width = previousContribution + contribution.value*100/totalContributions;
+                const tempPrevContribution = previousContribution
+                previousContribution = width;
+                return (<Animated.View
+                key={index}
+                style={[{
+                    height: height,
+                    backgroundColor: dimensionColorMap()[contribution.dimension],
+                    position: 'absolute',
+                    top: 0,
+                    left: `${tempPrevContribution}%`,
+                    width: `${contributionPercentage}%`,
+                }, ]}
+            />)
+            })
+        }
+    </View> 
+    );
+})
+
+export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData, navigationProps}){
+    const windowWidth = useWindowDimensions().width
+    const mostImpacted = getMostImpacted(3)
+    const $contentColor = useMemo(() => hexToRGBA(kauriColors.primary.dark, 0.7), [])
     const goToActionDetails = (actionId: string) => {
         navigationProps.navigate('actionDetails', {
             actionId,
@@ -285,7 +287,6 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
 
     return (
         <View style={{width: windowWidth}}>
-
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16}}>
              <Greeting/>
          </View>
@@ -296,7 +297,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
                         {userData.actionsCompleted}
                     </Text>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.6), marginBottom: 8}}>
+                    <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, marginBottom: 8}}>
                         {geti18n("common.actionsCompleted").toLowerCase()}
                     </Text>
                     <ProgressBar width={userData.actionsCompleted*100/userData.totalActions}/>
@@ -305,7 +306,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
                         {userData.subdimensionsImpacted}
                     </Text>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.6), marginBottom:8}}>
+                    <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, marginBottom:8}}>
                         {geti18n("common.causesImpacted").toLowerCase()}
                     </Text>
                     <ProgressBar width={userData.subdimensionsImpacted*100/userData.totalSubdimensions}/>
@@ -313,7 +314,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
             </View>
             <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>    
                 <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.dark}}>{geti18n("common.feelingStuck")}?</Text>
-                <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.6), textAlign: 'center', paddingHorizontal:4}}>
+                <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, textAlign: 'center', paddingHorizontal:4}}>
                     {geti18n("common.positiveFocusDescription")}
                 </Text>
                 <Pressable>
@@ -363,7 +364,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
         </View>
         <View style={{marginTop: 24, paddingHorizontal: 16, alignItems: 'center'}}>
             <StylisedTitle text={geti18n("home.whatNext")} alt={true} small/>
-            <Text style={{textAlign: 'left', color: hexToRGBA(kauriColors.primary.dark, 0.7), ...designSystem.textStyles.paragraph, marginTop: 8}}>
+            <Text style={{textAlign: 'left', color: $contentColor, ...designSystem.textStyles.paragraph, marginTop: 8}}>
                     {geti18n("home.whatNextDescription")}
             </Text>
         </View>

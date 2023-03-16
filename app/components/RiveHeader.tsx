@@ -1,6 +1,6 @@
-import {createRef, FC, useRef, useState} from 'react';
+import {createRef, FC, memo, useRef, useState} from 'react';
 import React from 'react';
-import {Pressable, TextInput, useWindowDimensions, View, ViewStyle, Text} from 'react-native';
+import {Pressable, TextInput, useWindowDimensions, View, ViewStyle, Text, FlexStyle} from 'react-native';
 import {
   Extrapolate,
   interpolate,
@@ -11,7 +11,7 @@ import {
 } from 'react-native-reanimated';
 import Animated from 'react-native-reanimated';
 import {useSafeAreaInsetsStyle} from '../utils/useSafeAreaInsetsStyle';
-import {Chips, ChipSystem} from './ChipSystem';
+import {Chips, ChipSystem, ChipSystemProps} from './ChipSystem';
 import {CartIcon, CrossIcon, CustomiseIcon, FilterIcon, SearchIcon} from '../svgs';
 import {hexToRGBA} from '../utils/hexToRGBA';
 import {designSystem, kauriColors} from '../theme';
@@ -33,19 +33,16 @@ interface RiveHeaderProps {
   isSearching: boolean;
   searchClicked: (override: any, searchPhrase: string) => void;
   updateSearchPhrase: (phrase: string) => void
-  searchPhrase: string
 }
 
 interface OptionBtnProps {
   optionType: configOptions;
   left: boolean;
   searchClicked: (override: any, searchPhrase: string) => void,
-  translationY: SharedValue<number>;
   updateSearchPhrase: (phrase: string) => void
-  searchPhrase: string
 }
 
-const OptionBtn = ({optionType, left, searchClicked, translationY, updateSearchPhrase, searchPhrase}: OptionBtnProps) => {
+const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: OptionBtnProps) => {
   let option: JSX.Element;
   switch (optionType) {
     case 'customise':
@@ -87,10 +84,17 @@ const OptionBtn = ({optionType, left, searchClicked, translationY, updateSearchP
         textRef.current.focus()
       }
     }
-    searchClicked(undefined, searchPhrase.trim())
-    if(searchPhrase.length === 0){
+    searchClicked(undefined, localSearchPhrase.trim())
+    if(localSearchPhrase.length === 0){
       setIsSearching(prev => !prev)
     }
+  }
+
+  const [localSearchPhrase, setLocalSearchPhrase] = useState('') 
+
+  const updateLocalSearchPhrase = (phrase:string) => {
+    setLocalSearchPhrase(phrase)
+    updateSearchPhrase(phrase)
   }
 
   return (
@@ -107,7 +111,7 @@ const OptionBtn = ({optionType, left, searchClicked, translationY, updateSearchP
       ]}>
             <Pressable onPress={()=>{
               if(optionType=== 'search'){
-                translationY.value =0
+                //translate main screen to top
                 toggleSearch()
               }
             }}>
@@ -119,14 +123,14 @@ const OptionBtn = ({optionType, left, searchClicked, translationY, updateSearchP
               placeholder={"Search for different actions..."}
               placeholderTextColor={kauriColors.primary.unselectedLight}
               autoFocus={false}
-              value={searchPhrase}
-              onChangeText={updateSearchPhrase}
+              value={localSearchPhrase}
+              onChangeText={updateLocalSearchPhrase}
               onBlur={() => {
-                if (searchPhrase.trim().length === 0) {
-                  updateSearchPhrase('');
+                if (localSearchPhrase.trim().length === 0) {
+                  updateLocalSearchPhrase('');
                 }
-                searchClicked(false, searchPhrase)
-                if(searchPhrase.length === 0){ 
+                searchClicked(false, localSearchPhrase)
+                if(localSearchPhrase.length === 0){ 
                   setIsSearching(false)
                 }
               }}
@@ -136,7 +140,7 @@ const OptionBtn = ({optionType, left, searchClicked, translationY, updateSearchP
             {isSearching && 
               <Pressable 
               onPress={()=>{
-                updateSearchPhrase('')
+                updateLocalSearchPhrase('')
                 toggleSearch()
               }}
               style={{width:12}}>
@@ -145,10 +149,92 @@ const OptionBtn = ({optionType, left, searchClicked, translationY, updateSearchP
             }
     </Animated.View>
   );
-};
+});
+
+const LottiePlayer = memo(() =>{
+  return (
+      <View style={{ width: '100%', height: '100%', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+        <Lottie
+          source={require('./animation.json')}
+          autoPlay
+          speed={0.5}
+          loop
+          style={{position: 'absolute', height: 240}}
+          />
+      </View>
+  )
+})
 
 
-export const RiveHeader: FC<RiveHeaderProps> = React.memo(({
+const ChipPlayer = memo(({data, screenState}:ChipSystemProps)=>{
+      return (
+        <View style={{position: 'absolute', left: 0, bottom: 16, width: '100%'}}>
+          <ChipSystem data={data} screenState={screenState} />
+        </View>
+      )
+})
+
+
+interface ConfigProps {
+  $containerInsets: Pick<FlexStyle, "paddingTop" | "marginBottom" | "marginEnd" | "marginStart" | "marginTop" | "paddingBottom" | "paddingEnd" | "paddingStart">
+  data:any
+  searchClicked: (override: any, searchPhrase: string) => void
+  updateSearchPhrase: (phrase: string) => void
+}
+
+const ConfigRight = memo(({$containerInsets, data, searchClicked, updateSearchPhrase}:ConfigProps) => {
+  return (
+        <View
+          style={{
+            position: 'absolute',
+            top: $containerInsets.paddingTop,
+            right: 16,
+            flexDirection: 'row',
+            zIndex: 2
+          }}>
+          {data.map((option, i) => {
+            return (
+                <OptionBtn
+                  optionType={option}
+                  key={i}
+                  left={false}
+                  searchClicked={searchClicked}
+                  updateSearchPhrase={updateSearchPhrase}
+                />
+              )
+          })}
+        </View>
+  )
+})
+
+const ConfigLeft = memo(({$containerInsets, data, searchClicked, updateSearchPhrase}:ConfigProps) => {
+  return (
+    <View
+          style={{
+            position: 'absolute',
+            top: $containerInsets.paddingTop,
+            left: 0,
+            paddingLeft: 16,
+            paddingRight:16,
+            flexDirection: 'row',
+            width: '100%'
+          }}>
+          {data.map((option, i) => {
+            return (
+                <OptionBtn
+                  optionType={option}
+                  key={`${option}_${i}`}
+                  left={true}
+                  searchClicked={searchClicked}
+                  updateSearchPhrase={updateSearchPhrase}
+                />
+              )
+          })}
+    </View>
+  )
+})
+
+export const RiveHeader: FC<RiveHeaderProps> = ({
   translationY,
   data,
   config,
@@ -156,12 +242,10 @@ export const RiveHeader: FC<RiveHeaderProps> = React.memo(({
   isSearching,
   searchClicked,
   updateSearchPhrase,
-  searchPhrase
 }) => {
   const $containerInsets = useSafeAreaInsetsStyle(['top'], 'padding');
   const headerRef = createRef<Animated.View>();
   const $animated_container = useAnimatedStyle(() => {
-    // console.log(translationY.value)
     return {
       height: interpolate(
         translationY.value,
@@ -174,75 +258,27 @@ export const RiveHeader: FC<RiveHeaderProps> = React.memo(({
 
   return (
     <Animated.View style={[$container, $animated_container]} ref={headerRef}>
-      <View style={{ width: '100%', height: '100%', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-        <Lottie
-          source={require('./animation.json')}
-          autoPlay
-          speed={0.5}
-          loop
-          style={{position: 'absolute', height: 240}}
-          />
-      </View>
-      <View style={{position: 'absolute', left: 0, bottom: 16, width: '100%'}}>
-        <ChipSystem data={data} screenState={screenState} />
-      </View>
+      <LottiePlayer/>
+      <ChipPlayer data={data} screenState={screenState}/>
       {!isSearching && config && config.right && (
-        <View
-          style={{
-            position: 'absolute',
-            top: $containerInsets.paddingTop,
-            right: 16,
-            flexDirection: 'row',
-            zIndex: 2
-          }}>
-          {config.right.map((option, i) => {
-            return (
-              config.right && (
-                <OptionBtn
-                  optionType={option}
-                  key={`${option}_${i}`}
-                  left={false}
-                  searchClicked={searchClicked}
-                  translationY={translationY}
-                  updateSearchPhrase={updateSearchPhrase}
-                  searchPhrase={searchPhrase}
-                />
-              )
-            );
-          })}
-        </View>
+        <ConfigRight
+          $containerInsets={$containerInsets}
+          data={config.right}
+          searchClicked={searchClicked}
+          updateSearchPhrase={updateSearchPhrase}
+        />
       )}
       {config && config.left && (
-        <View
-          style={{
-            position: 'absolute',
-            top: $containerInsets.paddingTop,
-            left: 0,
-            paddingLeft: 16,
-            paddingRight:16,
-            flexDirection: 'row',
-            width: '100%'
-          }}>
-          {config.left.map((option, i) => {
-            return (
-              config.left && (
-                <OptionBtn
-                  optionType={option}
-                  key={`${option}_${i}`}
-                  left={true}
-                  searchClicked={searchClicked}
-                  translationY={translationY}
-                  updateSearchPhrase={updateSearchPhrase}
-                  searchPhrase={searchPhrase}
-                />
-              )
-            );
-          })}
-        </View>
+        <ConfigLeft
+          $containerInsets={$containerInsets}
+          data={config.left}
+          searchClicked={searchClicked}
+          updateSearchPhrase={updateSearchPhrase} 
+        />
       )}
     </Animated.View>
   );
-});
+};
 
 const $container: ViewStyle = {
   width: '100%',

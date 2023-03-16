@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { FC, memo, useMemo } from "react";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Thumbnail } from "./Thumbnail";
 import {View, Text, Pressable, ImageSourcePropType, TextStyle, ViewStyle} from 'react-native';
@@ -17,16 +17,19 @@ interface PlaylistListItemProps {
     onPress: (actionId: string) => void
 }
 
-export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, id, title, status, type, index, onPress}) =>{
+export const PlaylistListItem:FC<PlaylistListItemProps> = memo(({url, id, title, status, type, index, onPress}) =>{
     const pressIn = useSharedValue(false)
     const _statusColorMap = {
         uncompleted: kauriColors.secondary.uncompleted,
         completed: kauriColors.secondary.completed,
         inProgress: kauriColors.secondary.inProgress,
     };
+    const _statusBackgroundColor = useMemo(() => {
+      return hexToRGBA(_statusColorMap[status], 0.25)
+    }, [status])
     const $statusConfig: ViewStyle = {
         borderRadius: 50,
-        backgroundColor: hexToRGBA(_statusColorMap[status], 0.25),
+        backgroundColor: _statusBackgroundColor,
         paddingHorizontal: 8,
         paddingVertical: 4,
         marginLeft: type !== 'habit' ? 0 : 8,
@@ -139,7 +142,7 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, id, title, stat
         </View>
         </Animated.View>
     )
-}
+})
 
   const $orderIndex:TextStyle = {
     ...designSystem.textStyles.smallTextsSemi,
@@ -149,7 +152,6 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = ({url, id, title, stat
   const $orderIndexContainer:TextStyle = {
     alignItems: 'center',
     justifyContent:'center',
-    // backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.25),
     borderRadius: 50,
     width:24,
     height:24,

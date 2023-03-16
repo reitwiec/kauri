@@ -35,6 +35,7 @@ const en = {
     new: "New",
     problemStatement: 'Problem Statement',
     solution: 'Solution',
+    likes: "likes",
   },
   interestHive: {
     title: 'What does sustainability mean for you?',
@@ -57,7 +58,11 @@ const en = {
     },
     startHabit: "Start Habit",
     noHistory: "It seems like you haven't given this action a try just yet.",
-    historyTitle: "Action History"
+    historyTitle: "Action History",
+    contributedBy: "Contributed by",
+    addToLibrary: "Add to library",
+    randomAction: "Random action",
+    shareCollection: "Share collection"
   },
   home: {
     whatNext: 'What next?',

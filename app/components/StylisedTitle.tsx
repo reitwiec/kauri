@@ -1,10 +1,10 @@
-import {useState} from 'react';
+import {memo, useState} from 'react';
 import {Text, View} from 'react-native';
 import {Path, Svg} from 'react-native-svg';
 import {designSystem, kauriColors} from '../theme';
 import React from 'react';
 
-export const StylisedTitle = ({text, alt, small}) => {
+export const StylisedTitle = memo(({text, alt, small}:{text:string, alt: boolean, small:boolean}) => {
   const [textWidth, setTextWidth] = useState(50);
   return (
     <View style={alt?{alignItems: 'center'}:{}}>
@@ -37,4 +37,4 @@ export const StylisedTitle = ({text, alt, small}) => {
       </View>
     </View>
   );
-};
+});

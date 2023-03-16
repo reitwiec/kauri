@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Extrapolate, interpolate, runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { RiveHeader } from "../../components";
 import { homeChips, userDataSummary } from "../../mockdata";
 import { translate as geti18n } from "../../i18n"
@@ -14,7 +14,6 @@ import { Impact } from "./Impact";
 import type { AppStackParamList } from "../../navigators";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useIsReady from "../../utils/useIsReady";
 
 type HomeProps = CompositeScreenProps<
@@ -75,6 +74,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
             ]
         }
     }, [translationY])
+
     const Greeting = ({}) =>{
         return (
             <View>
@@ -123,7 +123,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
                 throw new Error("Function not implemented.");
             } } updateSearchPhrase={function (phrase: string): void {
                 throw new Error("Function not implemented.");
-            } } searchPhrase={""}/>
+            } }/>
         </View>
     )
 })
