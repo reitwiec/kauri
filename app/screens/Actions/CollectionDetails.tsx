@@ -15,6 +15,7 @@ import { designSystem, kauriColors } from "../../theme";
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { PlusIcon, ShareIcon, ShuffleIcon } from "../../svgs";
 import { Completion } from "./Completion";
+import { FlashList } from "@shopify/flash-list";
 
 type CollectionDetails = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'collectionDetails'>,
@@ -24,7 +25,7 @@ type CollectionDetails = CompositeScreenProps<
 export const CollectionDetails:FC<CollectionDetails> = observer(function CollectionDetails(_props){
     const $containerInsets = useSafeAreaInsetsStyle(["top", "bottom"]);
     const {collectionId, cameFrom} = _props.route.params
-    const {width:windowWidth} = useWindowDimensions()
+    const {width:windowWidth, height:windowHeight} = useWindowDimensions()
     const [busy, setBusy] = useState(true)
     const [completedActions, setCompletedActions] = useState(0)
 
@@ -65,19 +66,14 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
 
     const translationY = useSharedValue(0)
 
-    const scrollHandler = useAnimatedScrollHandler({
-        onScroll: (event)=>{
-            translationY.value = event.contentOffset.y
-        }
-    })
+    const scrollHandler = ({nativeEvent}) => {
+        translationY.value = nativeEvent.contentOffset.y
+    }
 
-    return (
-        <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
-            { busy?
-                <BusyIndicator/>:
-                <>
-                    <Animated.ScrollView showsVerticalScrollIndicator={false} onScroll={scrollHandler} scrollEventThrottle={16} style={{paddingTop: 40}}>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+    const HeaderComponent = () =>{
+        return (
+            <View style={{paddingTop: 40}}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <View style={[{flexBasis:"50%",}]}>
                                 <View style={{flexDirection: "row", flexWrap: 'wrap', justifyContent: 'center'}}>
                                     {
@@ -109,45 +105,58 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                         </Text>
                     </View>
                     <Completion total={item.total} completed={completedActions}/>
-                        <View style={{marginTop: 24, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
-                                <View style={{width: 16}}>
-                                    <PlusIcon color={kauriColors.primary.dark}/>
-                                </View>
-                                <Text style={{...designSystem.textStyles.smallTextsSemi, marginLeft: 8, color: kauriColors.primary.dark}}>
-                                    {geti18n("actions.addToLibrary")}
-                                </Text>
-                            </TouchableOpacity>
-                            
-                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
-                                <View style={{width: 16}}>
-                                    <ShuffleIcon color={kauriColors.primary.dark}/>
-                                </View>
-                                <Text style={{...designSystem.textStyles.smallTextsSemi, marginLeft: 8, color: kauriColors.primary.dark}}>
-                                    {geti18n("actions.randomAction")}
-                                </Text>
-                            </TouchableOpacity>
-                            
-                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
-                                <View style={{height: 18}}>
-                                    <ShareIcon color={kauriColors.primary.dark}/>
-                                </View>
-                                <Text style={{...designSystem.textStyles.smallTextsSemi, marginLeft: 8, color:kauriColors.primary.dark}}>
-                                    {geti18n("actions.shareCollection")}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    <View style={{marginTop: 24}}>
-                        {
-                            item.resources.map((resource, index)=>{
+                    <View style={{marginTop: 24, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
+                            <View style={{width: 16}}>
+                                <PlusIcon color={kauriColors.primary.dark}/>
+                            </View>
+                            <Text style={{...designSystem.textStyles.smallTextsSemi, marginLeft: 8, color: kauriColors.primary.dark}}>
+                                {geti18n("actions.addToLibrary")}
+                            </Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
+                            <View style={{width: 16}}>
+                                <ShuffleIcon color={kauriColors.primary.dark}/>
+                            </View>
+                            <Text style={{...designSystem.textStyles.smallTextsSemi, marginLeft: 8, color: kauriColors.primary.dark}}>
+                                {geti18n("actions.randomAction")}
+                            </Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
+                            <View style={{height: 18}}>
+                                <ShareIcon color={kauriColors.primary.dark}/>
+                            </View>
+                            <Text style={{...designSystem.textStyles.smallTextsSemi, marginLeft: 8, color:kauriColors.primary.dark}}>
+                                {geti18n("actions.shareCollection")}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+            </View>
+        )
+    }
+    return (
+        <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
+            { busy?
+                <BusyIndicator/>:
+                <>
+                    <Animated.View style={{ height: windowHeight}}>
+                        <FlashList
+                            showsVerticalScrollIndicator={false}
+                            data={item.resources}
+                            ListHeaderComponent={HeaderComponent}
+                            ListFooterComponent={<View style={{height: $containerInsets.paddingBottom, width: '100%', marginBottom: 36}}/>}
+                            estimatedItemSize={80}
+                            onScroll={scrollHandler}
+                            keyExtractor={(item, index) => index + ""}
+                            renderItem={({item:resource, index}) => {
                                 return (
                                     <PlaylistListItem id={resource.id} url={resource.url} title={resource.title} index={index+1} status={resource.status} type={resource.type} onPress={goToActionDetails} key={index}/>
                                 )
-                            })
-                        }
-                    </View>
-                    <View style={{height: $containerInsets.paddingBottom, width: '100%', marginBottom: 36}}/>
-                    </Animated.ScrollView>
+                            }}
+                        />
+                    </Animated.View>
                     <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title} • ${item.owner}`} translationY={translationY}/>
                 </>
             }

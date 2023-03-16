@@ -87,7 +87,6 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = memo(({url, id, title,
                     pressIn.value = false;
                 }}
                 onPress={() => {
-                    console.log('pressed');
                     navigateToDetails()
                 }}
                 style={{
