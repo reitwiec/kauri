@@ -3,11 +3,11 @@ import {hexToRGBA} from './hexToRGBA';
 
 export const dimensionColorMap = () => {
   return {
-    dimension1: "#BFD1B6",
-    dimension2: "#B7E3D7",
-    dimension3: "#E2BDB4",
-    dimension4: "#D6BED1",
-    dimension5: "#BBC0D5",
+    dimension1: "#D49A9A",
+    dimension2: "#8CD9D4",
+    dimension3: "#9ABB9C",
+    dimension4: "#93A0D0",
+    dimension5: "#C09CC9",
     default: "#F6F6F2",
   };
 };

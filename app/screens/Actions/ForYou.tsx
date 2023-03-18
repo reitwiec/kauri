@@ -43,10 +43,9 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
         <View style={{ width: '100%', alignItems: 'center'}}>
             <View style={{ width: '100%', alignItems: 'center', paddingBottom: 24, paddingTop: 16}}>
                 <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
-            </View>
-            <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16, }}>
+            <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16, marginTop: 16}}>
                     <View>
-                        <StylisedTitle text={"Your full roadmap"} alt={true} small={false}/>
+                        <StylisedTitle text={"Your full roadmap"} alt={true} small={true}/>
                     </View>
                     <View style={{...designSystem.card, marginTop:16, marginHorizontal:8}}>
                         <Completion total={roadMap.count} completed={roadMap.completed}/>
@@ -60,6 +59,7 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
                         </Pressable>
                     </View>
             </View>
+            </View>
         </View>
     )
 }
@@ -68,12 +68,15 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
     let resources = data.resources
 
+    const isFocused = useIsFocused()
     const scrollHandler = ({nativeEvent}) => {
+        if(!isFocused){
+            return
+        }
         translationY.value = nativeEvent.contentOffset.y
     }
 
     const progress = useSharedValue(0)
-    const isFocused = useIsFocused()
     const isPaused = useSharedValue(isFocused)
 
     useEffect(()=>{
@@ -107,7 +110,7 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
 
     const _renderItem = ({item, index}:{item:any, index: number}) =>{
         return (
-            <PlaylistListItem id={item.id} url={item.url} title={item.title} index={index} status={item.status} type={item.type} onPress={goToActionDetails}/>
+            <PlaylistListItem id={item.id} url={item.url} title={item.title} index={index+1} status={item.status} type={item.type} onPress={goToActionDetails}/>
         )
     }
 

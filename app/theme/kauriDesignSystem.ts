@@ -21,12 +21,17 @@ type textStyles =
   | 'smallSerifBigger'
   | 'superTitle'
   | 'captionsExtraBold'
+  | 'titleBigger'
 
 type textStylesMap = {[style in textStyles]: textSettings};
 
 const textStyles: textStylesMap = {
   superTitle:{
     fontSize: 32,
+    fontFamily: kauriTypography.secondary.medium,
+  },
+  titleBigger: {
+    fontSize: 28,
     fontFamily: kauriTypography.secondary.medium,
   },
   titleBig: {

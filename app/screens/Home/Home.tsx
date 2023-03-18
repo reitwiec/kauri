@@ -3,7 +3,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { RiveHeader } from "../../components";
-import { homeChips, userDataSummary } from "../../mockdata";
+import { getMostImpacted, homeChips, roadMap, userDataSummary } from "../../mockdata";
 import { translate as geti18n } from "../../i18n"
 import type { TabStackParamList } from "../Tabs/Tabs";
 import { designSystem, kauriColors } from "../../theme";
@@ -24,43 +24,94 @@ type HomeProps = CompositeScreenProps<
 export const Home:FC<HomeProps> = observer(function Home(_props){
     const translationY = useSharedValue(0)
     const [userData, setUserData] = useState(userDataSummary)
-    const [homeState, setHomeState] = useState('overview')
+    const [homeState, setHomeState] = useState<'overview'|'impact'>('overview')
     const homeStateVal = useSharedValue('overview')
     const riveHeight = 240
     const winWidth = useWindowDimensions().width
     
+    const [pageConfig, setPageConfig] = useState<any[]>([{
+        name: 'overview', 
+        data: { 
+            mostImpacted: [],
+            roadmap: {
+                count: 0,
+                resources: [],
+                nextAction: {},
+                completed: 0
+            }
+        }}, 
+        {name: 'impact', data: []}])
+
+    const [overviewData, setOverviewData] = useState<any>(
+        {
+            roadmap: { 
+            count: 0,
+            resources: [],
+            nextAction: {},
+            completed:0
+            },
+            mostImpacted: []
+        }
+    )
+
+    const [impactData, setImpactData] = useState<any>({ 
+        count: 0,
+        resources: [],
+        nextAction: {},
+        completed:0
+})
+
     const flatRef = useRef<any>()
     const overviewRef = useRef<any>()
     const impactRef = useRef<any>()
     const states = {'overview': {index: 0, ref: overviewRef, scrollToTop: () => overviewRef.current.scrollTo({x: 0, y: 0, animated: true})}, 'impact':  {index: 1, ref: impactRef, scrollToTop: () => impactRef.current.scrollTo({x: 0, y: 0, animated: true})}}
-    const updateHomeState = useCallback((key:string) =>{
-        flatRef.current.scrollToIndex({
+    
+    const updateHomeState = useCallback((key:any) =>{
+        if(flatRef.current){
+            flatRef.current.scrollToIndex({
             index:states[key].index,
             animated: true
-        })
+            })
+        }
+        const prevState = homeStateVal.value
+        if(states[prevState].ref.current){
+            states[prevState].scrollToTop()
+        }
         setTimeout(()=>{
-                const prevState = homeState
+                homeStateVal.value = key
                 setHomeState(key)
-                states[prevState].scrollToTop()
             },300)
     },[]);
 
+    useEffect(()=>{
+        switch(homeState){
+            case 'overview':
+                if(!overviewData.mostImpacted.length){
+                    const prevStateConfig = pageConfig
+                    prevStateConfig[0].data.roadmap = roadMap
+                    prevStateConfig[0].data.mostImpacted = getMostImpacted(3)
+                    setPageConfig(prevStateConfig)
+                    setOverviewData(prevStateConfig[0].data)
+                }
+                break
+            case 'impact':
+                if(!impactData.resources.length){
+                    const prevStateConfig = pageConfig
+                }
+                break
+        }
+    }, [homeState])
+
+    const isFocused = useIsFocused()
+
     const scrollHandler = useAnimatedScrollHandler({
         onScroll: (event)=>{
+            if(!isFocused){
+                return
+            }
             translationY.value = event.contentOffset.y
         }
     })
-
-    const isFocused = useIsFocused()
-    
-    useEffect(() => {
-      return () => {
-        if(states[homeState].ref.current){
-            states[homeState].scrollToTop()
-        }
-      }
-    }, [isFocused])
-    
 
     const $scrollContainer_animated = useAnimatedStyle(()=>{
         return {
@@ -87,13 +138,13 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const renderSubview = useCallback(({item})=>{
         if(item.name === 'overview'){
             return(
-                <Animated.ScrollView bounces={false} ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
-                    <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData} navigationProps={_props.navigation}/>
+                <Animated.ScrollView ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
+                    <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData} navigationProps={_props.navigation} data={item.data}/>
                 </Animated.ScrollView>
             )
         }else{
             return(
-                <Animated.ScrollView bounces={false} ref={impactRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
+                <Animated.ScrollView ref={impactRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
                     <Impact riveHeight={riveHeight}/>
                 </Animated.ScrollView>
             )
@@ -113,7 +164,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
                 ref={flatRef}
                 pagingEnabled
                 maxToRenderPerBatch={1}
-                data={[{name: 'overview'}, {name: 'analytics'}]}
+                data={pageConfig}
                 scrollEnabled={false}
                 renderItem={renderSubview}
             />:<View>

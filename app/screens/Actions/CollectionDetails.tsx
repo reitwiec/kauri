@@ -16,6 +16,7 @@ import { hexToRGBA } from "../../utils/hexToRGBA";
 import { PlusIcon, ShareIcon, ShuffleIcon } from "../../svgs";
 import { Completion } from "./Completion";
 import { FlashList } from "@shopify/flash-list";
+import LinearGradient from "react-native-linear-gradient";
 
 type CollectionDetails = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'collectionDetails'>,
@@ -165,6 +166,6 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
 })
 
 const $container:ViewStyle ={
-    backgroundColor:"#fff",
+    backgroundColor: "#fff",
     flex: 1,
 }

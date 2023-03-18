@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
 import Animated, { Easing, interpolate, runOnJS, SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
@@ -9,7 +9,7 @@ import { MindfulIcons } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
 import { getMostImpacted, roadMap } from "../../mockdata";
 import { dimensionColorMap } from "../../utils/hexDetails";
-import { StylisedTitle, Thumbnail, TryBtn } from "../../components";
+import { BusyIndicator, StylisedTitle, Thumbnail, TryBtn } from "../../components";
 import { Directions, FlatList, Gesture, GestureDetector, gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Hex } from "../../components/Hex";
 import { shadowGenerator } from "../../utils/shadowGenerator";
@@ -23,7 +23,11 @@ export interface OverviewProps {
     riveHeight: number,
     Greeting: ({}: {}) => JSX.Element,
     userData: any, //need to add user data type
-    navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "home", undefined>, NativeStackNavigationProp<AppStackParamList, "actionDetails", undefined>>
+    navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "home", undefined>, NativeStackNavigationProp<AppStackParamList, "actionDetails", undefined>>,
+    data: {
+        mostImpacted: any,
+        roadmap: any
+    }
 }
 
 const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
@@ -274,9 +278,9 @@ const ContributionBar = memo(({contributions, totalContributions}:{contributions
     );
 })
 
-export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData, navigationProps}){
-    const windowWidth = useWindowDimensions().width
-    const mostImpacted = getMostImpacted(3)
+export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData, navigationProps, data}){
+    const {width:windowWidth, height: windowHeight} = useWindowDimensions()
+    const mostImpacted = data.mostImpacted
     const $contentColor = useMemo(() => hexToRGBA(kauriColors.primary.dark, 0.7), [])
     const goToActionDetails = (actionId: string) => {
         navigationProps.navigate('actionDetails', {
@@ -284,93 +288,144 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
             cameFrom: 'home'
         })
     }
+    
 
     return (
-        <View style={{width: windowWidth}}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16}}>
-             <Greeting/>
-         </View>
-
-        <View style={{marginTop: 24, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16}}>
-            <View style={{marginRight: 8}}>
-                <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', marginBottom: 8, flex:1}}>
-                    <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
-                        {userData.actionsCompleted}
-                    </Text>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, marginBottom: 8}}>
-                        {geti18n("common.actionsCompleted").toLowerCase()}
-                    </Text>
-                    <ProgressBar width={userData.actionsCompleted*100/userData.totalActions}/>
+        <View style={{width: windowWidth, minHeight: windowHeight/2}}>
+        { mostImpacted.length === 0 ? <BusyIndicator/>:
+            <>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16}}>
+                    <Greeting/>
                 </View>
-                <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>
-                    <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
-                        {userData.subdimensionsImpacted}
-                    </Text>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, marginBottom:8}}>
-                        {geti18n("common.causesImpacted").toLowerCase()}
-                    </Text>
-                    <ProgressBar width={userData.subdimensionsImpacted*100/userData.totalSubdimensions}/>
-                </View>
-            </View>
-            <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>    
-                <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.dark}}>{geti18n("common.feelingStuck")}?</Text>
-                <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, textAlign: 'center', paddingHorizontal:4}}>
-                    {geti18n("common.positiveFocusDescription")}
-                </Text>
-                <Pressable>
-                    <LinearGradient start={{x: 0.0, y:0}} end={{x:1.0, y:1.0}} colors={["rgba(147,160,208,0.67)", "rgba(143,157,212,1)"]} style={{...$positiveFocusIcon}}>
 
-                    <MindfulIcons type='positiveFocus' color={kauriColors.primary.light}/>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.palette.primary.light, marginLeft: 8}}>
-                        {geti18n("common.positiveFocusBtn")}
+                <View style={{marginTop: 24, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16}}>
+                    <View style={{marginRight: 8}}>
+                        <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', marginBottom: 8, flex:1}}>
+                            <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
+                                {userData.actionsCompleted}
+                            </Text>
+                            <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, marginBottom: 8}}>
+                                {geti18n("common.actionsCompleted").toLowerCase()}
+                            </Text>
+                            <ProgressBar width={userData.actionsCompleted*100/userData.totalActions}/>
+                        </View>
+                        <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>
+                            <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
+                                {userData.subdimensionsImpacted}
+                            </Text>
+                            <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, marginBottom:8}}>
+                                {geti18n("common.causesImpacted").toLowerCase()}
+                            </Text>
+                            <ProgressBar width={userData.subdimensionsImpacted*100/userData.totalSubdimensions}/>
+                        </View>
+                    </View>
+                    <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>    
+                        <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.dark}}>{geti18n("common.feelingStuck")}?</Text>
+                        <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, textAlign: 'center', paddingHorizontal:4}}>
+                            {geti18n("common.positiveFocusDescription")}
+                        </Text>
+                        <Pressable>
+                            <LinearGradient start={{x: 0.0, y:0}} end={{x:1.0, y:1.0}} colors={["rgba(147,160,208,0.67)", "rgba(143,157,212,1)"]} style={{...$positiveFocusIcon}}>
+
+                            <MindfulIcons type='positiveFocus' color={kauriColors.primary.light}/>
+                            <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.palette.primary.light, marginLeft: 8}}>
+                                {geti18n("common.positiveFocusBtn")}
+                            </Text>
+                            </LinearGradient>
+                    </Pressable>
+                    </View> 
+                </View>
+                <View style={{...designSystem.card, marginTop: 24, marginHorizontal:16}}>
+                    <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 8}}>
+                        {geti18n("common.mostImpactedCauses")}
                     </Text>
-                    </LinearGradient>
-             </Pressable>
-            </View> 
-        </View>
-        <View style={{...designSystem.card, marginTop: 24, marginHorizontal:16}}>
-            <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 8}}>
-                {geti18n("common.mostImpactedCauses")}
-            </Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8, paddingHorizontal: 8}}>
-                {
-                    mostImpacted.map((item, index)=>{
-                        return (
-                            <Hex key={index} title={item.subdimension} dimension={item.dimension}/>
-                            )
-                        })
-                    }
-            </View>
-            <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 16}}>
-                {geti18n("common.totalContributions")}
-            </Text>
-            <View style={{marginTop: 8}}>
-                <ContributionBar contributions={userData.contributionsPerDimension} totalContributions={userData.totalContributions}/>
-            </View>
-            <View style={{marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', marginBottom: 8}}>
-                {
-                    userData.contributionsPerDimension.map((contribution, index)=>{
-                        return (
-                            <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 2}} key={index}>
-                                <View style={{width: 6, height: 6, borderRadius: 6, backgroundColor: dimensionColorMap()[contribution.dimension]}}/>
-                                <Text style={{marginHorizontal: 8, ...designSystem.textStyles.smallTextsSemi, color: hexToRGBA((kauriColors.primary.dark), 0.7)}}>
-                                    {contribution.dimension}
-                                </Text>
-                            </View>
-                        )
-                    })
-                }
-            </View>
-        </View>
-        <View style={{marginTop: 24, paddingHorizontal: 16, alignItems: 'center'}}>
-            <StylisedTitle text={geti18n("home.whatNext")} alt={true} small/>
-            <Text style={{textAlign: 'left', color: $contentColor, ...designSystem.textStyles.paragraph, marginTop: 8}}>
-                    {geti18n("home.whatNextDescription")}
-            </Text>
-        </View>
-        <WhatNext onPress={goToActionDetails}/>
-         <View style={{height:riveHeight, width:windowWidth}}>
-         </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8, paddingHorizontal: 8}}>
+                        {
+                            mostImpacted.map((item, index)=>{
+                                return (
+                                    <Hex key={index} title={item.subdimension} dimension={item.dimension}/>
+                                    )
+                                })
+                            }
+                    </View>
+                    <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 16}}>
+                        {geti18n("common.totalContributions")}
+                    </Text>
+                    <View style={{marginTop: 8}}>
+                        <ContributionBar contributions={userData.contributionsPerDimension} totalContributions={userData.totalContributions}/>
+                    </View>
+                    <View style={{marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', marginBottom: 8}}>
+                        {
+                            userData.contributionsPerDimension.map((contribution, index)=>{
+                                return (
+                                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 2}} key={index}>
+                                        <View style={{width: 6, height: 6, borderRadius: 6, backgroundColor: dimensionColorMap()[contribution.dimension]}}/>
+                                        <Text style={{marginHorizontal: 8, ...designSystem.textStyles.smallTextsSemi, color: hexToRGBA((kauriColors.primary.dark), 0.7)}}>
+                                            {contribution.dimension}
+                                        </Text>
+                                    </View>
+                                )
+                            })
+                        }
+                    </View>
+                </View>
+                <View style={{marginTop: 24, paddingHorizontal: 16, alignItems: 'center'}}>
+                    <StylisedTitle text={geti18n("home.whatNext")} alt={true} small/>
+                    <Text style={{textAlign: 'left', color: $contentColor, ...designSystem.textStyles.paragraph, marginTop: 8}}>
+                            {geti18n("home.whatNextDescription")}
+                    </Text>
+                </View>
+                <WhatNext onPress={goToActionDetails} roadmap={data.roadmap}/>
+                <View style={{marginTop: 24, overflow:'hidden',borderColor:kauriColors.primary.light, borderWidth: 2 , backgroundColor: kauriColors.primary.light, width: windowWidth-48, height: 4*(windowWidth-48)/3, marginHorizontal: 24, borderRadius:16, ...shadowGenerator(10)}}>
+                    <View style={{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', top:0, width:'100%'}}>
+                        <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>
+                            READ
+                        </Text>
+                        <Text style={{...designSystem.textStyles.titleBigger, color: kauriColors.primary.light, width: '70%'}}>
+                            What do they mean?
+                        </Text>
+                        {/* <Text style={{...designSystem.textStyles.captions, color: kauriColors.primary.chipBar}}>
+                            This is a sample description of the content in this article. Sounds interesting doesn't it?
+                        </Text> */}
+                    </View>
+                    <View style={{transform:[{rotate: '-45deg'}], alignItems: 'center', justifyContent: 'center'}}>
+                        <View style={{flexDirection: 'row'}}>
+                            {
+                                ["", "", "", "", "", "",].map((item, index)=>{
+                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension1"} size={64}/></View>
+                                }
+                                )
+                            }
+                        </View>
+                        <View style={{flexDirection: 'row', paddingLeft: 64}}>
+                            {
+                                ["", "", "", "", "", "",].map((item, index)=>{
+                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension4"} size={64}/></View>
+                                }
+                                )
+                            }
+                        </View>
+                        <View style={{flexDirection: 'row'}}>
+                            {
+                                ["", "", "", "", "", "",].map((item, index)=>{
+                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension3"} size={64}/></View>
+                                }
+                                )
+                            }
+                        </View>
+                        <View style={{flexDirection: 'row', paddingLeft: 64}}>
+                            {
+                                ["", "", "", "", "", "",].map((item, index)=>{
+                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension2"} size={64}/></View>
+                                }
+                                )
+                            }
+                        </View>
+                    </View>
+                </View>
+                <View style={{height:riveHeight, width:windowWidth}}>
+                </View>
+            </>}
         </View>
     )
 })

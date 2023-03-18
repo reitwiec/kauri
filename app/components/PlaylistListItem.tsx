@@ -43,12 +43,16 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = memo(({url, id, title,
     const $animatedStyles = {
         pressIn: useAnimatedStyle(()=>{
             return {
-                backgroundColor: pressIn.value?kauriColors.primary.light: 'transparent',
+                backgroundColor: pressIn.value?kauriColors.primary.light: "#fff",
                 opacity: pressIn.value?withTiming(0.9): withTiming(1),
+            }
+        }, [pressIn]),
+        scale: useAnimatedStyle(()=>{
+          return {
                 transform: [
                     {scale: pressIn.value? withTiming(0.98): withTiming(1)}
                 ]
-            }
+          }
         }, [pressIn])
     }
 
@@ -57,89 +61,91 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = memo(({url, id, title,
     }
 
     return (
-        <Animated.View
-          style={[
-            {flexDirection: 'row', alignItems: 'center', paddingLeft: 8},
-            $animatedStyles.pressIn,
-          ]}>
-            <View style={$orderIndexContainer}><Text style={$orderIndex}>
-            {index}
-            </Text></View>
-          <Pressable
-            onPressIn={() => {
-              pressIn.value = true;
-            }}
-            onPressOut={() => {
-              pressIn.value = false;
-            }}
-            onPress={() => {
-              navigateToDetails()
-            }}> 
-            <Thumbnail src={url} width={56} height={56} title={title} type={"compact"} pretty={false} actionType={type} index={index} activeIndexVal={null} stacked={false} status={status}/>
-        </Pressable>
-        <View style={{flexDirection: 'row', marginLeft: 16, flex:1, paddingVertical: 16, paddingRight:16, borderColor: kauriColors.primary.light,
-                    borderBottomWidth: 1.25}}>
-            <Pressable 
-                onPressIn={() => {
-                    pressIn.value = true;
-                }}
-                onPressOut={() => {
-                    pressIn.value = false;
-                }}
-                onPress={() => {
-                    navigateToDetails()
-                }}
-                style={{
-                        justifyContent: 'center',
-                        flex:1
-                    }}
-                >
-                <Text
-                    style={{
-                    ...designSystem.textStyles.smallTextsSemi,
-                    marginBottom: 8,
-                    color: hexToRGBA(kauriColors.primary.dark, 0.9),
-                    }}>
-                    {title}
-                </Text>
-                <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-                    {type === 'habit' && (
-                    <View
-                        style={{
-                        borderRadius: 50,
-                        backgroundColor: hexToRGBA(
-                            kauriColors.primary.seaGreen,
-                            0.8,
-                        ),
-                        paddingHorizontal: 8,
-                        paddingVertical: 4,
-                        }}>
-                        <Text
-                        style={{
-                            color: kauriColors.primary.light,
-                            ...designSystem.textStyles.smallTexts,
-                        }}>
-                        {geti18n('common.habit')}
-                        </Text>
-                    </View>
-                    )}
-                    <View style={{...$statusConfig}}>
-                      <Text style={{...$statusTextConfig}}>
-                          {geti18n(`common.${status}`)}
-                      </Text>
-                    </View>
-                </View>
-            </Pressable>
-          <Pressable
-            style={{
-              justifyContent: 'center',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <OptionsDotsIcon />
+      <Animated.View style={$animatedStyles.pressIn}>
+          <Animated.View
+            style={[
+              {flexDirection: 'row', alignItems: 'center', paddingLeft: 8},
+              $animatedStyles.scale,
+            ]}>
+              <View style={$orderIndexContainer}><Text style={$orderIndex}>
+              {index}
+              </Text></View>
+            <Pressable
+              onPressIn={() => {
+                pressIn.value = true;
+              }}
+              onPressOut={() => {
+                pressIn.value = false;
+              }}
+              onPress={() => {
+                navigateToDetails()
+              }}> 
+              <Thumbnail src={url} width={56} height={56} title={title} type={"compact"} pretty={false} actionType={type} index={index} activeIndexVal={null} stacked={false} status={status}/>
           </Pressable>
-        </View>
-        </Animated.View>
+          <View style={{flexDirection: 'row', marginLeft: 16, flex:1, paddingVertical: 16, paddingRight:16, borderColor: kauriColors.primary.light,
+                      borderBottomWidth: 1.25}}>
+              <Pressable 
+                  onPressIn={() => {
+                      pressIn.value = true;
+                  }}
+                  onPressOut={() => {
+                      pressIn.value = false;
+                  }}
+                  onPress={() => {
+                      navigateToDetails()
+                  }}
+                  style={{
+                          justifyContent: 'center',
+                          flex:1
+                      }}
+                  >
+                  <Text
+                      style={{
+                      ...designSystem.textStyles.smallTextsSemi,
+                      marginBottom: 8,
+                      color: hexToRGBA(kauriColors.primary.dark, 0.9),
+                      }}>
+                      {title}
+                  </Text>
+                  <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
+                      {type === 'habit' && (
+                      <View
+                          style={{
+                          borderRadius: 50,
+                          backgroundColor: hexToRGBA(
+                              kauriColors.primary.seaGreen,
+                              0.8,
+                          ),
+                          paddingHorizontal: 8,
+                          paddingVertical: 4,
+                          }}>
+                          <Text
+                          style={{
+                              color: kauriColors.primary.light,
+                              ...designSystem.textStyles.smallTexts,
+                          }}>
+                          {geti18n('common.habit')}
+                          </Text>
+                      </View>
+                      )}
+                      <View style={{...$statusConfig}}>
+                        <Text style={{...$statusTextConfig}}>
+                            {geti18n(`common.${status}`)}
+                        </Text>
+                      </View>
+                  </View>
+              </Pressable>
+            <Pressable
+              style={{
+                justifyContent: 'center',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <OptionsDotsIcon />
+            </Pressable>
+          </View>
+          </Animated.View>
+      </Animated.View>
     )
 })
 

@@ -2,7 +2,7 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import type { CompositeScreenProps } from '@react-navigation/native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { observer } from 'mobx-react-lite'
-import { FC, memo, useEffect, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useState } from 'react'
 import {Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
 import { BusyIndicator, ChipSystem, Header, ImpactDistribution, StylisedTitle, Thumbnail } from '../../components'
 import { actionDetail, getActionDetails, milestone } from '../../mockdata/actionDetails'
@@ -15,7 +15,9 @@ import {translate as geti18n} from '../../i18n';
 import { InfoIcon, Lock, MindfulIcons } from '../../svgs'
 import { Completion } from './Completion'
 import { Hex } from '../../components/Hex'
-import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import Animated, { Easing, Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
+import LinearGradient from 'react-native-linear-gradient'
+import { shadowGenerator } from '../../utils/shadowGenerator'
 
 type ActionDetailsProps = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'actionDetails'>,
@@ -73,7 +75,7 @@ export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number
                     </View>
                 </View>
                 <Completion completed={kauriUsersCompleted}  total={milestones[selected]!.targetValue}/>
-                <Text style={{padding:16, ...designSystem.textStyles.paragraph, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                <Text style={{padding:16, ...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark}}>
                         {milestones[selected]!.title}
                 </Text>
             </View>
@@ -88,6 +90,11 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
     const [pageState, setPageState] = useState<'allDetails'|'history'>('allDetails')
     const [busy, setBusy] = useState(true)
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
+    const shake = useSharedValue(0)
+    const shakeScale = useSharedValue(1)
+    const rippleProgress = useSharedValue(0)
+    const buttonPress = useSharedValue(1)
+
     const [item, setItem] = useState<actionDetail>({
         id: -1,
         url: 0,
@@ -105,11 +112,67 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
         kauriUsersCompleted: 0
     })
 
+    const $rippleAnim = useAnimatedStyle(()=>{
+        return {
+            opacity: interpolate(rippleProgress.value, [0, 0.5, 1], [0, 0.7, 0], Extrapolate.CLAMP),
+            transform: [
+                {scale: interpolate(rippleProgress.value, [0, 1], [1, 3])}
+            ]
+        }
+    }, [rippleProgress])
+
     useEffect(() => {
         setTimeout(()=>{
             setItem(getActionDetails(actionId))
             setBusy(false)
+            shake.value = withDelay(250, withRepeat(withSequence(
+                    withTiming(
+                        -2,
+                        {
+                            duration:50,
+                        }
+                    ),
+                    withTiming(
+                        2,
+                        {
+                            duration:50,
+
+                        }
+                    ),
+                    withTiming(
+                        0,
+                        {
+                            duration:50,
+                        }
+                    ),
+            ), 2))
+
+            shakeScale.value = withDelay(0, withSequence(
+                withTiming(
+                    0.9,
+                    {   
+                        duration:200,
+                        easing: Easing.bounce,
+                    }
+                ),
+                withTiming(
+                    1.1,
+                    {   
+                        duration:300,
+                        easing: Easing.bounce,
+                    }
+                ),
+                withTiming(
+                    1,
+                    {
+                        duration:400,
+                        easing: Easing.inOut(Easing.ease)
+                    }
+                ),
+            ),)
+
         }, 300)
+
     }, [])
     
     const _statusColorMap = {
@@ -149,6 +212,12 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
             translationY.value = event.contentOffset.y
         }
     })
+
+    const ripple = useCallback(() => {
+        shakeScale.value = withTiming(1)
+        rippleProgress.value = 0
+        rippleProgress.value = withTiming(1, {duration: 600, easing: Easing.inOut(Easing.ease)})
+      }, []);
 
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
@@ -244,21 +313,35 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                         </View>}
                         <View style={{width: '100%', height:150}}/>
                     </Animated.ScrollView>
-                    <View style={[{
-                            paddingBottom: $containerInsets.paddingBottom,
-                            paddingTop: $containerInsets.paddingBottom && typeof $containerInsets.paddingBottom === 'number'?($containerInsets.paddingBottom)/2:24, 
-                            backgroundColor: item.status === 'inProgress'?kauriColors.primary.yellow:item.type=== 'habit'?kauriColors.primary.seaGreen: 'transparent',
-                    }, $bottomActionBar]}>
-                        <MindfulIcons type='flower' color={kauriColors.primary.light}/>
-                        <Text style={{
-                            ...designSystem.textStyles.subtitle,
-                            color: '#fff',
-                            width: '100%',
-                            textAlign: 'center',
-                        }}>
-                            {geti18n('actions.startHabit')}
-                        </Text>
-                    </View>
+
+                    <Animated.View style={[{width: 50, height: 50, borderRadius:50, backgroundColor: kauriColors.secondary.completed, position: 'absolute', bottom: $containerInsets.paddingBottom, alignSelf: 'center', transform: [{scale:2}]}, $rippleAnim]}/>
+                    <Animated.View style={{transform:[{translateX: shake}, {scale: shakeScale}]}}>
+                        <TouchableOpacity
+                            activeOpacity={0.9}
+                            onPressIn={()=>{
+                                shakeScale.value = withTiming(0.98)
+                            }}
+                            onPress={ripple}
+                        >
+                            <LinearGradient colors={["#9ABB9C", kauriColors.secondary.completed]} style={[{
+                                    marginBottom: $containerInsets.paddingBottom,
+                                    paddingHorizontal: 16,
+                                    paddingVertical: 8,
+                                    borderRadius: 100,
+                                    // paddingTop: $containerInsets.paddingBottom && typeof $containerInsets.paddingBottom === 'number'?($containerInsets.paddingBottom)/2:24, 
+                            }, $bottomActionBar]}>
+                                <MindfulIcons type='flower' color={kauriColors.primary.light}/>
+                                <Text style={{
+                                    ...designSystem.textStyles.captionsExtraBold,
+                                    color: kauriColors.primary.light,
+                                    width: '100%',
+                                    textAlign: 'center',
+                                }}>
+                                    {geti18n('actions.startHabit')}
+                                </Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </Animated.View>
                     <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title}(${item.kauriUsersCompleted} ${geti18n('common.completed').toLowerCase()})`} translationY={translationY}/>
                 </>
                 }
@@ -272,10 +355,11 @@ const $container:ViewStyle ={
 }
 
 const $bottomActionBar:ViewStyle = {
-    width: '100%',
     position: 'absolute',
-    bottom:0,
+    bottom: 0,
     alignSelf: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth:1,
+    borderColor: kauriColors.secondary.completed
 }

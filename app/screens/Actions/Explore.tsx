@@ -1,5 +1,5 @@
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import type { CompositeNavigationProp } from "@react-navigation/native";
+import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 import { observer } from "mobx-react-lite";
@@ -164,7 +164,11 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
     const {width:windowWidth, height: windowHeight} = useWindowDimensions()
     // data.push({id:-1, type: 'singleton', title: '', resources :[]})
 
+    const isFocused = useIsFocused()
     const scrollHandler = ({nativeEvent}) => {
+        if(!isFocused){
+            return
+        }
         translationY.value = nativeEvent.contentOffset.y
     }
 
@@ -195,6 +199,7 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                     getItemType={(item) => item.type}
                     onScroll={scrollHandler}
                     scrollEventThrottle={16}
+                    ref={scrollRef}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
                     ListFooterComponent={<View style={{height:200, width:'100%'}}/>}

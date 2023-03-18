@@ -1,4 +1,4 @@
-import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
+import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
@@ -27,7 +27,6 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const actionsStateValue = useSharedValue('forYou')
     const [filterState, setFilterState] = useState({})
     const [isSearching, setIsSearching] = useState(false)
-    const [busy, setBusy] = useState(true)
     const [searchPhrase, setSearchPhrase] = useState('')
 
     const [pageConfig, setPageConfig] = useState<any[]>([{
@@ -49,7 +48,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const flatRef = useRef<any>()
     const exploreRef = useRef<any>()
     const forYouRef = useRef<any>()
-    const states = {'forYou': {index: 0, ref: forYouRef, scrollToTop: () => forYouRef.current.scrollToOffset({offset:0, animated:false})}, 'explore': {index: 1, ref: exploreRef, scrollToTop: () => exploreRef.current.scrollTo({x: 0, y: 0, animated: true})}, 'habits': {index: 2, ref: forYouRef}}
+    const states = {'forYou': {index: 0, ref: forYouRef, scrollToTop: () => forYouRef.current.scrollToOffset({offset:0, animated:false})}, 'explore': {index: 1, ref: exploreRef, scrollToTop: () => exploreRef.current.scrollToOffset({offset:0, animated:false})}, 'habits': {index: 2, ref: forYouRef}}
     
     const updateActionsState = useCallback((key:any) =>{
         if(flatRef.current){
@@ -90,17 +89,17 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
             case 'habits':
             case 'myLibrary':
         }
-        fetchFilteredData(filterState, actionsState)
+        fetchFilteredData()
     }, [actionsState])
 
     const isReady = useIsReady()
     const filteredData = []
-    const onViewableItemsChanged = useRef((viewChange) => {
+    const onViewableItemsChanged = useRef(() => {
         // console.log("Visible items are", viewChange.viewableItems);
         // console.log("Changed in this iteration", changed);
     })
 
-    const fetchFilteredData = (config, pageType) =>{
+    const fetchFilteredData = () =>{
         // console.log("API call here")
         // console.log("filterState", config)
         // console.log("pagetype:", pageType)
@@ -114,7 +113,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
             [key]: value,
         }
         setFilterState(config);
-        fetchFilteredData(config, pageType)
+        fetchFilteredData()
     }
 
     const debounceFilterCall = useCallback(
@@ -169,17 +168,6 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
             )
         }
     },[])
-
-    const isFocused = useIsFocused()
-
-    // useEffect(()=>{
-    //     if(!isFocused){
-    //         const activeRef = states[actionsState]
-    //         setTimeout(()=>{
-    //             activeRef.scrollToTop()
-    //         }, 300)
-    //     }
-    // }, [isFocused])
 
     return (
         <Animated.View style={[$container]} >
