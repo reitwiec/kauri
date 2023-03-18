@@ -1,16 +1,14 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Easing, interpolate, runOnJS, SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
+import Animated, { Easing, Extrapolate, interpolate, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { MindfulIcons } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
-import { getMostImpacted, roadMap } from "../../mockdata";
 import { dimensionColorMap } from "../../utils/hexDetails";
 import { BusyIndicator, StylisedTitle, Thumbnail, TryBtn } from "../../components";
-import { Directions, FlatList, Gesture, GestureDetector, gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Hex } from "../../components/Hex";
 import { shadowGenerator } from "../../utils/shadowGenerator";
 import type { CompositeNavigationProp } from "@react-navigation/native";
@@ -18,6 +16,7 @@ import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { AppStackParamList } from "../../navigators";
+import { FlashList } from "@shopify/flash-list";
 
 export interface OverviewProps {
     riveHeight: number,
@@ -30,74 +29,54 @@ export interface OverviewProps {
     }
 }
 
-const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
-    
+const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
+    const {width:winWidth} = useWindowDimensions()
     const $contentColor = useMemo(() => hexToRGBA(kauriColors.primary.dark, 0.7), [])
-    const activeIndexVal = useSharedValue(0)
     const THUMBNAIL_WIDTH = 144
-    const flingLeft = Gesture.Fling()
-    .direction(Directions.LEFT)
-    .onEnd(()=>{
-        if(activeIndexVal.value === roadMap.count-1){
-            return
-        }
-        activeIndexVal.value += 1
-    });
-    
-    const flingRight = Gesture.Fling()
-    .direction(Directions.RIGHT)
-    .onEnd(()=>{
-        if(activeIndexVal.value === 0){
-            return
-        }
-        activeIndexVal.value -= 1
-    });
 
-
-    const [activeIndex, setActiveIndex] = useState(0)
     const [currentItem, setCurrentItem] = useState<any>(null)
 
-    const updateCurrent = (val) =>{
-       setActiveIndex(val)
-       if(val < roadMap.resources.length){
-            setCurrentItem(roadMap.resources[val])
-       }
+    useEffect(()=>{
+        setCurrentItem(roadMap.resources[0])
+    },[])
+
+    const translationX = useSharedValue(0);
+    const scrollHandler = ({nativeEvent}) => {
+        translationX.value = nativeEvent.contentOffset.x
     }
-    
-    useAnimatedReaction(()=>{
-        runOnJS(updateCurrent)(activeIndexVal.value)
-        return null
-     },()=>{
-     })
-    
-    const flingGesture = Gesture.Race(flingLeft, flingRight)
+    const onScrollEnd = () => {
+        const selectedIndex = translationX.value/(winWidth - THUMBNAIL_WIDTH - 32)
+        setCurrentItem(roadMap.resources[selectedIndex])
+    }
     const renderItem = useCallback(({item, index}) =>{
         return(
-                <RoadmapThumbs item={item} index={index} key={index} activeIndexVal={activeIndexVal} activeIndex={activeIndex} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH} onPress={onPress}/>
+                <RoadmapThumbs item={item} index={index} key={index} translationX={translationX} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH} onPress={onPress}/>
         )
     },[])
+    
     return (
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <GestureDetector gesture={flingGesture}>
-                <FlatList
-                    maxToRenderPerBatch={4}
+            <View style={{height: THUMBNAIL_WIDTH * 1.5}}>
+                <FlashList
                     data={roadMap.resources}
-                    contentContainerStyle={{
-                        overflow: 'hidden',
-                        width: '100%',
-                        height: THUMBNAIL_WIDTH*1.5,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                    // removeClippedSubviews={true}
-                    scrollEnabled={true}
+                    decelerationRate={0}
+                    estimatedItemSize={winWidth - THUMBNAIL_WIDTH - 32}
                     horizontal
+                    snapToOffsets={[...Array(roadMap.resources.length)].map((x, i) => (i * (winWidth - THUMBNAIL_WIDTH - 32) ))}
                     bounces={false}
-                    showsHorizontalScrollIndicator={true}
-                    keyExtractor={(item, index) => `${index}`}
+                    contentContainerStyle={{
+                        paddingTop:((THUMBNAIL_WIDTH*1.5) - (THUMBNAIL_WIDTH+8))/2
+                    }}
+                    pagingEnabled
+                    onScroll={scrollHandler}
+                    onMomentumScrollEnd={onScrollEnd}
+                    scrollEventThrottle={16}
+                    ListHeaderComponent={()=><View style={{width:THUMBNAIL_WIDTH/2 + 16, height: THUMBNAIL_WIDTH}}/>}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(_ , index) => `${index}`}
                     renderItem={renderItem}
                 />
-            </GestureDetector>
+            </View>
 
             {currentItem && <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: "80%", marginBottom: 16, paddingHorizontal:16}}>
                 {
@@ -123,81 +102,78 @@ const WhatNext = React.memo(gestureHandlerRootHOC(({onPress}) => {
                 {currentItem.description}
             </Text>}
             <View style={{flexDirection: "row", justifyContent: 'space-evenly', paddingHorizontal: 16}}>
-                <TryBtn/>
-                <Pressable style={{...$nextBtn, borderColor: kauriColors.primary.light, borderWidth:2}}>
+                <TryBtn onPress={() => onPress(currentItem.id)}/>
+                <TouchableOpacity activeOpacity={0.9} style={{...$nextBtn, borderColor: kauriColors.primary.light, borderWidth:2}} onPress={()=>{
+                    console.log("Redirect to actions page")
+                }}>
                     <Text style={{color: hexToRGBA(kauriColors.primary.dark,0.7), ...designSystem.textStyles.captionsBold}}>
-                    {geti18n("common.seeAll")} (86)
+                        {geti18n("common.seeAll")} (86)
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </View>
     )
-}))
+})
 
 interface RoadmapThumbsProps {
     item: any,
     index: number,
-    activeIndexVal: SharedValue<number>,
+    translationX: SharedValue<number>,
     THUMBNAIL_WIDTH: number,
-    activeIndex: number,
     onPress: any
 }
 
-const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, activeIndexVal, THUMBNAIL_WIDTH, activeIndex, onPress}){
+const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, translationX, THUMBNAIL_WIDTH, onPress}){
     const winWidth = useWindowDimensions().width
-    const inputRange = [index -1, index, index+1]
+    const offsetFactor = (winWidth - THUMBNAIL_WIDTH - 32)
+    const inputRange = [(index -1)*offsetFactor, index * offsetFactor, (index+1) * offsetFactor]
     const isPressing = useSharedValue(false)
-    const $animStyle = useAnimatedStyle(()=>{
-        const absDifference = Math.abs(activeIndexVal.value - index);
-        const delay = absDifference*100
-        if(absDifference<=2){
+    const $animStyles = {
+        thumbnail: useAnimatedStyle(()=>{
             return {
                 useNativeDriver:true,
                 transform: [
-                    {translateX: withTiming(interpolate(activeIndexVal.value, inputRange, [winWidth/2,0,-winWidth/2]), {duration: 450, easing: Easing.inOut(Easing.ease)})},
-                    {translateY:  withTiming(interpolate(activeIndexVal.value, inputRange, [12,0,12]), {duration: 450, easing: Easing.inOut(Easing.ease)})},
-                    {scale: isPressing.value?withTiming(0.98):withTiming(interpolate(activeIndexVal.value, inputRange, [0.92, 1, 0.92]), {duration: 450, easing: Easing.inOut(Easing.ease)})}
+                    {translateY:  withTiming(interpolate(translationX.value, inputRange, [24,0,24], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})},
+                    {scale: isPressing.value?withTiming(0.98):withTiming(interpolate(translationX.value, inputRange, [0.92, 1, 0.92], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})}
                 ],
-                opacity: withDelay(delay,withTiming(interpolate(activeIndexVal.value, inputRange, [1/4, 1, 1/4]), {duration: 450, easing: Easing.inOut(Easing.ease)})),
+                opacity: withTiming(interpolate(translationX.value, inputRange, [1/4, 1, 1/4], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)}),
             }
-        }else{
-            return { 
-                useNativeDriver:true,
-                transform: [
-                    {translateX: interpolate(activeIndexVal.value, inputRange, [winWidth/2,0,-winWidth/2])},
-                    {translateY: interpolate(activeIndexVal.value, inputRange, [12,0,12])},
-                    {scale: isPressing.value?withTiming(0.98):interpolate(activeIndexVal.value, inputRange, [0.92, 1, 0.92])}
-                ],
-                opacity:interpolate(activeIndexVal.value, inputRange, [1/4, 1, 1/4]),
+        }, [translationX, isPressing]),
+        border: useAnimatedStyle(()=>{
+            return {    
+                opacity: withTiming(interpolate(translationX.value, inputRange, [0, 1, 0], Extrapolate.CLAMP), {duration: 200, easing: Easing.inOut(Easing.ease)}), 
             }
-        }
-    }, [activeIndexVal, isPressing])
+        }, [translationX])
+    }
+    
 
     return (
-        <TouchableOpacity activeOpacity={0.9} onPressIn={()=>{
-            if(index === activeIndexVal.value){
-                isPressing.value = true
-            }
+        <TouchableOpacity activeOpacity={0.9}
+        onPressIn={()=>{
+            isPressing.value = true
         }}
         onPressOut={()=>{
-            if(isPressing.value === true){
-                isPressing.value = false
-            }
+            isPressing.value = false
         }}
         onPress={()=>{
-            if(index === activeIndexVal.value){
-                onPress(item.id)
-            }
+            onPress(item.id)
         }}
-        style={[{
-            ...shadowGenerator(5)
-        }]}
         >
-            <View style={[{width: "100%", alignItems: 'center', justifyContent: 'center'}]}>
-                <Animated.View style={[{position: 'absolute'}, $animStyle]}>
-                        <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={activeIndexVal} index={index} pretty={true} stacked={true} status={item.status}/>
-                </Animated.View> 
-            </View>
+            <Animated.View style={[$animStyles.thumbnail, { alignItems: 'center', justifyContent:'center', height:THUMBNAIL_WIDTH+8, width: winWidth - THUMBNAIL_WIDTH - 32}]}>
+                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={null} index={index} pretty={false} stacked={false} status={item.status}/>
+                    <Animated.View style={[$animStyles.border, {zIndex: -1, position: 'absolute', top:0}]}>
+                        <LinearGradient
+                            style={{
+                            width: THUMBNAIL_WIDTH + 8,
+                            height: THUMBNAIL_WIDTH + 8,
+                            borderRadius:16
+                            }}
+                            start={{x: 1, y: 1}}
+                            end={{x: 0.5, y: 0}}
+                            colors={['rgba(92,58,36,0.8)', kauriColors.primary.yellow,  'rgba(92,58,36, 0.25)']}
+                        />
+                    </Animated.View>
+            </Animated.View> 
         </TouchableOpacity>
     )
 })
@@ -375,7 +351,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                             {geti18n("home.whatNextDescription")}
                     </Text>
                 </View>
-                <WhatNext onPress={goToActionDetails} roadmap={data.roadmap}/>
+                <WhatNext onPress={goToActionDetails} roadMap={data.roadmap}/>
                 <View style={{marginTop: 24, overflow:'hidden',borderColor:kauriColors.primary.light, borderWidth: 2 , backgroundColor: kauriColors.primary.light, width: windowWidth-48, height: 4*(windowWidth-48)/3, marginHorizontal: 24, borderRadius:16, ...shadowGenerator(10)}}>
                     <View style={{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', top:0, width:'100%'}}>
                         <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>

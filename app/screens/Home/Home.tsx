@@ -138,7 +138,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const renderSubview = useCallback(({item})=>{
         if(item.name === 'overview'){
             return(
-                <Animated.ScrollView ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
+                <Animated.ScrollView ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
                     <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData} navigationProps={_props.navigation} data={item.data}/>
                 </Animated.ScrollView>
             )
