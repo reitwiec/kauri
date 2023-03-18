@@ -27,10 +27,7 @@ export interface ThumbnailProps {
   title: string;
   type: 'small' | 'large' | 'compact';
   actionType: 'onetime' | 'habit';
-  activeIndexVal: SharedValue<number> | null;
-  index: number;
   pretty: boolean;
-  stacked: boolean;
   status: 'uncompleted' | 'completed' | 'inProgress';
   isNew?: boolean
 }
@@ -151,99 +148,14 @@ const UnstackedThumbnail = memo(({width, height, type, imageHeight, imageWidth, 
   )
 })
 
-const StackedThumbnail = memo(({width, height, type, imageHeight, imageWidth, src, title, actionType,}:UnstackedThumbnailProps) => {
-  return (
-    <View
-          style={{
-            width: width,
-            height: height,
-            borderRadius: type === 'large' ? 16 : 12,
-            overflow: 'hidden',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            zIndex: 3,
-          }}>
-          <Image
-            source={src}
-            style={{
-              borderRadius: type === 'large' ? 16 : 12,
-              flex: 1,
-              width: imageWidth,
-              height: imageHeight,
-            }}
-          />
-          <View
-            style={{
-              top: 0,
-              right: 0,
-              left: 0,
-              bottom: 0,
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              position: 'absolute',
-            }}
-          />
-          <LinearGradient
-            style={{
-              top: 0,
-              right: 0,
-              left: 0,
-              bottom: 0,
-              flex: 1,
-              position: 'absolute',
-            }}
-            start={{x: 0.5, y: 1}}
-            end={{x: 0.5, y: 0}}
-            colors={['rgba(92,58,36,0.75)', 'rgba(92,58,36,0)']}
-          />
-          <Text
-            style={{
-              position: 'absolute',
-              bottom: 8,
-              left: 8,
-              ...designSystem.textStyles.smallSerif,
-              width: '60%',
-              color: '#ffffff',
-              lineHeight: 10,
-            }}>
-            {title}
-          </Text>
-          {actionType === 'habit' && type === 'large' && (
-            <View
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                borderRadius: 50,
-                backgroundColor: hexToRGBA(kauriColors.primary.seaGreen, 0.8),
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-              }}>
-              <Text
-                style={{
-                  color: kauriColors.primary.light,
-                  ...designSystem.textStyles.smallTexts,
-                }}>
-                {geti18n('common.habit')}
-              </Text>
-            </View>
-          )}
-        </View>
-  )
-})
-
 export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
   src,
   width,
   height,
   type,
-  activeIndexVal,
-  index,
   title,
   actionType,
   pretty,
-  stacked,
   isNew
 }) {
   const {imageWidth, imageHeight} = useMemo(() => {
@@ -260,38 +172,16 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
       imageHeight: imageHeight
     }
   }, [src])
-  
-  const inputRange = [index - 1, index, index + 1];
-
-  const animStyle = useAnimatedStyle(() => {
-    if(!activeIndexVal){
-      return {
-      }
-    }
-    const absDifference = Math.abs(activeIndexVal.value - index);
-    const delay = absDifference * 100;
-    return {
-      opacity: withDelay(
-        delay,
-        withTiming(interpolate(activeIndexVal.value, inputRange, [0, 1, 0]), {
-          duration: 300,
-          easing: Easing.inOut(Easing.ease),
-        }),
-      ),
-    };
-  }, [activeIndexVal]);
-
   return (
     <Animated.View
       style={[
         {
-          alignItems: stacked ? 'center' : 'flex-start',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          padding: !stacked && pretty? 4:0
+          padding: pretty? 4:0
         },
       ]}>
-      {stacked && (
-        <StackedThumbnail
+        <UnstackedThumbnail
           width={width}
           height={height}
           imageHeight={imageHeight}
@@ -300,24 +190,10 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
           type={type}
           actionType={actionType}
           isNew={isNew}
-          title={title} 
+          title={title}
         />
-      )}
-      {!stacked && (
-            <UnstackedThumbnail
-              width={width}
-              height={height}
-              imageHeight={imageHeight}
-              imageWidth={imageWidth}
-              src={src}
-              type={type}
-              actionType={actionType}
-              isNew={isNew}
-              title={title}
-            />
-      )}
       {pretty && (
-        <Animated.View style={[animStyle, {zIndex: !stacked?-1:2, position: !stacked?'absolute':'relative', top:0}]}>
+        <Animated.View style={[{zIndex: -1, position: 'absolute', top:0}]}>
           <LinearGradient
             style={{
               width: width + 8,

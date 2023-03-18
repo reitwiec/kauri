@@ -54,7 +54,7 @@ const CollectionItem = memo(({resource, index, windowWidth, goToCollectionDetail
                         resource.featured.map((item, index)=>{
                             return (
                                 <View style={{margin:4}} key={`${resource.title}_${index}`}>
-                                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"compact"} pretty={false} actionType={item.type} index={index} activeIndexVal={null} stacked={false} status={'uncompleted'} key={index}/>
+                                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"compact"} pretty={false} actionType={item.type} status={'uncompleted'} key={index}/>
                                 </View>
                             )
                         })
@@ -108,7 +108,7 @@ const SingletonItem = ({item, index, sectionLength, sectionIndex, goToActionDeta
                         goToActionDetails(item.id)
                     }}
                     >
-                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={null} index={index} pretty={false} stacked={false} status={"uncompleted"} isNew={sectionIndex === 0 && newActions.resources.length>0}/>
+                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} pretty={false} status={"uncompleted"} isNew={sectionIndex === 0 && newActions.resources.length>0}/>
                     <View style={{width: THUMBNAIL_WIDTH, marginTop:8}}>
                         <Text style={{...designSystem.textStyles.smallTextsSemi, textAlign: 'left', color: hexToRGBA(kauriColors.primary.dark, 0.7)}} numberOfLines={2}>
                             {item.description}

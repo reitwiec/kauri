@@ -67,6 +67,12 @@
 		<string>Recoleta-Regular.ttf</string>
 		<string>Recoleta-SemiBold.ttf</string>
 		<string>Recoleta-Thin.ttf</string>
+		<string>FONTSPRINGDEMO-PeachiBlackRegular.otf</string>
+		<string>FONTSPRINGDEMO-PeachiBold.otf</string>
+		<string>FONTSPRINGDEMO-PeachiLightRegular.otf</string>
+		<string>FONTSPRINGDEMO-PeachiMediumRegular.otf</string>
+		<string>FONTSPRINGDEMO-PeachiRegular.otf</string>
+		<string>FONTSPRINGDEMO-PeachiThinRegular.otf</string>
 	</array>
 </dict>
 </plist>

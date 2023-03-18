@@ -228,7 +228,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                         
                         <View style={{paddingHorizontal: 16}}>
                             <View style={{flexDirection: 'row'}}>
-                                <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={null} index={1} pretty={true} stacked={false} status={item.status} isNew={false}/>
+                                <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} pretty={true} status={item.status} isNew={false}/>
                                 <View style={{marginLeft: 16, justifyContent: 'flex-end'}}>
                                     <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.dark, width: '90%', marginBottom:16}}>
                                         {item.title}

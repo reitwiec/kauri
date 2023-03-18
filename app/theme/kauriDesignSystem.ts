@@ -44,7 +44,7 @@ const textStyles: textStylesMap = {
   },
   titleNormal: {
     fontSize: 20,
-    fontFamily: kauriTypography.secondary.normal,
+    fontFamily: kauriTypography.secondary.light,
   },
   paragraph: {
     fontSize: 14,

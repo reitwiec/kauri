@@ -81,7 +81,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                                         item.resources.slice(0,3).map((resource, index)=>{
                                             return (
                                                 <View style={{margin:4}} key={`${resource.title}_${index}`}>
-                                                    <Thumbnail src={resource.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={resource.title} type={"compact"} pretty={false} actionType={resource.type} index={index} activeIndexVal={null} stacked={false} status={'uncompleted'} key={index}/>
+                                                    <Thumbnail src={resource.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={resource.title} type={"compact"} pretty={false} actionType={resource.type} status={'uncompleted'} key={index}/>
                                                 </View>
                                             )
                                         })

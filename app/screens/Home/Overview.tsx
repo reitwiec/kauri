@@ -160,7 +160,7 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
         }}
         >
             <Animated.View style={[$animStyles.thumbnail, { alignItems: 'center', justifyContent:'center', height:THUMBNAIL_WIDTH+8, width: winWidth - THUMBNAIL_WIDTH - 32}]}>
-                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} activeIndexVal={null} index={index} pretty={false} stacked={false} status={item.status}/>
+                    <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} pretty={false} status={item.status}/>
                     <Animated.View style={[$animStyles.border, {zIndex: -1, position: 'absolute', top:0}]}>
                         <LinearGradient
                             style={{

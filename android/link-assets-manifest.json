@@ -2,6 +2,30 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "assets/fonts/FONTSPRINGDEMO-PeachiBlackRegular.otf",
+      "sha1": "dacca03fc818e64ca1879965787753a8c2be440e"
+    },
+    {
+      "path": "assets/fonts/FONTSPRINGDEMO-PeachiBold.otf",
+      "sha1": "79062b5f3d26705bd8537381d309cce42ff1115b"
+    },
+    {
+      "path": "assets/fonts/FONTSPRINGDEMO-PeachiLightRegular.otf",
+      "sha1": "d7d6b5ba7648b144424a6781e43b24fbceca203a"
+    },
+    {
+      "path": "assets/fonts/FONTSPRINGDEMO-PeachiMediumRegular.otf",
+      "sha1": "7dafd39152c5981bd825d9dc4f48c43d56c7fe9b"
+    },
+    {
+      "path": "assets/fonts/FONTSPRINGDEMO-PeachiRegular.otf",
+      "sha1": "3625939f56742d94bee5dffb0090def3b3be2d1c"
+    },
+    {
+      "path": "assets/fonts/FONTSPRINGDEMO-PeachiThinRegular.otf",
+      "sha1": "865641ee2ae0b71733121a2365cb2a65fd939966"
+    },
+    {
       "path": "assets/fonts/Manrope-Bold.ttf",
       "sha1": "fd4744b003e034fdf9ff433985088600ed4c6b19"
     },

@@ -28,6 +28,12 @@
 		DB5FA90758364E6295F1FF16 /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */; };
 		EB31624937DF449F810DFA7A /* Recoleta-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FC99BDBB0D44AC18A54961B /* Recoleta-Bold.ttf */; };
 		F9EA068501C746C78B8C2DFB /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 604B9F7BAC5140DE82E6E549 /* Manrope-SemiBold.ttf */; };
+		7014FB9D2AC442089E77512B /* FONTSPRINGDEMO-PeachiBlackRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 136039BE85AF4FB38E18F19E /* FONTSPRINGDEMO-PeachiBlackRegular.otf */; };
+		4B12539A030C409592C3315B /* FONTSPRINGDEMO-PeachiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 87CF1DC94D514C4C98E230FC /* FONTSPRINGDEMO-PeachiBold.otf */; };
+		DBD43788438E4A7AA86EDAF1 /* FONTSPRINGDEMO-PeachiLightRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4A694B74AE8F432C8E5467C7 /* FONTSPRINGDEMO-PeachiLightRegular.otf */; };
+		182A6A97949648AC804DA0B5 /* FONTSPRINGDEMO-PeachiMediumRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B1289D0A7F124CCDB2E52323 /* FONTSPRINGDEMO-PeachiMediumRegular.otf */; };
+		72379A02FDFB46BA899A25D9 /* FONTSPRINGDEMO-PeachiRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = A81FA01233584274808FECC7 /* FONTSPRINGDEMO-PeachiRegular.otf */; };
+		39F232984C084865BAD0959B /* FONTSPRINGDEMO-PeachiThinRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5784576527DF48F4B6470604 /* FONTSPRINGDEMO-PeachiThinRegular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +78,12 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EEE04156DCC34BAF8AF6D49E /* Manrope-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Manrope-Bold.ttf"; path = "../assets/fonts/Manrope-Bold.ttf"; sourceTree = "<group>"; };
 		FD2E0FE8FB39D561D35235AF /* libPods-kauri.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kauri.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		136039BE85AF4FB38E18F19E /* FONTSPRINGDEMO-PeachiBlackRegular.otf */ = {isa = PBXFileReference; name = "FONTSPRINGDEMO-PeachiBlackRegular.otf"; path = "../assets/fonts/FONTSPRINGDEMO-PeachiBlackRegular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		87CF1DC94D514C4C98E230FC /* FONTSPRINGDEMO-PeachiBold.otf */ = {isa = PBXFileReference; name = "FONTSPRINGDEMO-PeachiBold.otf"; path = "../assets/fonts/FONTSPRINGDEMO-PeachiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4A694B74AE8F432C8E5467C7 /* FONTSPRINGDEMO-PeachiLightRegular.otf */ = {isa = PBXFileReference; name = "FONTSPRINGDEMO-PeachiLightRegular.otf"; path = "../assets/fonts/FONTSPRINGDEMO-PeachiLightRegular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B1289D0A7F124CCDB2E52323 /* FONTSPRINGDEMO-PeachiMediumRegular.otf */ = {isa = PBXFileReference; name = "FONTSPRINGDEMO-PeachiMediumRegular.otf"; path = "../assets/fonts/FONTSPRINGDEMO-PeachiMediumRegular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A81FA01233584274808FECC7 /* FONTSPRINGDEMO-PeachiRegular.otf */ = {isa = PBXFileReference; name = "FONTSPRINGDEMO-PeachiRegular.otf"; path = "../assets/fonts/FONTSPRINGDEMO-PeachiRegular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5784576527DF48F4B6470604 /* FONTSPRINGDEMO-PeachiThinRegular.otf */ = {isa = PBXFileReference; name = "FONTSPRINGDEMO-PeachiThinRegular.otf"; path = "../assets/fonts/FONTSPRINGDEMO-PeachiThinRegular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +195,12 @@
 				ECBC34CBB38240E489ACC5C9 /* Recoleta-Regular.ttf */,
 				77C6036764964A998E99031C /* Recoleta-SemiBold.ttf */,
 				4FF1ABFCFC96410198C6C65D /* Recoleta-Thin.ttf */,
+				136039BE85AF4FB38E18F19E /* FONTSPRINGDEMO-PeachiBlackRegular.otf */,
+				87CF1DC94D514C4C98E230FC /* FONTSPRINGDEMO-PeachiBold.otf */,
+				4A694B74AE8F432C8E5467C7 /* FONTSPRINGDEMO-PeachiLightRegular.otf */,
+				B1289D0A7F124CCDB2E52323 /* FONTSPRINGDEMO-PeachiMediumRegular.otf */,
+				A81FA01233584274808FECC7 /* FONTSPRINGDEMO-PeachiRegular.otf */,
+				5784576527DF48F4B6470604 /* FONTSPRINGDEMO-PeachiThinRegular.otf */,
 			);
 			name = Resources;
 			path = "";
@@ -309,6 +327,12 @@
 				212A4B3DC95145B4A504F7D2 /* Recoleta-Regular.ttf in Resources */,
 				936BAE028CF5464190B2D9E8 /* Recoleta-SemiBold.ttf in Resources */,
 				3FB6467979704F7BAB2333F7 /* Recoleta-Thin.ttf in Resources */,
+				7014FB9D2AC442089E77512B /* FONTSPRINGDEMO-PeachiBlackRegular.otf in Resources */,
+				4B12539A030C409592C3315B /* FONTSPRINGDEMO-PeachiBold.otf in Resources */,
+				DBD43788438E4A7AA86EDAF1 /* FONTSPRINGDEMO-PeachiLightRegular.otf in Resources */,
+				182A6A97949648AC804DA0B5 /* FONTSPRINGDEMO-PeachiMediumRegular.otf in Resources */,
+				72379A02FDFB46BA899A25D9 /* FONTSPRINGDEMO-PeachiRegular.otf in Resources */,
+				39F232984C084865BAD0959B /* FONTSPRINGDEMO-PeachiThinRegular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

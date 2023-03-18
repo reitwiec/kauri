@@ -11,12 +11,20 @@ const fonts = {
   recoleta: {
     extraLight: 'Recoleta-Thin',
     light: 'Recoleta-Light',
-    normal: 'Recoleta-Regular',
+    regular: 'Recoleta-Regular',
     medium: 'Recoleta-Medium',
     semiBold: 'Recoleta-SemiBold',
     bold: 'Recoleta-Bold',
     extraBold: 'Recoleta-ExtraBold',
   },
+  peachi: {
+    light: 'FONTSPRINGDEMO-PeachiLightRegular',
+    bold: 'FONTSPRINGDEMO-PeachiBold',
+    black: 'FONTSPRINGDEMO-PeachiBlackRegular',
+    medium: 'FONTSPRINGDEMO-PeachiMediumRegular',
+    regular: 'FONTSPRINGDEMO-PeachiRegular',
+    thin: 'FONTSPRINGDEMO-PeachiThinRegular'
+  }
 };
 
 export const kauriTypography = {
@@ -25,5 +33,5 @@ export const kauriTypography = {
    */
   fonts,
   primary: fonts.manrope,
-  secondary: fonts.recoleta,
+  secondary: fonts.peachi,
 };
