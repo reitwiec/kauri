@@ -117,8 +117,8 @@ const actionDetails:actionDetail[] = [
                 targetValue: 10000
             },
             {
-                title: "If 25k people do it, Bangalore becomes traffic free",
-                targetValue: 25000
+                title: "If 15k people do it, Bangalore becomes traffic free",
+                targetValue: 15000
             }
         ],
         timesCompleted: 0
@@ -295,8 +295,8 @@ const actionDetails:actionDetail[] = [
                 targetValue: 10000
             },
             {
-                title: "If 25k people do it, Bangalore becomes traffic free",
-                targetValue: 25000
+                title: "If 30k people do it, Bangalore becomes traffic free",
+                targetValue: 30000
             }
         ],
         timesCompleted: 0
@@ -378,12 +378,12 @@ const actionDetails:actionDetail[] = [
                 targetValue: 1000
             },
             {
-                title: "If 10k people do it, Bangalore becomes traffic free",
-                targetValue: 10000
+                title: "If 5k people do it, Bangalore becomes traffic free",
+                targetValue: 5000
             },
             {
                 title: "If 25k people do it, Bangalore becomes traffic free",
-                targetValue: 25000
+                targetValue: 10000
             }
         ],
         timesCompleted: 0

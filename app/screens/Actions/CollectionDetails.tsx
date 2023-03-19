@@ -9,14 +9,13 @@ import {Text, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'reac
 import { BusyIndicator, Header, PlaylistListItem, Thumbnail } from "../../components";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { collectionDetail, getCollectionDetails } from "../../mockdata/collectionDetails";
-import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 import {translate as geti18n} from '../../i18n';
 import { designSystem, kauriColors } from "../../theme";
 import { hexToRGBA } from "../../utils/hexToRGBA";
-import { PlusIcon, ShareIcon, ShuffleIcon } from "../../svgs";
+import { KauriLogo, PlusIcon, ShareIcon, ShuffleIcon } from "../../svgs";
 import { Completion } from "./Completion";
 import { FlashList } from "@shopify/flash-list";
-import LinearGradient from "react-native-linear-gradient";
 
 type CollectionDetails = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'collectionDetails'>,
@@ -62,7 +61,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
             })
             setCompletedActions(count)
             setBusy(false)
-        }, 300)
+        }, 600)
     }, [])
 
     const translationY = useSharedValue(0)
@@ -98,8 +97,8 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                         <Text style={{...designSystem.textStyles.titleSmall, color: kauriColors.primary.dark}}>
                             {item.title}
                         </Text>
-                        <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
-                            {geti18n("actions.contributedBy")} {item.owner} • {item.likes} {geti18n("common.likes")} • {item.total} {geti18n("common.actions")}
+                        <Text style={{...designSystem.textStyles.smallTextsSemi, marginTop:8, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                            {geti18n("actions.contributedBy")} {item.owner==='Kauri'?<View style={{height: 10}}><KauriLogo/></View>:item.owner} • {item.likes} {geti18n("common.likes")} • {item.total} {geti18n("common.actions")}
                         </Text>
                         <Text style={{...designSystem.textStyles.paragraph, marginTop:16, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
                             {item.description}
@@ -140,7 +139,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
             { busy?
-                <BusyIndicator/>:
+                <BusyIndicator style="light"/>:
                 <>
                     <Animated.View style={{ height: windowHeight}}>
                         <FlashList

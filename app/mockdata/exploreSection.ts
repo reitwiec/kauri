@@ -112,7 +112,7 @@ export const exploreSkeleton: skeleton[] = [
     },
     {
         id: 2,
-        title: "Favourite 5-min actions",
+        title: "Favourite 5 min actions",
         type: 'singleton',
         resources: singletonGenerator(50)
     },
@@ -165,7 +165,7 @@ export const exploreSkeleton: skeleton[] = [
     },
     {
         id: 6,
-        title: "Favourite 5-min actions",
+        title: "Favourite 5 min actions",
         type: 'singleton',
         resources: singletonGenerator(50)
     },

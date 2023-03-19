@@ -245,12 +245,14 @@ export const RiveHeader: FC<RiveHeaderProps> = ({
 }) => {
   const $containerInsets = useSafeAreaInsetsStyle(['top'], 'padding');
   const headerRef = createRef<Animated.View>();
+  const { height:winHeight} = useWindowDimensions()
+  const minRiveHeight = 200*winHeight/844
   const $animated_container = useAnimatedStyle(() => {
     return {
       height: interpolate(
         translationY.value,
-        [0, 100],
-        [config?.height || 240, 200],
+        [0, 200],
+        [config?.height || 240, minRiveHeight],
         Extrapolate.CLAMP,
       ),
     };

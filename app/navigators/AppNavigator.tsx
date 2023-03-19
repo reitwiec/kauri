@@ -6,6 +6,7 @@ import React from 'react';
 import {InterestSelectionHive, Tabs, TabStackParamList} from '../screens';
 import { ActionDetails } from '../screens/Actions/ActionDetails';
 import { CollectionDetails } from '../screens/Actions/CollectionDetails';
+import { Trail } from '../screens/Home/Trail';
 
 type mainScreens = 'home' | 'actions' | 'shop' | 'read' | 'you'
 export type AppStackParamList = {
@@ -18,7 +19,8 @@ export type AppStackParamList = {
   collectionDetails: {
     collectionId: string,
     cameFrom: mainScreens
-  }
+  },
+  trail: undefined
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -46,6 +48,11 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen
           name="collectionDetails"
           component={CollectionDetails}
+      />
+      <Stack.Screen
+        name="trail"
+        component={Trail}
+        options={{presentation: 'modal'}}
       />
     </Stack.Navigator>
   );

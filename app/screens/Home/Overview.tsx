@@ -268,7 +268,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
 
     return (
         <View style={{width: windowWidth, minHeight: windowHeight/2}}>
-        { mostImpacted.length === 0 ? <BusyIndicator/>:
+        { mostImpacted.length === 0 ? <BusyIndicator style="light"/>:
             <>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16}}>
                     <Greeting/>
@@ -399,7 +399,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                         </View>
                     </View>
                 </View>
-                <View style={{height:riveHeight, width:windowWidth}}>
+                <View style={{height:riveHeight*1.5, width:windowWidth}}>
                 </View>
             </>}
         </View>

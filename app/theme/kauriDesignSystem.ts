@@ -1,11 +1,7 @@
-import type {ViewStyle} from 'react-native';
+import type {TextStyle, ViewStyle} from 'react-native';
 import {kauriColors} from './kauriColors';
 import {kauriTypography} from './kauriTypography';
 
-type textSettings = {
-  fontSize: number;
-  fontFamily: string;
-};
 type textStyles =
   | 'titleBig'
   | 'titleSmall'
@@ -22,8 +18,9 @@ type textStyles =
   | 'superTitle'
   | 'captionsExtraBold'
   | 'titleBigger'
+  | 'titleSans'
 
-type textStylesMap = {[style in textStyles]: textSettings};
+type textStylesMap = {[style in textStyles]: TextStyle};
 
 const textStyles: textStylesMap = {
   superTitle:{
@@ -46,9 +43,17 @@ const textStyles: textStylesMap = {
     fontSize: 20,
     fontFamily: kauriTypography.secondary.light,
   },
+  titleSans: {
+    fontSize: 20,
+    fontFamily: kauriTypography.primary.extraBold
+  },
   paragraph: {
     fontSize: 14,
     fontFamily: kauriTypography.primary.medium,
+  },
+  subtitle: {
+    fontSize: 14,
+    fontFamily: kauriTypography.primary.semiBold,
   },
   captions: {
     fontSize: 12,
@@ -61,10 +66,6 @@ const textStyles: textStylesMap = {
   captionsExtraBold: {
     fontSize: 12,
     fontFamily: kauriTypography.primary.extraBold,
-  },
-  subtitle: {
-    fontSize: 14,
-    fontFamily: kauriTypography.primary.semiBold,
   },
   smallTextsSemi: {
     fontSize: 10,

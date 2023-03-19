@@ -4,13 +4,10 @@ import { Circle, G, Path, Svg } from 'react-native-svg';
 import { kauriColors } from '../theme';
 import { dimensionColorMap } from '../utils/hexDetails';
 
-export const Treering = ({color, cumulativeSeconds, total}) => {
+export const Treering = ({ cumulativeSeconds, total}) => {
 const rotation = (Math.random()*100)%360
 const {width:windowWidth} = useWindowDimensions()
 const maxScale = (windowWidth-32-32)/179
-  if(!color){
-    color = "#fff"
-  }
   return (
     <View style={{aspectRatio: 1}}>
       <Svg viewBox="0 0 72 72" width={"100%"} height={"100%"}>

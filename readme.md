@@ -44,3 +44,9 @@ Hightlights:
 
 What milestones have you helped achieve?
     Map through actions completed and calculate all the milestones that are achieved
+
+## Impact
+
+- Need to make it more component based
+- Add minimum check for width
+- Add translations

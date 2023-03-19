@@ -27,7 +27,8 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const [homeState, setHomeState] = useState<'overview'|'impact'>('overview')
     const homeStateVal = useSharedValue('overview')
     const riveHeight = 240
-    const winWidth = useWindowDimensions().width
+    const {width:winWidth, height:winHeight} = useWindowDimensions()
+    const minRiveHeight = 200*winHeight/844
     
     const [pageConfig, setPageConfig] = useState<any[]>([{
         name: 'overview', 
@@ -119,7 +120,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
                 {translateY: interpolate(
                     translationY.value,
                     [0, 200],
-                    [riveHeight, 100],
+                    [riveHeight, minRiveHeight],
                     Extrapolate.CLAMP
                 )}
             ]
@@ -145,7 +146,7 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
         }else{
             return(
                 <Animated.ScrollView ref={impactRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
-                    <Impact riveHeight={riveHeight}/>
+                    <Impact riveHeight={riveHeight} navigationProps={_props.navigation}/>
                 </Animated.ScrollView>
             )
         }

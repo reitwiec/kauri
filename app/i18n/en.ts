@@ -13,6 +13,7 @@ const en = {
     idontfeelgood: "I don't feel good",
     actionsCompleted: 'Actions completed',
     causesImpacted: 'Causes impacted',
+    causes: 'Causes',
     totalContributions: 'Total contributions',
     mostImpactedCauses: 'Your most impacted causes',
     feelingStuck: 'Feeling stuck',
@@ -36,6 +37,10 @@ const en = {
     problemStatement: 'Problem Statement',
     solution: 'Solution',
     likes: "likes",
+    trail: "Trail",
+    save: "Save",
+    share: 'Share',
+    rings: 'rings',
   },
   interestHive: {
     title: 'What does sustainability mean for you?',
@@ -65,6 +70,8 @@ const en = {
     shareCollection: "Share collection"
   },
   home: {
+    generatedOn: 'Generated on',
+    brownRingDescription: "Every brown ring marks the start of a new year",
     whatNext: 'What next?',
     whatNextDescription:
       'Next action for you on your roadmap.',

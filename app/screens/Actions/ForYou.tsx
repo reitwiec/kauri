@@ -115,10 +115,11 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
     }
 
     return (
-            <View style={{ width: windowWidth, height:windowHeight}}>
-                {
-                    data.resources.length ===0? 
-                    <BusyIndicator/>:
+            data.resources.length===0? 
+            <View style={{width: windowWidth, minHeight: windowHeight/2}}>
+                <BusyIndicator style="light"/>
+            </View>:
+                <View style={{ width: windowWidth, height:windowHeight}}>
                     <FlashList
                         data={resources}
                         renderItem={_renderItem}
@@ -131,7 +132,6 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
                         onScroll={scrollHandler}
                         ListFooterComponent={<View style={{height:200, width:'100%'}}/>}
                     />
-                }
-            </View>
+                </View>
     )
 })

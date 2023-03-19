@@ -17,7 +17,6 @@ import { Completion } from './Completion'
 import { Hex } from '../../components/Hex'
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 import LinearGradient from 'react-native-linear-gradient'
-import { shadowGenerator } from '../../utils/shadowGenerator'
 
 type ActionDetailsProps = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'actionDetails'>,
@@ -171,7 +170,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                 ),
             ),)
 
-        }, 300)
+        }, 600)
 
     }, [])
     
@@ -222,7 +221,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
             { busy?
-                <BusyIndicator/>:
+                <BusyIndicator style='light'/>:
                 <>
                     <Animated.ScrollView onScroll={scrollHandler} showsVerticalScrollIndicator={false} scrollEventThrottle={16} style={{paddingTop: 40}}>
                         

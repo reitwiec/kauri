@@ -188,11 +188,11 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
     }
 
     return (
-        <View style={{width: windowWidth, height: windowHeight}}>
-            {
-                data.length===1?
-                <BusyIndicator/>:
-                <>
+        data.length===1?
+            <View style={{width: windowWidth, minHeight: windowHeight/2}}>
+                <BusyIndicator style="light"/>
+            </View>:
+            <View style={{width: windowWidth, height: windowHeight}}>
                 <FlashList
                     data={data}
                     estimatedItemSize={200}
@@ -204,58 +204,6 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
                     ListFooterComponent={<View style={{height:200, width:'100%'}}/>}
                 />
-                {/* <ScrollView scrollEventThrottle={16} onScroll={scrollHandler} ref={scrollRef} showsVerticalScrollIndicator={false}>
-                        {
-                            data.map((sectionItem, sectionIndex) =>{
-                                if(sectionItem.id === -1){
-                                    return (
-                                        <View style={{height:200, width:'100%'}} key={sectionIndex}>
-                                        </View>
-                                    )
-                                }
-                                if(sectionItem.type === 'singleton'){
-                                    return (
-                                        <View style={[{marginBottom:40}, ]} key={sectionIndex}>
-                                            <View style={{paddingHorizontal: 16, marginBottom: 24}}>
-                                                <StylisedTitle text={sectionItem.title} alt={false} small/>
-                                            </View>
-                                            <FlashList
-                                                horizontal={true}
-                                                showsHorizontalScrollIndicator={false}
-                                                data={sectionItem.resources as singletonResource[]}
-                                                estimatedItemSize={140}
-                                                keyExtractor={(item, index) => index + ""}
-                                                renderItem={({item, index}) => {
-                                                    return (
-                                                        <SingletonItem goToActionDetails={goToActionDetails} sectionLength={sectionItem.resources.length} sectionIndex={sectionIndex} index={index} item={item} key={index}/>
-                                                    )
-                                                }}
-                                            />
-                                        </View>
-                                    )
-                                }
-
-                                return (
-                                    <View style={{marginBottom:40-24}} key={sectionIndex}>
-                                        <View style={{paddingHorizontal: 16, marginBottom: 24}}>
-                                            <StylisedTitle text={sectionItem.title} alt={false} small/>
-                                        </View>
-                                        <View style={{flexDirection: "row", flex:1, flexWrap: 'wrap'}}>
-                                            {
-                                                sectionItem.resources.map((resource, index) => {
-                                                    return (
-                                                        <CollectionItem resource={resource} index={index} key={index} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>
-                                                    )
-                                                })
-                                            }
-                                        </View>
-                                    </View>
-                                )
-                            })
-                        }
-                </ScrollView> */}
-                </>
-            }
-        </View>
+            </View>
     )
 })
