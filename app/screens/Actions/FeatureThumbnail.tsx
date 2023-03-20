@@ -249,7 +249,7 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                     </Text>
 
                     <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', marginTop: 24}}>
-                        <TryBtn/>
+                        <TryBtn onPress={() => onPress(actionId+"")}/>
                         <StaggeredHex topCauses={topCauses} totalCauses={totalCauses}/>
                     </View>
                     <View style={{flexDirection: 'row', width: '100%', position: 'absolute', top: 8, left:8}}>

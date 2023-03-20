@@ -123,7 +123,7 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
                 </View>
                 }
             </ScrollView>
-            <View style={{ position: 'absolute', top: $containerInsets.paddingTop, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
+            <View style={{ position: 'absolute', top: 16, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
                     <TouchableOpacity style={{width: 16}} activeOpacity={0.9} onPress={()=>_props.navigation.goBack()}>
                         <CrossIcon color={kauriColors.primary.dark}/>
                     </TouchableOpacity>

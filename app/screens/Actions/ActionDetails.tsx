@@ -26,7 +26,7 @@ type ActionDetailsProps = CompositeScreenProps<
 export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number}> = memo(({milestones, kauriUsersCompleted}) =>{
     const [selected, setSelected] = useState(0)
     useEffect(()=>{
-        let startIndex = 0
+        let startIndex = -1
         milestones.forEach((milestone, index) => {
             if(milestone.targetValue<kauriUsersCompleted){
                 startIndex=index
@@ -88,11 +88,10 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
     const {actionId, cameFrom} = _props.route.params
     const [pageState, setPageState] = useState<'allDetails'|'history'>('allDetails')
     const [busy, setBusy] = useState(true)
-    const {width:windowWidth, height:windowHeight} = useWindowDimensions()
+    const {height:windowHeight} = useWindowDimensions()
     const shake = useSharedValue(0)
     const shakeScale = useSharedValue(1)
     const rippleProgress = useSharedValue(0)
-    const buttonPress = useSharedValue(1)
 
     const [item, setItem] = useState<actionDetail>({
         id: -1,
@@ -313,8 +312,8 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                         <View style={{width: '100%', height:150}}/>
                     </Animated.ScrollView>
 
-                    <Animated.View style={[{width: 50, height: 50, borderRadius:50, backgroundColor: kauriColors.secondary.completed, position: 'absolute', bottom: $containerInsets.paddingBottom, alignSelf: 'center', transform: [{scale:2}]}, $rippleAnim]}/>
-                    <Animated.View style={{transform:[{translateX: shake}, {scale: shakeScale}]}}>
+                    <Animated.View style={[{width: 50, height: 50, borderRadius:50, backgroundColor: kauriColors.secondary.completed, position: 'absolute', bottom: typeof $containerInsets.paddingBottom ==='number'?  $containerInsets.paddingBottom + 8:  $containerInsets.paddingBottom, alignSelf: 'center', transform: [{scale:2}]}, $rippleAnim]}/>
+                    <Animated.View style={{transform:[{translateX: shake}, {scale: shakeScale}], marginBottom: 8}}>
                         <TouchableOpacity
                             activeOpacity={0.9}
                             onPressIn={()=>{

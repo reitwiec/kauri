@@ -1,12 +1,15 @@
 import {NavigationContainer, NavigatorScreenParams} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import type {StackScreenProps} from '@react-navigation/stack';
+import {StackScreenProps, TransitionPresets} from '@react-navigation/stack';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
+import { Platform } from 'react-native/types';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import {InterestSelectionHive, Tabs, TabStackParamList} from '../screens';
 import { ActionDetails } from '../screens/Actions/ActionDetails';
 import { CollectionDetails } from '../screens/Actions/CollectionDetails';
 import { Trail } from '../screens/Home/Trail';
+import { ReadDetail } from '../screens/Read/ReadDetail';
 
 type mainScreens = 'home' | 'actions' | 'shop' | 'read' | 'you'
 export type AppStackParamList = {
@@ -20,7 +23,10 @@ export type AppStackParamList = {
     collectionId: string,
     cameFrom: mainScreens
   },
-  trail: undefined
+  trail: undefined,
+  readDetail: {
+    readId: string
+  }
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -30,16 +36,16 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       initialRouteName="tabs"
-      screenOptions={{headerShown: false}}>
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen
         name="onboarding_interests_hive"
         component={InterestSelectionHive}
-        options={{animation: 'fade'}}
       />
       <Stack.Screen
         name="tabs"
         component={Tabs}
-        options={{animation: 'fade'}}
       />
       <Stack.Screen
           name="actionDetails"
@@ -53,6 +59,11 @@ const AppStack = observer(function AppStack() {
         name="trail"
         component={Trail}
         options={{presentation: 'modal'}}
+      />
+      <Stack.Screen
+        name="readDetail"
+        component={ReadDetail}
+        options={{animation: 'slide_from_bottom', presentation: 'modal'}}
       />
     </Stack.Navigator>
   );

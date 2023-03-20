@@ -41,6 +41,7 @@ const en = {
     save: "Save",
     share: 'Share',
     rings: 'rings',
+    theory: 'Theory',
   },
   interestHive: {
     title: 'What does sustainability mean for you?',

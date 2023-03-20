@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Easing, Extrapolate, interpolate, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { Image, Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
+import Animated, { Easing, Extrapolate, interpolate, SharedTransition, SharedValue, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { hexToRGBA } from "../../utils/hexToRGBA";
@@ -17,6 +17,8 @@ import type { TabStackParamList } from "../Tabs/Tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { AppStackParamList } from "../../navigators";
 import { FlashList } from "@shopify/flash-list";
+import { hexIntro } from "../../mockdata";
+import { SharedElement } from "react-navigation-shared-element";
 
 export interface OverviewProps {
     riveHeight: number,
@@ -35,6 +37,7 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
     const THUMBNAIL_WIDTH = 144
 
     const [currentItem, setCurrentItem] = useState<any>(null)
+    const [currentIndex, setCurrentIndex] = useState(0)
 
     useEffect(()=>{
         setCurrentItem(roadMap.resources[0])
@@ -45,8 +48,11 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
         translationX.value = nativeEvent.contentOffset.x
     }
     const onScrollEnd = () => {
-        const selectedIndex = translationX.value/(winWidth - THUMBNAIL_WIDTH - 32)
-        setCurrentItem(roadMap.resources[selectedIndex])
+        const selectedIndex = Math.round(translationX.value/(winWidth - THUMBNAIL_WIDTH - 32))
+        if(currentIndex !== selectedIndex) {
+            setCurrentItem(roadMap.resources[selectedIndex])
+            setCurrentIndex(selectedIndex)
+        }
     }
     const renderItem = useCallback(({item, index}) =>{
         return(
@@ -61,7 +67,7 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
                     data={roadMap.resources}
                     decelerationRate={0}
                     estimatedItemSize={winWidth - THUMBNAIL_WIDTH - 32}
-                    horizontal
+                    horizontal 
                     snapToOffsets={[...Array(roadMap.resources.length)].map((x, i) => (i * (winWidth - THUMBNAIL_WIDTH - 32) ))}
                     bounces={false}
                     contentContainerStyle={{
@@ -258,12 +264,27 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
     const {width:windowWidth, height: windowHeight} = useWindowDimensions()
     const mostImpacted = data.mostImpacted
     const $contentColor = useMemo(() => hexToRGBA(kauriColors.primary.dark, 0.7), [])
+
+    const $pressing = useSharedValue(false)
+
     const goToActionDetails = (actionId: string) => {
         navigationProps.navigate('actionDetails', {
             actionId,
             cameFrom: 'home'
         })
     }
+
+    const goToReadDetails = (readId: string) => {
+        navigationProps.navigate('readDetail' , {
+            readId: readId
+        })
+    }
+
+    const $pressingAnim = useAnimatedStyle(()=>{
+        return {
+            transform: [{scale: $pressing.value?withTiming(0.98):withTiming(1)}]
+        }
+    }, [$pressing])
     
 
     return (
@@ -352,53 +373,29 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     </Text>
                 </View>
                 <WhatNext onPress={goToActionDetails} roadMap={data.roadmap}/>
-                <View style={{marginTop: 24, overflow:'hidden',borderColor:kauriColors.primary.light, borderWidth: 2 , backgroundColor: kauriColors.primary.light, width: windowWidth-48, height: 4*(windowWidth-48)/3, marginHorizontal: 24, borderRadius:16, ...shadowGenerator(10)}}>
-                    <View style={{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', top:0, width:'100%'}}>
-                        <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>
-                            READ
-                        </Text>
-                        <Text style={{...designSystem.textStyles.titleBigger, color: kauriColors.primary.light, width: '70%'}}>
-                            What do they mean?
-                        </Text>
-                        {/* <Text style={{...designSystem.textStyles.captions, color: kauriColors.primary.chipBar}}>
-                            This is a sample description of the content in this article. Sounds interesting doesn't it?
-                        </Text> */}
-                    </View>
-                    <View style={{transform:[{rotate: '-45deg'}], alignItems: 'center', justifyContent: 'center'}}>
-                        <View style={{flexDirection: 'row'}}>
-                            {
-                                ["", "", "", "", "", "",].map((item, index)=>{
-                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension1"} size={64}/></View>
-                                }
-                                )
-                            }
-                        </View>
-                        <View style={{flexDirection: 'row', paddingLeft: 64}}>
-                            {
-                                ["", "", "", "", "", "",].map((item, index)=>{
-                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension4"} size={64}/></View>
-                                }
-                                )
-                            }
-                        </View>
-                        <View style={{flexDirection: 'row'}}>
-                            {
-                                ["", "", "", "", "", "",].map((item, index)=>{
-                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension3"} size={64}/></View>
-                                }
-                                )
-                            }
-                        </View>
-                        <View style={{flexDirection: 'row', paddingLeft: 64}}>
-                            {
-                                ["", "", "", "", "", "",].map((item, index)=>{
-                                    return <View style={{paddingHorizontal: 12}} key={index}><Hex title={""} dimension={"dimension2"} size={64}/></View>
-                                }
-                                )
-                            }
-                        </View>
-                    </View>
-                </View>
+                <TouchableOpacity activeOpacity={0.9} onPressIn={()=> $pressing.value = true} onPressOut={()=> $pressing.value = false}  onPress={() => goToReadDetails("1")} style={{marginTop:24, paddingHorizontal: 24}}>
+                        <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, width: windowWidth-48, height: 4*(windowWidth-48)/3, borderRadius:12}, $pressingAnim]}>
+                                    <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', width:'100%'}, hexIntro.description?{bottom:0}:{top:0}]}>
+                                            <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>
+                                            3 MIN READ
+                                            </Text>
+                                            <Text style={{...designSystem.textStyles.titleBigger, color: kauriColors.primary.light, width: '70%'}}>
+                                                {hexIntro.title}
+                                            </Text>
+                                            {
+                                                hexIntro.description && <Text style={{...designSystem.textStyles.captions, color: kauriColors.primary.chipBar}}>
+                                                    {hexIntro.description}
+                                                </Text>
+                                            }
+                                    </Animated.View>
+                                    <Animated.View style={{width: windowWidth, height:4*windowWidth/3}}>
+                                        <Image
+                                            source={hexIntro.url}
+                                            style={{width: '100%', height:'100%', resizeMode: 'cover'}}
+                                        />
+                                    </Animated.View>
+                        </Animated.View>
+                </TouchableOpacity>
                 <View style={{height:riveHeight*1.5, width:windowWidth}}>
                 </View>
             </>}
