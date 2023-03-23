@@ -2,9 +2,9 @@ import {useWindowDimensions, View} from 'react-native';
 import { Extrapolate, interpolate } from 'react-native-reanimated';
 import { Circle, G, Path, Svg } from 'react-native-svg';
 import { kauriColors } from '../theme';
-import { dimensionColorMap } from '../utils/hexDetails';
+import { dimensionColorMap, dimensionColorMapContrast } from '../utils/hexDetails';
 
-export const Treering = ({ cumulativeSeconds, total}) => {
+export const Treering = ({ cumulativeSeconds, total}) => {kauriColors.secondary.tanBrown
 const rotation = (Math.random()*100)%360
 const {width:windowWidth} = useWindowDimensions()
 const maxScale = (windowWidth-32-32)/179
@@ -12,7 +12,7 @@ const maxScale = (windowWidth-32-32)/179
     <View style={{aspectRatio: 1}}>
       <Svg viewBox="0 0 72 72" width={"100%"} height={"100%"}>
       {Array.from({length: total}).map((i, j)=>{
-                        const isYearEnd = j!== 0 && j%100 ===0
+                        const isYearEnd = j!== 0 && j%500 ===0
                         let scale = 1
                         let strokeWidth = isYearEnd ? 1: 0.2
                         if(cumulativeSeconds.length > j && typeof cumulativeSeconds[j] === "number") {
@@ -30,7 +30,7 @@ const maxScale = (windowWidth-32-32)/179
                                 c1.1-1.5,2.5-2.1,3.4-3.8c0.8-1.4,0.5-3.2,0.8-4.7c0.1-0.5,0.3-1,0.5-1.6c0.4-1.5,0.4-3-0.1-4.5c-0.1-0.4-0.3-0.8-0.4-1.2
                                 c-0.1-0.4,0-0.9,0-1.3c0-0.8-0.4-1.6-0.7-2.4c-0.3-0.8-0.7-1.6-1-2.5c-0.1-0.3-0.2-0.6-0.4-0.8c-0.2-0.2-0.4-0.4-0.6-0.6
                                 c-1.5-1.5-3.1-2.9-4.6-4.4c-0.2-0.2-0.4-0.3-0.6-0.5c-0.2-0.1-0.5-0.2-0.7-0.3c-1.3-0.3-2.5-0.8-3.7-1.2c-0.6-0.2-1.4-0.3-2-0.7
-                                c-0.2-0.2-1.2-0.3-1.4-0.3S35.7,18,35.7,18z" fill="none" strokeWidth={strokeWidth} stroke={isYearEnd?kauriColors.secondary.tanBrown:dimensionColorMap()[selectedDimension!]} scale={scale} translateX={(1-scale)*36} translateY={(1-scale)*36} transform={`rotate(${rotation}, 36, 36)`}/>
+                                c-0.2-0.2-1.2-0.3-1.4-0.3S35.7,18,35.7,18z" fill="none" strokeWidth={strokeWidth} stroke={isYearEnd?"#FFFDEC":dimensionColorMapContrast()[selectedDimension!]} scale={scale} translateX={(1-scale)*36} translateY={(1-scale)*36} transform={`rotate(${rotation}, 36, 36)`}/>
                         )
         })}
     </Svg>

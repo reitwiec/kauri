@@ -43,7 +43,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
     })
 
     const goToActionDetails = (actionId: string) => {
-        _props.navigation.navigate('actionDetails', {
+        _props.navigation.push('actionDetails', {
             actionId,
             cameFrom: 'actions'
         })
@@ -149,7 +149,6 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                             ListFooterComponent={<View style={{height: $containerInsets.paddingBottom, width: '100%', marginBottom: 36}}/>}
                             estimatedItemSize={80}
                             onScroll={scrollHandler}
-                            keyExtractor={(item, index) => index + ""}
                             renderItem={({item:resource, index}) => {
                                 return (
                                     <PlaylistListItem id={resource.id} url={resource.url} title={resource.title} index={index+1} status={resource.status} type={resource.type} onPress={goToActionDetails} key={index}/>

@@ -36,9 +36,9 @@ function App() {
   // otherwise, we're ready to render the app
   return (
       <GestureHandlerRootView style={{flex:1}}>
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <AppNavigator />
-    </SafeAreaProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <AppNavigator />
+        </SafeAreaProvider>
       </GestureHandlerRootView>
   );
 }

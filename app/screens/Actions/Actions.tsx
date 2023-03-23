@@ -1,4 +1,4 @@
-import type { CompositeScreenProps } from "@react-navigation/native";
+import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
@@ -28,7 +28,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const [filterState, setFilterState] = useState({})
     const [isSearching, setIsSearching] = useState(false)
     const [searchPhrase, setSearchPhrase] = useState('')
-
+    const isFocused = useIsFocused()
     const [pageConfig, setPageConfig] = useState<any[]>([{
         name: 'forYou', 
         data: { count: 0,
@@ -66,7 +66,6 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
                 setActionsState(key)
         },300)
     },[]);
-
 
     useEffect(()=>{
         switch(actionsState){
@@ -142,6 +141,7 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     }
 
     const $scrollContainer_animated = useAnimatedStyle(()=>{
+        console.log('--',translationY.value)
         return {
             transform:[
                 {translateY: interpolate(

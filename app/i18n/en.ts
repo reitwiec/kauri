@@ -72,7 +72,7 @@ const en = {
   },
   home: {
     generatedOn: 'Generated on',
-    brownRingDescription: "Every brown ring marks the start of a new year",
+    ringDescription: "Every light coloured ring marks the start of a new year",
     whatNext: 'What next?',
     whatNextDescription:
       'Next action for you on your roadmap.',

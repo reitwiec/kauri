@@ -43,11 +43,13 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
         <View style={{ width: '100%', alignItems: 'center'}}>
             <View style={{ width: '100%', alignItems: 'center', paddingBottom: 24, paddingTop: 16}}>
                 <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
-            <View style={{width: '100%', paddingHorizontal: 8, paddingVertical:16, marginTop: 16}}>
-                    <View>
+            <View style={{width: '100%', paddingHorizontal: 16, marginTop: 24, alignItems: 'center'}}>
+                    <View style={{marginTop: 24}}>
                         <StylisedTitle text={"Your full roadmap"} alt={true} small={true}/>
                     </View>
-                    <View style={{...designSystem.card, marginTop:16, marginHorizontal:8}}>
+            </View>
+            <View style={{width: '100%'}}>
+                    <View style={{marginHorizontal:8}}>
                         <Completion total={roadMap.count} completed={roadMap.completed}/>
                         <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
                             <View style={{opacity: 0.6}}>
@@ -121,6 +123,7 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
             </View>:
                 <View style={{ width: windowWidth, height:windowHeight}}>
                     <FlashList
+                        contentOffset={{x:0, y: translationY.value}}
                         data={resources}
                         renderItem={_renderItem}
                         keyExtractor={(item, index) => index+""}

@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from "react";
 import { BusyIndicator } from "../../components";
 import type { AppStackParamList } from "../../navigators";
 import type { TabStackParamList } from "../Tabs/Tabs";
-import {Image, ScrollView, Text, TextStyle, useWindowDimensions, View, ViewStyle} from 'react-native'
+import {Image, ScrollView, StatusBar, Text, TextStyle, useWindowDimensions, View, ViewStyle} from 'react-native'
 import { CrossIcon, KauriLogo, ShareIcon, Treering } from "../../svgs";
 import { designSystem, kauriColors } from "../../theme";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
@@ -23,7 +23,7 @@ type TrailProps = CompositeScreenProps<
 export const Trail:FC<TrailProps> = observer(function Trail(_props){
     const [cumulativeSeconds, setCumulativeSeconds] = useState<number[]>([])
     const [selectedColor, setSelectedColor] = useState("rgb(240,115,116)")
-    const total = 147
+    const total = 500
     const $containerInsets = useSafeAreaInsetsStyle(['top'])
     const {width: windowWidth, height: windowHeight} = useWindowDimensions()
     const [isBusy, setIsBusy] = useState(true)
@@ -44,8 +44,8 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
       const impacts = [0.1, 0.5, 1]
       const cumulativeSeconds:number[] = []
       Array.from({length: total}).forEach((i, j) => {
-        const second = impacts[Math.floor(Math.random() * impacts.length)]!*10
-        totalSeconds += second
+        const second = impacts[Math.floor(Math.random() * impacts.length)]!*20
+        totalSeconds += second 
         cumulativeSeconds.push(totalSeconds)
       })
       setCumulativeSeconds(cumulativeSeconds)
@@ -56,7 +56,8 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
 
     return (
         <>
-            <ScrollView style={{backgroundColor: "#222222",}}>
+            <StatusBar backgroundColor={"#222222"} barStyle="light-content"/>
+            <ScrollView style={{backgroundColor: "#222222",}} bounces={false}>
                 {isBusy? 
                 <View style={{width: windowWidth, minHeight: windowHeight/2}}>
                     <BusyIndicator style="dark"/>
@@ -92,9 +93,9 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
                         </View>
                     </View>
                     <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 24}}>
-                        <View style={{borderColor: kauriColors.secondary.tanBrown, borderWidth:3, width: 16, height: 16, marginHorizontal: 8, borderRadius: 16}}/>
+                        <View style={{borderColor: "#FFFDEC", borderWidth:3, width: 16, height: 16, marginHorizontal: 8, borderRadius: 16}}/>
                         <Text style={{color: '#FFFDEC', ...designSystem.textStyles.smallTextsSemi}}>
-                            {geti18n('home.brownRingDescription')}
+                            {geti18n('home.ringDescription')}
                         </Text>
                     </View>
                     <View style={{flexDirection: 'row'}}>
@@ -123,7 +124,7 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
                 </View>
                 }
             </ScrollView>
-            <View style={{ position: 'absolute', top: 16, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
+            <View style={{ position: 'absolute', top: $containerInsets.paddingTop, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
                     <TouchableOpacity style={{width: 16}} activeOpacity={0.9} onPress={()=>_props.navigation.goBack()}>
                         <CrossIcon color={kauriColors.primary.dark}/>
                     </TouchableOpacity>

@@ -7,8 +7,8 @@ import { designSystem, kauriColors } from "../theme"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 
 interface HeaderProps{
-    backTitle: string,
-    onBackPress: () => void,
+    backTitle?: string,
+    onBackPress?: () => void,
     title: string,
     translationY: SharedValue<number>
 }
@@ -31,17 +31,25 @@ export const Header:FC<HeaderProps> = ({backTitle, onBackPress, title, translati
             opacity: opacity
         }
     }, [translationY])
+
+    const $bgAnim = useAnimatedStyle(()=>{
+        const opacity = interpolate(translationY.value, [0, 150], [0,1], Extrapolate.CLAMP)
+        return {
+            backgroundColor: `rgba(255,255,255,${opacity})`
+        }
+    }, [translationY])
     return (
-        <View style={{position: 'absolute', top:$containerInsets.paddingTop, width: '100%'}}>
-            <Animated.View style={[$headerAnim, {width: '100%',height: 32, backgroundColor: "#fff", alignItems: 'center', justifyContent: 'center'}]}>
+        <Animated.View style={[{position: 'absolute', top:0, paddingTop:$containerInsets.paddingTop, width: '100%'}, $bgAnim]}>
+            <Animated.View style={[$headerAnim, {width: '100%',height: 32, alignItems: 'center', justifyContent: 'center'}]}>
                 <Text style={{...designSystem.textStyles.smallTextsBold,textAlign: 'center', color: kauriColors.primary.unselectedLight}} numberOfLines={1}>
                     {title}
                 </Text>
             </Animated.View>
-            <Animated.View style={[$headerAnimReverse, {position:'absolute',top:0, left:16, height: 32, justifyContent: 'center'}]}>
+            {backTitle && onBackPress && <Animated.View style={[$headerAnimReverse, {position:'absolute',top: $containerInsets.paddingTop, left:16, height: 32, justifyContent: 'center'}]}>
                 <TouchableOpacity 
                                 onPress={()=>{onBackPress()}}
                                 activeOpacity={0.9} 
+                                hitSlop={{top:5, bottom:5, right:5, left:5}}
                                 style={{ flexDirection: 'row', alignItems: 'center'}}>
                                 <View style={{height:12, marginRight:8}}>
                                     <BackArrow color={kauriColors.primary.dark} alt/>
@@ -50,7 +58,7 @@ export const Header:FC<HeaderProps> = ({backTitle, onBackPress, title, translati
                                     {backTitle}
                                 </Text>
                 </TouchableOpacity>
-            </Animated.View>
-        </View>
+            </Animated.View>}
+        </Animated.View>
 )
 }

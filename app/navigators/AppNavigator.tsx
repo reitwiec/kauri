@@ -1,15 +1,15 @@
 import {NavigationContainer, NavigatorScreenParams} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {StackScreenProps, TransitionPresets} from '@react-navigation/stack';
+import type {StackNavigationOptions} from '@react-navigation/stack';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
-import { Platform } from 'react-native/types';
+import { Easing } from 'react-native-reanimated';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import {InterestSelectionHive, Tabs, TabStackParamList} from '../screens';
 import { ActionDetails } from '../screens/Actions/ActionDetails';
 import { CollectionDetails } from '../screens/Actions/CollectionDetails';
 import { Trail } from '../screens/Home/Trail';
 import { ReadDetail } from '../screens/Read/ReadDetail';
+import { options } from '../utils/cardTransitionOptions';
 
 type mainScreens = 'home' | 'actions' | 'shop' | 'read' | 'you'
 export type AppStackParamList = {
@@ -29,13 +29,16 @@ export type AppStackParamList = {
   }
 };
 
-const Stack = createNativeStackNavigator<AppStackParamList>();
+const Stack = createSharedElementStackNavigator<AppStackParamList>();
+
+
 
 //screen name format "[FLOW]_[ROLE]_[meta]"
 const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       initialRouteName="tabs"
+      detachInactiveScreens={false}
       screenOptions={{
         headerShown: false,
       }}>
@@ -50,20 +53,22 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen
           name="actionDetails"
           component={ActionDetails}
+          options={{...options, detachPreviousScreen: false}}
       />
       <Stack.Screen
           name="collectionDetails"
-          component={CollectionDetails}
+          component={CollectionDetails} 
+          options={{...options, detachPreviousScreen: false}}
       />
       <Stack.Screen
         name="trail"
         component={Trail}
-        options={{presentation: 'modal'}}
+        options={options}
       />
       <Stack.Screen
         name="readDetail"
         component={ReadDetail}
-        options={{animation: 'slide_from_bottom', presentation: 'modal'}}
+        options={options}
       />
     </Stack.Navigator>
   );

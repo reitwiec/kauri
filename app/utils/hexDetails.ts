@@ -12,6 +12,17 @@ export const dimensionColorMap = () => {
   };
 };
 
+export const dimensionColorMapContrast = () => {
+  return {
+    dimension1: "#F17D7D",
+    dimension2: "#75F0E8",
+    dimension3: "#6FE677",
+    dimension4: "#7B92E8",
+    dimension5: "#D37DE8",
+    default: "#F6F6F2",
+  };
+};
+
 export const hexMap: any = [
   [1, 2],
   [2, 3],

@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from '@react-navigation/native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { observer } from 'mobx-react-lite'
 import { FC, memo, useCallback, useEffect, useState } from 'react'
-import {Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
+import {Pressable, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
 import { BusyIndicator, ChipSystem, Header, ImpactDistribution, StylisedTitle, Thumbnail } from '../../components'
 import { actionDetail, getActionDetails, milestone } from '../../mockdata/actionDetails'
 import type { AppStackParamList } from '../../navigators'
@@ -46,7 +46,7 @@ export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number
                 </Text>
                 <InfoIcon color={kauriColors.primary.dark}/>
             </View>
-            <View style={{...designSystem.card}}>
+            <View style={{marginTop: 8}}>
                 <View style={{paddingHorizontal:16}}>
                     <View style={{flexDirection: 'row'}}>
                         {
@@ -262,18 +262,22 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                             </View>
                             <ImpactDistribution impactDist={item.impactDist} style={"dark"}/>
                             <View style={{marginTop: 16}}>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Text style={{...designSystem.textStyles.captionsExtraBold , marginBottom:8, color: kauriColors.primary.dark, marginRight:4}}>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8}}>
+                                    <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark, marginRight:4}}>
                                         {geti18n("actions.causesImpactedHighest")}
                                     </Text>
-                                    <InfoIcon color={kauriColors.primary.dark}/>
+                                    <TouchableOpacity activeOpacity={0.8}>
+                                        <Text style={{ ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
+                                            See All
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
                                 <View style={{flexDirection: 'row', flexWrap: 'wrap', width:'100%'}}>
                                     {
                                         item.topCauses.map((cause, index)=>{
                                             return(
                                                 <View style={{flexBasis: '50%', paddingRight:index%2===0?8:0, paddingLeft:index%2===0?0:8, justifyContent: index%2===0?'flex-start':'flex-end'}} key={index}>
-                                                    <View style={{...designSystem.card, flexDirection: 'row', alignItems: 'center', marginVertical: 8}}>
+                                                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 8}}>
                                                         <Hex dimension={cause.dimension} title={null}/>
                                                         <Text style={{width:'50%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
                                                             {cause.note}
@@ -318,6 +322,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                             activeOpacity={0.9}
                             onPressIn={()=>{
                                 shakeScale.value = withTiming(0.98)
+                                _props.navigation.push('collectionDetails', {collectionId: '1', cameFrom: 'home'})
                             }}
                             onPress={ripple}
                         >

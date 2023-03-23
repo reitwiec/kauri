@@ -96,19 +96,42 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
     const desiredImageHeight = winWidth - 24*2 - 8*2
     const desiredImageWidth = (desiredImageHeight/imageHeight) * imageWidth
     const isPressing = useSharedValue(false)
+    // const rotateX = useSharedValue(0)
+    // const rotateY = useSharedValue(0)
 
-    const sensor = useAnimatedSensor(SensorType.ROTATION, {interval: 500})
+    // const sensor = useAnimatedSensor(SensorType.ROTATION, {interval: 300})
 
-    const cardStyle = useAnimatedStyle(()=>{
-        // console.log(sensor.sensor.value);
-        // console.log(rotX.toFixed(2), rotY.toFixed(2))
+    // const cardStyle = useAnimatedStyle(()=>{
+    //     const {yaw, pitch, roll} = sensor.sensor.value;
+    //     //{z, y, x}
+    //     //{--, 1.5, 0}
+    //      //{--, 0.8,-0.3} top left
+    //      //{--, 0.8, 0.3} top right
+    //      //{--, 1.3, -2.4} bottom left
+    //      //{---, 1,3, 2.4} bottom right
+    //     // w= windowWidth - 32 h= desireImpageHeight
+    //     console.log(yaw.toFixed(2), pitch.toFixed(2), roll.toFixed(2))
+        
 
-        return {transform:[
-            {perspective: 300},
-            {rotateX: '1deg'},
-            {rotateY: '-1deg'}
-        ]}
-    })
+    //     rotateX.value = interpolate(
+    //         pitch,
+    //         [0.8, 1.3],
+    //         [10, -10],
+    //         Extrapolate.CLAMP
+    //     )
+
+    //     rotateY.value = interpolate(
+    //         roll,
+    //         [-2.4, 2.4],
+    //         [-10, 10],
+    //         Extrapolate.CLAMP
+    //     )
+    //     return {transform:[
+    //         {perspective: 300},
+    //         {rotateX: `${rotateX.value}deg`},
+    //         {rotateY: `${rotateY.value}deg`}
+    //     ]}
+    // }, [sensor])
 
     const $animatedStyles = {
         scale: useAnimatedStyle(()=>{

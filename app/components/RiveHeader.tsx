@@ -70,7 +70,8 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
   const $growAnim = useAnimatedStyle(()=>{
     return {
       marginLeft: isSearching?withTiming(8):withTiming(0),
-      width: isSearching? withTiming(windowWidth-16-8-(8*2)-(24*2)-64): withTiming(0)
+      width: isSearching? withTiming(windowWidth-16-8-(8*2)-(24*2)-64): withTiming(0),
+      height: 22
     }
   }, [isSearching])
 
@@ -119,7 +120,7 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
             </Pressable>
             {optionType === 'search' && <Animated.View style={[$growAnim]}><TextInput
               ref={textRef}
-              style={{width: '100%', ...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark}}
+              style={{width: '100%', ...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, padding:0, alignItems: 'center', justifyContent: 'center'}}
               placeholder={"Search for different actions..."}
               placeholderTextColor={kauriColors.primary.unselectedLight}
               autoFocus={false}
@@ -139,11 +140,12 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
             </Animated.View>}
             {isSearching && 
               <Pressable 
+              hitSlop={30}
               onPress={()=>{
                 updateLocalSearchPhrase('')
                 toggleSearch()
               }}
-              style={{width:12}}>
+              style={{width:12, backgroundColor: 'red'}}>
                 <CrossIcon color={kauriColors.primary.unselectedLight}/>
               </Pressable>
             }

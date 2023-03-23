@@ -166,6 +166,8 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
 
     const isFocused = useIsFocused()
     const scrollHandler = ({nativeEvent}) => {
+        console.log(windowWidth, windowHeight)
+        console.log('her', isFocused)
         if(!isFocused){
             return
         }
@@ -181,7 +183,7 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
 
 
     const goToCollectionDetails = (collectionId: string) => {
-        navigationProps.navigate('collectionDetails', {
+        navigationProps.push('collectionDetails', {
             collectionId,
             cameFrom: 'actions'
         })
@@ -192,14 +194,16 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
             <View style={{width: windowWidth, minHeight: windowHeight/2}}>
                 <BusyIndicator style="light"/>
             </View>:
-            <View style={{width: windowWidth, height: windowHeight}}>
+            <View style={{width: 390, height: 700}}>
                 <FlashList
                     data={data}
+                    contentOffset={{x:0, y: translationY.value}}
                     estimatedItemSize={200}
                     getItemType={(item) => item.type}
                     onScroll={scrollHandler}
                     scrollEventThrottle={16}
                     ref={scrollRef}
+                    keyExtractor={(item, index) => index + ""}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
                     ListFooterComponent={<View style={{height:200, width:'100%'}}/>}
