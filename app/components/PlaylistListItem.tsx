@@ -82,8 +82,7 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = memo(({url, id, title,
               }}> 
               <Thumbnail src={url} width={56} height={56} title={title} type={"compact"} pretty={false} actionType={type} status={status}/>
           </Pressable>
-          <View style={{flexDirection: 'row', marginLeft: 16, flex:1, paddingVertical: 16, paddingRight:16, borderColor: kauriColors.primary.light,
-                      borderBottomWidth: 1.25}}>
+          <View style={{flexDirection: 'row', marginLeft: 16, flex:1, paddingVertical: 16, paddingRight:16}}>
               <Pressable 
                   onPressIn={() => {
                       pressIn.value = true;

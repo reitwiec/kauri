@@ -1,6 +1,6 @@
 import {createRef, FC, memo, useRef, useState} from 'react';
 import React from 'react';
-import {Pressable, TextInput, useWindowDimensions, View, ViewStyle, Text, FlexStyle} from 'react-native';
+import {Pressable, TextInput, useWindowDimensions, View, ViewStyle, Text, FlexStyle, Image} from 'react-native';
 import {
   Extrapolate,
   interpolate,
@@ -32,7 +32,10 @@ interface RiveHeaderProps {
   screenState: (key: string) => void;
   isSearching: boolean;
   searchClicked: (override: any, searchPhrase: string) => void;
-  updateSearchPhrase: (phrase: string) => void
+  updateSearchPhrase: (phrase: string) => void,
+  lottiePlayerDisabled?: boolean;
+  short?:boolean,
+  ImagePlayer?: React.ElementType
 }
 
 interface OptionBtnProps {
@@ -70,24 +73,28 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
   const $growAnim = useAnimatedStyle(()=>{
     return {
       marginLeft: isSearching?withTiming(8):withTiming(0),
-      width: isSearching? withTiming(windowWidth-16-8-(8*2)-(24*2)-64): withTiming(0),
+      width: isSearching? withTiming(windowWidth-16-8-(8*2)-(24*2)-64, {duration: 100}): withTiming(0),
+      opacity: isSearching? withTiming(1): withTiming(0),
       height: 22
     }
   }, [isSearching])
 
 
+
   const toggleSearch = () => {
+    searchClicked(undefined, localSearchPhrase.trim())
+    if(localSearchPhrase.length === 0){
+      setIsSearching(prev => !prev)
+    }
     if(textRef.current){
       const isFocused = textRef.current.isFocused()
       if(isFocused){
         textRef.current.blur()
       }else{
-        textRef.current.focus()
+        setTimeout(()=>{
+          textRef.current.focus()
+        }, 300)
       }
-    }
-    searchClicked(undefined, localSearchPhrase.trim())
-    if(localSearchPhrase.length === 0){
-      setIsSearching(prev => !prev)
     }
   }
 
@@ -118,12 +125,11 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
             }}>
               {option}
             </Pressable>
-            {optionType === 'search' && <Animated.View style={[$growAnim]}><TextInput
+            {optionType === 'search' && <Animated.View style={[$growAnim, {justifyContent: 'center'}]}><TextInput
               ref={textRef}
               style={{width: '100%', ...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, padding:0, alignItems: 'center', justifyContent: 'center'}}
               placeholder={"Search for different actions..."}
-              placeholderTextColor={kauriColors.primary.unselectedLight}
-              autoFocus={false}
+              placeholderTextColor={kauriColors.primary.dark}
               value={localSearchPhrase}
               onChangeText={updateLocalSearchPhrase}
               onBlur={() => {
@@ -145,8 +151,8 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
                 updateLocalSearchPhrase('')
                 toggleSearch()
               }}
-              style={{width:12, backgroundColor: 'red'}}>
-                <CrossIcon color={kauriColors.primary.unselectedLight}/>
+              style={{width:12}}>
+                <CrossIcon color={kauriColors.primary.dark}/>
               </Pressable>
             }
     </Animated.View>
@@ -189,7 +195,7 @@ const ConfigRight = memo(({$containerInsets, data, searchClicked, updateSearchPh
         <View
           style={{
             position: 'absolute',
-            top: $containerInsets.paddingTop,
+            top: $containerInsets.paddingTop?$containerInsets.paddingTop:16,
             right: 16,
             flexDirection: 'row',
             zIndex: 2
@@ -214,7 +220,7 @@ const ConfigLeft = memo(({$containerInsets, data, searchClicked, updateSearchPhr
     <View
           style={{
             position: 'absolute',
-            top: $containerInsets.paddingTop,
+            top: $containerInsets.paddingTop?$containerInsets.paddingTop:16,
             left: 0,
             paddingLeft: 16,
             paddingRight:16,
@@ -244,25 +250,37 @@ export const RiveHeader: FC<RiveHeaderProps> = ({
   isSearching,
   searchClicked,
   updateSearchPhrase,
+  lottiePlayerDisabled,
+  short,
+  ImagePlayer
 }) => {
+  if(lottiePlayerDisabled === undefined){
+    lottiePlayerDisabled = false
+  }
+  if(short === undefined){
+    short = false
+  }
   const $containerInsets = useSafeAreaInsetsStyle(['top'], 'padding');
   const headerRef = createRef<Animated.View>();
-  const { height:winHeight} = useWindowDimensions()
-  const minRiveHeight = 200*winHeight/844
+  const { height:winHeight, width: winWidth} = useWindowDimensions()
+  const minRiveHeight = short? $containerInsets.paddingTop?150:120 : 200*winHeight/844
   const $animated_container = useAnimatedStyle(() => {
+    // console.log("=>",translationY.value)
+    const height = interpolate(
+      translationY.value,
+      [0, short?(config?.height || (winWidth +48))+100: 240],
+      [config?.height || 240, minRiveHeight],
+      Extrapolate.CLAMP,
+    )
     return {
-      height: interpolate(
-        translationY.value,
-        [0, 200],
-        [config?.height || 240, minRiveHeight],
-        Extrapolate.CLAMP,
-      ),
+      height: height,
     };
   }, [translationY]);
 
   return (
     <Animated.View style={[$container, $animated_container]} ref={headerRef}>
-      <LottiePlayer/>
+      {!lottiePlayerDisabled && <LottiePlayer/>}
+      {ImagePlayer && <ImagePlayer translationY={translationY}/>}
       <ChipPlayer data={data} screenState={screenState}/>
       {!isSearching && config && config.right && (
         <ConfigRight
@@ -296,7 +314,7 @@ const $container: ViewStyle = {
 };
 
 const $optionBtn: ViewStyle = {
-  backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.8),
+  backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.5),
   padding: 8,
   borderRadius: 50,
 };

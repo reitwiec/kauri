@@ -166,8 +166,6 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
 
     const isFocused = useIsFocused()
     const scrollHandler = ({nativeEvent}) => {
-        console.log(windowWidth, windowHeight)
-        console.log('her', isFocused)
         if(!isFocused){
             return
         }
@@ -206,7 +204,7 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                     keyExtractor={(item, index) => index + ""}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
-                    ListFooterComponent={<View style={{height:200, width:'100%'}}/>}
+                    ListFooterComponent={<View style={{height:150, width:'100%'}}/>}
                 />
             </View>
     )

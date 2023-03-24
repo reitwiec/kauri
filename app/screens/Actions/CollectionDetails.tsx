@@ -2,7 +2,7 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import type { AppStackParamList } from "../../navigators";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import {Text, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
@@ -16,6 +16,7 @@ import { hexToRGBA } from "../../utils/hexToRGBA";
 import { KauriLogo, PlusIcon, ShareIcon, ShuffleIcon } from "../../svgs";
 import { Completion } from "./Completion";
 import { FlashList } from "@shopify/flash-list";
+import { FlatList } from "react-native-gesture-handler";
 
 type CollectionDetails = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'collectionDetails'>,
@@ -136,24 +137,34 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
             </View>
         )
     }
+
+    const _renderItem = useCallback(
+      ({item:resource, index}) => {
+        return (
+            <PlaylistListItem id={resource.id} url={resource.url} title={resource.title} index={index+1} status={resource.status} type={resource.type} onPress={goToActionDetails} key={index}/>
+        )
+      },
+      [item.resources],
+    )
+    
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
             { busy?
                 <BusyIndicator style="light"/>:
                 <>
                     <Animated.View style={{ height: windowHeight}}>
-                        <FlashList
+                        <FlatList
                             showsVerticalScrollIndicator={false}
                             data={item.resources}
+                            keyExtractor={(item, index) => index + ""}
                             ListHeaderComponent={HeaderComponent}
                             ListFooterComponent={<View style={{height: $containerInsets.paddingBottom, width: '100%', marginBottom: 36}}/>}
-                            estimatedItemSize={80}
+                            initialNumToRender={30}
+                            // estimatedItemSize={80}
+                            ItemSeparatorComponent={() => <View style={{height: 1.25, backgroundColor: kauriColors.primary.light, width: '80%', marginLeft: '10%', marginRight: '10%'}}/>}
                             onScroll={scrollHandler}
-                            renderItem={({item:resource, index}) => {
-                                return (
-                                    <PlaylistListItem id={resource.id} url={resource.url} title={resource.title} index={index+1} status={resource.status} type={resource.type} onPress={goToActionDetails} key={index}/>
-                                )
-                            }}
+                            scrollEventThrottle={16}
+                            renderItem={_renderItem}
                         />
                     </Animated.View>
                     <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title} • ${item.owner}`} translationY={translationY}/>

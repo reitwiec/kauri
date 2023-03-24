@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import {Text, Image, useWindowDimensions, ImageSourcePropType} from "react-native"
 import { designSystem, kauriColors } from "../theme";
 import { hexToRGBA } from "../utils/hexToRGBA";
+import FastImage from "react-native-fast-image";
 
 interface ReadCardProps {
     image: ImageSourcePropType,
@@ -38,9 +39,10 @@ export const ReadCard:FC<ReadCardProps> = ({image, title, description, onPress})
                                             }
                                     </Animated.View>
                                         <Animated.View style={{width: windowWidth, height:4*windowWidth/3}}>
-                                            <Image
-                                                source={image}
-                                                style={{width: '100%', height:'100%', resizeMode: 'cover'}}
+                                            <FastImage
+                                                source={image as any}
+                                                resizeMode={'cover'}
+                                                style={{width: '100%', height:'100%'}}
                                             />
                                         </Animated.View>
                     </Animated.View>

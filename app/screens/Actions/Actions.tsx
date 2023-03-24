@@ -141,7 +141,6 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     }
 
     const $scrollContainer_animated = useAnimatedStyle(()=>{
-        console.log('--',translationY.value)
         return {
             transform:[
                 {translateY: interpolate(

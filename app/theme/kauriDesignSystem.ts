@@ -19,6 +19,7 @@ type textStyles =
   | 'captionsExtraBold'
   | 'titleBigger'
   | 'titleSans'
+  | 'captionsMediumBold'
 
 type textStylesMap = {[style in textStyles]: TextStyle};
 
@@ -62,6 +63,10 @@ const textStyles: textStylesMap = {
   captionsBold: {
     fontSize: 12,
     fontFamily: kauriTypography.primary.semiBold,
+  },
+  captionsMediumBold: {
+    fontSize: 12,
+    fontFamily: kauriTypography.primary.bold,
   },
   captionsExtraBold: {
     fontSize: 12,

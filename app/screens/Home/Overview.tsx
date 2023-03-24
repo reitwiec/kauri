@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Image, Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
+import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Image, Platform, Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
 import Animated, { Easing, Extrapolate, interpolate, SharedTransition, SharedValue, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
@@ -11,7 +11,7 @@ import { dimensionColorMap } from "../../utils/hexDetails";
 import { BusyIndicator, ReadCard, StylisedTitle, Thumbnail, TryBtn } from "../../components";
 import { Hex } from "../../components/Hex";
 import { shadowGenerator } from "../../utils/shadowGenerator";
-import type { CompositeNavigationProp } from "@react-navigation/native";
+import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -37,12 +37,9 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
     const $contentColor = useMemo(() => hexToRGBA(kauriColors.primary.dark, 0.7), [])
     const THUMBNAIL_WIDTH = 144
 
-    const [currentItem, setCurrentItem] = useState<any>(null)
+    const [currentItem, setCurrentItem] = useState<any>(roadMap.resources[0])
     const [currentIndex, setCurrentIndex] = useState(0)
-
-    useEffect(()=>{
-        setCurrentItem(roadMap.resources[0])
-    },[])
+    const isFocused = useIsFocused()
 
     const translationX = useSharedValue(0);
     const scrollHandler = ({nativeEvent}) => {
@@ -135,16 +132,18 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
     const offsetFactor = (winWidth - THUMBNAIL_WIDTH - 32)
     const inputRange = [(index -1)*offsetFactor, index * offsetFactor, (index+1) * offsetFactor]
     const isPressing = useSharedValue(false)
+    
     const $animStyles = {
         thumbnail: useAnimatedStyle(()=>{
-            return {
-                useNativeDriver:true,
-                transform: [
-                    {translateY:  withTiming(interpolate(translationX.value, inputRange, [24,0,24], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})},
-                    {scale: isPressing.value?withTiming(0.98):withTiming(interpolate(translationX.value, inputRange, [0.92, 1, 0.92], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})}
-                ],
-                opacity: withTiming(interpolate(translationX.value, inputRange, [1/4, 1, 1/4], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)}),
-            }
+            const style = Platform.OS === 'ios'? 
+                {
+                    transform: [{translateY: withTiming(interpolate(translationX.value, inputRange, [24,0,24], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})}, 
+                                {scale: isPressing.value?withTiming(0.98):withTiming(interpolate(translationX.value, inputRange, [0.92, 1, 0.92], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})}],
+                    opacity: withTiming(interpolate(translationX.value, inputRange, [1/4, 1, 1/4], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)}),
+                }:{
+                    transform: [{scale: isPressing.value?withTiming(0.98):withTiming(1)}]
+                }
+            return style
         }, [translationX, isPressing]),
         border: useAnimatedStyle(()=>{
             return {    

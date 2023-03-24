@@ -19,6 +19,7 @@ import Animated, {
 import {designSystem, kauriColors} from '../theme';
 import {translate as geti18n} from '../i18n';
 import {hexToRGBA} from '../utils/hexToRGBA';
+import FastImage from 'react-native-fast-image';
 
 export interface ThumbnailProps {
   src: ImageSourcePropType;
@@ -56,14 +57,14 @@ const UnstackedThumbnail = memo(({width, height, type, imageHeight, imageWidth, 
                 justifyContent: 'center',
                 position: 'relative',
               }}>
-              <Image
-                source={src}
+              <FastImage
                 style={{
                   borderRadius: type === 'large' ? 16 : type === 'compact'? 10 : 12,
                   flex: 1,
                   width: imageWidth,
                   height: imageHeight,
                 }}
+                source={src as any}
               />
               <View
                 style={{

@@ -17,6 +17,7 @@ import { BusyIndicator, Header } from "../../components"
 import { SharedElement } from "react-navigation-shared-element"
 import { FlashList } from "@shopify/flash-list"
 import { Hex } from "../../components/Hex"
+import FastImage from "react-native-fast-image"
 
 type ReadDetailProps = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'readDetail'>,
@@ -34,11 +35,6 @@ const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
         setIsBusy(false)
     }, 1200);
     }, [])
-
-    const scrollHandler = ({nativeEvent}) => {
-        translationY.value = nativeEvent.contentOffset.y
-    }
-
     
     return (
         <View style={{backgroundColor: backgroundColor, flex:1}}>
@@ -46,9 +42,9 @@ const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
             {isBusy? 
                 <View style={{width: windowWidth, minHeight: windowHeight/2}}>
                     <BusyIndicator style="light"/>
-                </View>:<ScrollView bounces={false} onScroll={scrollHandler} scrollEventThrottle={16}>
+                </View>:<ScrollView bounces={false}>
                 <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, borderRadius:0,}]}>
-                                    <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, paddingTop:$containerInsets.paddingTop, position:'absolute', width:'100%', top:0}]}>
+                                    <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, paddingTop:$containerInsets.paddingTop?$containerInsets.paddingTop:16, position:'absolute', width:'100%', top:0}]}>
                                             <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>
                                                 3 MIN READ
                                             </Text>
@@ -58,9 +54,10 @@ const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
                                     </Animated.View>
                                 <View>
                                     <Animated.View style={{width: windowWidth, height:4*windowWidth/3}}>
-                                        <Image
-                                            source={hexIntro.url}
-                                            style={{width: '100%', height:'100%', resizeMode: 'cover'}}
+                                        <FastImage
+                                            source={hexIntro.url as any}
+                                            resizeMode={'cover'}
+                                            style={{width: '100%', height:'100%'}}
                                         />
                                     </Animated.View>
                                 </View>
@@ -89,7 +86,7 @@ const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
                         </Text>
                     </View>
                     
-                    <Text style={{...designSystem.textStyles.paragraph, marginTop: 24, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                    <Text style={{...designSystem.textStyles.paragraph, fontSize: 16, marginTop: 24, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
                         <Text style={{...designSystem.textStyles.titleSans, fontSize: 32, color: kauriColors.primary.dark}}>{hexIntro.content[0]}</Text>{hexIntro.content.substring(1)}
                     </Text>
                 </View>
@@ -168,8 +165,7 @@ const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
                 </View>
                 <View style={{width: '100%', height: 100}}/>
             </ScrollView>}
-            <Header title={hexIntro.title} translationY={translationY}/>
-            <View style={{ position: 'absolute', top: $containerInsets.paddingTop, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
+            <View style={{ position: 'absolute', top: $containerInsets.paddingTop?$containerInsets.paddingTop:16, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
                     <TouchableOpacity style={{width: 16}} activeOpacity={0.9} onPress={()=>navigation.goBack()}>
                         <CrossIcon color={kauriColors.primary.dark}/>
                     </TouchableOpacity>

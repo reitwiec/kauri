@@ -211,12 +211,6 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
         }
     })
 
-    const ripple = useCallback(() => {
-        shakeScale.value = withTiming(1)
-        rippleProgress.value = 0
-        rippleProgress.value = withTiming(1, {duration: 600, easing: Easing.inOut(Easing.ease)})
-      }, []);
-
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
             { busy?
@@ -316,15 +310,16 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                         <View style={{width: '100%', height:150}}/>
                     </Animated.ScrollView>
 
-                    <Animated.View style={[{width: 50, height: 50, borderRadius:50, backgroundColor: kauriColors.secondary.completed, position: 'absolute', bottom: typeof $containerInsets.paddingBottom ==='number'?  $containerInsets.paddingBottom + 8:  $containerInsets.paddingBottom, alignSelf: 'center', transform: [{scale:2}]}, $rippleAnim]}/>
+                    {/* <Animated.View style={[{width: 50, height: 50, borderRadius:50, backgroundColor: kauriColors.secondary.completed, position: 'absolute', bottom: typeof $containerInsets.paddingBottom ==='number'?  $containerInsets.paddingBottom + 8:  $containerInsets.paddingBottom, alignSelf: 'center', transform: [{scale:2}]}, $rippleAnim]}/> */}
                     <Animated.View style={{transform:[{translateX: shake}, {scale: shakeScale}], marginBottom: 8}}>
                         <TouchableOpacity
                             activeOpacity={0.9}
                             onPressIn={()=>{
                                 shakeScale.value = withTiming(0.98)
+                            }}
+                            onPress={()=>{
                                 _props.navigation.push('collectionDetails', {collectionId: '1', cameFrom: 'home'})
                             }}
-                            onPress={ripple}
                         >
                             <LinearGradient colors={["#9ABB9C", kauriColors.secondary.completed]} style={[{
                                     marginBottom: $containerInsets.paddingBottom,

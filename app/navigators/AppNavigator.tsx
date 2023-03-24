@@ -68,7 +68,6 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen
         name="readDetail"
         component={ReadDetail}
-        options={options}
       />
     </Stack.Navigator>
   );

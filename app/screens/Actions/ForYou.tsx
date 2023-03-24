@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
-import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
+import { FlatList, Pressable, Text, useWindowDimensions, View, StyleSheet } from "react-native";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { roadMap as mockRoadmap } from "../../mockdata";
@@ -128,6 +128,7 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
                         renderItem={_renderItem}
                         keyExtractor={(item, index) => index+""}
                         scrollEventThrottle={16}
+                        ItemSeparatorComponent={() => <View style={{height: 1.25, backgroundColor: kauriColors.primary.light, width: '80%', marginLeft: '10%', marginRight: '10%'}}/>}
                         showsVerticalScrollIndicator={false}
                         ref={scrollRef}
                         ListHeaderComponent={<Header progress={progress} onPress={goToActionDetails} roadMap={data}/>}

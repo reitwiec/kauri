@@ -10,6 +10,7 @@ import Animated, { Extrapolate, interpolate, SensorType, SharedValue, useAnimate
 import { ImpactDistribution, TryBtn } from "../../components"
 import { shadowGenerator } from "../../utils/shadowGenerator"
 import { Path, Svg } from "react-native-svg"
+import FastImage from "react-native-fast-image"
 
 interface FeatureThumbnailProps {
     data: resource,
@@ -191,8 +192,8 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                 </View>
                 <View style={{width: desiredImageHeight, minHeight: desiredImageHeight, padding: 16, justifyContent: 'flex-end'}} onLayout={(e)=>{setCardHeight(e.nativeEvent.layout.height)}}>
                     <View style={{width: desiredImageHeight,overflow:"hidden", borderRadius: 12, position: 'absolute', top: 0}}>
-                        <Image
-                            source={url}
+                        <FastImage
+                            source={url as any}
                             style={{
                                 flex: 1,
                                 width: desiredImageWidth,
