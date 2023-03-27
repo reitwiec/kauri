@@ -23,8 +23,8 @@ export const ReadCard:FC<ReadCardProps> = ({image, title, description, onPress})
         }
     }, [$pressing])
     return (
-        <TouchableOpacity activeOpacity={0.9} onPressIn={()=> $pressing.value = true} onPressOut={()=> $pressing.value = false}  onPress={() => onPress("1")} style={{marginTop:24, paddingHorizontal: 24}}>
-                    <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, width: windowWidth-48, height: 4*(windowWidth-48)/3, borderRadius:12}, $pressingAnim]}>
+        <TouchableOpacity activeOpacity={0.9} onPressIn={()=> $pressing.value = true} onPressOut={()=> $pressing.value = false}  onPress={() => onPress("1")} style={{paddingHorizontal: 16}}>
+                    <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, width: windowWidth-32, height: 4*(windowWidth-32)/3, borderRadius:12}, $pressingAnim]}>
                                     <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', width:'100%'}, description?{bottom:0}:{top:0}]}>
                                             <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>
                                             3 MIN READ

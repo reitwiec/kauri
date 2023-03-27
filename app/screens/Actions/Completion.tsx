@@ -12,18 +12,18 @@ export const Completion:FC<CompletionProps> = ({total, completed}) => {
     const progressBarHeight = 6
     completed = completed>total?total:completed 
     return (
-        <View style={{width: '100%', paddingHorizontal: 16, marginTop: 16}}>
+        <View style={{width: '100%', paddingHorizontal: 16}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex:1, alignItems: 'flex-start'}}>
                     <Text style={{...designSystem.textStyles.captionsBold, color:kauriColors.primary.dark}}>
                         {completed}/{total}
                     </Text>
                     <Text style={{...designSystem.textStyles.smallTextsBold, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
-                        {geti18n('common.completed').toLowerCase()}
+                        actions {geti18n('common.completed').toLowerCase()}
                     </Text>
                 </View>
                 <View style={{flex:1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'baseline'}}>
-                    <Text style={{...designSystem.textStyles.superTitle, color:kauriColors.primary.dark}}>
+                    <Text style={{...designSystem.textStyles.superTitleSans, color:kauriColors.primary.dark}}>
                         {(completed*100/total).toFixed(1)}
                     </Text>
                     <Text style={{...designSystem.textStyles.captions, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>

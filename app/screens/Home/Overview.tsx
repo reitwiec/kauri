@@ -8,7 +8,7 @@ import { hexToRGBA } from "../../utils/hexToRGBA";
 import { MindfulIcons } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
 import { dimensionColorMap, dimensionNameMap } from "../../utils/hexDetails";
-import { BusyIndicator, ReadCard, StylisedTitle, Thumbnail, TryBtn } from "../../components";
+import { BusyIndicator, LineSeparator, ReadCard, StylisedTitle, Thumbnail, TryBtn } from "../../components";
 import { Hex } from "../../components/Hex";
 import { shadowGenerator } from "../../utils/shadowGenerator";
 import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
@@ -82,39 +82,35 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
                 />
             </View>
 
-            {currentItem && <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: "80%", marginBottom: 16, paddingHorizontal:16}}>
-                {
-                    currentItem.topCauses.map((cause, index)=>{
-                        return (
-                                <Hex dimension={cause.dimension} title={null} key={index}/>
-                            )
-                        })   
-                    }
-                {
-                    currentItem.totalCauses - currentItem.topCauses.length>0 && <View>
-                        <Hex dimension={"default"} title={null}/>
-                        <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor}}>
-                                +{`${currentItem.totalCauses - currentItem.topCauses.length}`}
-                            </Text>
-                        </View>
+            {currentItem && <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: "80%", marginBottom: 16, paddingHorizontal:16}}>
+                        {
+                            currentItem.topCauses.map((cause, index)=>{
+                                return (
+                                        <Hex dimension={cause.dimension} title={null} key={index}/>
+                                    )
+                                })   
+                            }
+                        {
+                            currentItem.totalCauses - currentItem.topCauses.length>0 && <View>
+                                <Hex dimension={"default"} title={null}/>
+                                <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor}}>
+                                        +{`${currentItem.totalCauses - currentItem.topCauses.length}`}
+                                    </Text>
+                                </View>
+                            </View>
+                        }
                     </View>
-                }
-            </View>}
-            {currentItem && <Text 
-                style={{textAlign: 'center',paddingHorizontal: 16, width: "90%", color: $contentColor, ...designSystem.textStyles.captions}} numberOfLines={2}>
-                {currentItem.description}
-            </Text>}
-            <View style={{flexDirection: "row", justifyContent: 'space-evenly', paddingHorizontal: 16}}>
-                <TryBtn onPress={() => onPress(currentItem.id)}/>
-                <TouchableOpacity activeOpacity={0.9} style={{...$nextBtn, borderColor: kauriColors.primary.light, borderWidth:2}} onPress={()=>{
-                    console.log("Redirect to actions page")
-                }}>
-                    <Text style={{color: hexToRGBA(kauriColors.primary.dark,0.7), ...designSystem.textStyles.captionsBold}}>
-                        {geti18n("common.seeAll")} ({`${86}`})
-                    </Text>
-                </TouchableOpacity>
-            </View>
+                    <View style={{flexDirection: "row", justifyContent: 'space-between', paddingHorizontal: 16, alignItems: 'center', width: '90%'}}>
+                        <Text 
+                            style={{textAlign: 'left', color: $contentColor, ...designSystem.textStyles.captions, width: '80%'}} numberOfLines={3}>
+                            {currentItem.description}
+                        </Text>
+                        <TryBtn onPress={() => onPress(currentItem.id)}/>
+                    </View>
+                </View>
+            }
         </View>
     )
 })
@@ -300,7 +296,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     <Greeting/>
                 </View>
 
-                <View style={{marginTop: 24, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16}}>
+                <View style={{marginVertical: 24, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16}}>
                     <View style={{marginRight: 8}}>
                         <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', marginBottom: 8, flex:1}}>
                             <Text style={{...designSystem.textStyles.subtitle, color: kauriColors.primary.dark}}>
@@ -322,7 +318,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                         </View>
                     </View>
                     <View style={{...designSystem.card, alignItems: 'center', justifyContent: 'center', flex:1}}>    
-                        <Text style={{...designSystem.textStyles.titleSmall, color: kauriColors.primary.dark}}>{geti18n("common.feelingStuck")}?</Text>
+                        <Text style={{...designSystem.textStyles.captionsMediumBold, color: kauriColors.primary.dark, fontSize:16}}>{geti18n("common.feelingStuck")}?</Text>
                         <Text style={{...designSystem.textStyles.captionsBold, color: $contentColor, textAlign: 'center', paddingHorizontal:4}}>
                             {geti18n("common.positiveFocusDescription")}
                         </Text>
@@ -337,7 +333,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     </Pressable>
                     </View> 
                 </View>
-                <View style={{...designSystem.card, marginTop: 24, marginHorizontal:16}}>
+                <View style={{...designSystem.card, marginHorizontal:16}}>
                     <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 8}}>
                         {geti18n("common.mostImpactedCauses")}
                     </Text>
@@ -371,7 +367,8 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                         }
                     </View>
                 </View>
-                <LinearGradient style={{borderRadius:12, padding:16, borderColor: "rgba(240,115,116, 0.67)", borderWidth: 1, alignItems: 'center', marginHorizontal: 16, marginTop: 24}}
+                <LineSeparator/>
+                <LinearGradient style={{borderRadius:12, padding:16, borderColor: "rgba(240,115,116, 0.67)", borderWidth: 1, alignItems: 'center', marginHorizontal: 16}}
                             colors={["rgba(240,115,116,0.67)", "rgba(240,115,116,1)"]}
                             start={{x:0, y:0}}
                             end={{x:1, y:1}}
@@ -395,13 +392,20 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                                 </Text>
                             </TouchableOpacity>
                 </LinearGradient>
-                <View style={{marginTop: 24, paddingHorizontal: 16, alignItems: 'center'}}>
-                    <StylisedTitle text={geti18n("home.whatNext")} alt={true} small/>
-                    <Text style={{textAlign: 'left', color: $contentColor, ...designSystem.textStyles.paragraph, marginTop: 8}}>
-                            {geti18n("home.whatNextDescription")}
-                    </Text>
+                <LineSeparator/>
+                <View style={{paddingHorizontal: 16}}>
+                    
+                        <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
+                            Actions on your roadmap
+                        </Text>
+                        <TouchableOpacity activeOpacity={0.9}>
+                            <Text style={{ ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
+                                            See All
+                            </Text>
+                        </TouchableOpacity>
                 </View>
                 <WhatNext onPress={goToActionDetails} roadMap={data.roadmap}/>
+                <LineSeparator/>
                <ReadCard title={hexIntro.title} image={hexIntro.url} description={hexIntro.description} onPress={goToReadDetails}/> 
                 <View style={{height:riveHeight*1.25, width:windowWidth}}>
                 </View>

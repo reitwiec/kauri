@@ -100,9 +100,9 @@ export const PlaylistListItem:FC<PlaylistListItemProps> = memo(({url, id, title,
                   >
                   <Text
                       style={{
-                      ...designSystem.textStyles.smallTextsSemi,
+                      ...designSystem.textStyles.smallTexts,
                       marginBottom: 8,
-                      color: hexToRGBA(kauriColors.primary.dark, 0.9),
+                      color: kauriColors.primary.dark,
                       }}>
                       {title}
                   </Text>

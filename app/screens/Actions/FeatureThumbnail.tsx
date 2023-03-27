@@ -7,7 +7,7 @@ import { hexToRGBA } from "../../utils/hexToRGBA"
 import {translate as geti18n} from '../../i18n';
 import { Hex } from "../../components/Hex"
 import Animated, { Extrapolate, interpolate, SensorType, SharedValue, useAnimatedSensor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import { ImpactDistribution, TryBtn } from "../../components"
+import { ImpactDistribution, LineSeparator, TryBtn } from "../../components"
 import { shadowGenerator } from "../../utils/shadowGenerator"
 import { Path, Svg } from "react-native-svg"
 import FastImage from "react-native-fast-image"
@@ -20,24 +20,24 @@ interface FeatureThumbnailProps {
 
 const StaggeredHex = ({topCauses, totalCauses}) => {
     return (
-<View style={{ marginBottom: 16, flex:1, height:64, marginLeft: 16}}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start', width:'100%', marginBottom: 16}}>
                 {
                     topCauses.map((cause, index)=>{
                         return (
-                                <View style={{position: 'absolute', left: index*15}} key={index}>
-                                    <Hex dimension={cause.dimension} title={null}/>
-                                </View>
+                            <View key={index} style={{marginLeft: index>0?4:0, marginRight:4}}>
+                                <Hex dimension={cause.dimension} title={null}/>
+                            </View>
                             )
                         })   
                     }
                 {
-                    totalCauses - topCauses.length>0 && <View style={{position:'absolute',left: topCauses.length*15, top:0, bottom:0}}>
-                            <Hex dimension={"default"} title={null}/>
-                            <View style={{justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 0, bottom: 0, right:0, left:0}}>
-                                <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
-                                    +{totalCauses - topCauses.length}
-                                </Text>
-                            </View>
+                    totalCauses - topCauses.length>0 && <View style={{marginLeft: 4}}>
+                        <Hex dimension={"default"} title={null}/>
+                        <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{...designSystem.textStyles.captionsBold, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                                +{`${totalCauses - topCauses.length}`}
+                            </Text>
+                        </View>
                     </View>
                 }
             </View>
@@ -94,45 +94,9 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
     let {width: imageWidth, height: imageHeight} = Image.resolveAssetSource(url);
     const arrows = [0,1,2]
     const delta = 1/arrows.length
-    const desiredImageHeight = winWidth - 24*2 - 8*2
+    const desiredImageHeight = winWidth - 16*2
     const desiredImageWidth = (desiredImageHeight/imageHeight) * imageWidth
     const isPressing = useSharedValue(false)
-    // const rotateX = useSharedValue(0)
-    // const rotateY = useSharedValue(0)
-
-    // const sensor = useAnimatedSensor(SensorType.ROTATION, {interval: 300})
-
-    // const cardStyle = useAnimatedStyle(()=>{
-    //     const {yaw, pitch, roll} = sensor.sensor.value;
-    //     //{z, y, x}
-    //     //{--, 1.5, 0}
-    //      //{--, 0.8,-0.3} top left
-    //      //{--, 0.8, 0.3} top right
-    //      //{--, 1.3, -2.4} bottom left
-    //      //{---, 1,3, 2.4} bottom right
-    //     // w= windowWidth - 32 h= desireImpageHeight
-    //     console.log(yaw.toFixed(2), pitch.toFixed(2), roll.toFixed(2))
-        
-
-    //     rotateX.value = interpolate(
-    //         pitch,
-    //         [0.8, 1.3],
-    //         [10, -10],
-    //         Extrapolate.CLAMP
-    //     )
-
-    //     rotateY.value = interpolate(
-    //         roll,
-    //         [-2.4, 2.4],
-    //         [-10, 10],
-    //         Extrapolate.CLAMP
-    //     )
-    //     return {transform:[
-    //         {perspective: 300},
-    //         {rotateX: `${rotateX.value}deg`},
-    //         {rotateY: `${rotateY.value}deg`}
-    //     ]}
-    // }, [sensor])
 
     const $animatedStyles = {
         scale: useAnimatedStyle(()=>{
@@ -153,15 +117,6 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
         }, [progress.value])
     }
 
-    // topLeft (10deg, -10deg)
-    // topRight (10deg, 10deg)
-    // bottomRight (-10deg, 10deg)
-    // bottomLeft (-10deg, -10deg)
-
-    // useEffect(() => {
-    //     console.log('something updated')
-    // }, [])
-
     const [cardHeight, setCardHeight] = useState(desiredImageHeight)
     return (
         <Animated.View style={{...$animatedStyles.scale}}>
@@ -179,11 +134,11 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                     onPress(actionId+"")
                 }}
             >
-                <View style={{...shadowGenerator(5), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+8, height: cardHeight+8, position: 'absolute',left:-4, top:-4, borderRadius:12}}>
+                <View style={{...shadowGenerator(5), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+10, height: cardHeight+10, position: 'absolute',left:-5, top:-5, borderRadius:12}}>
                     <LinearGradient
                         style={{
                         borderRadius: 12,
-                        width: desiredImageHeight+8, height: cardHeight+8 
+                        width: desiredImageHeight+10, height: cardHeight+10 
                         }}
                         start={{x: 1, y: 1}}
                         end={{x: 0.5, y: 0}}
@@ -241,12 +196,7 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                             end={{x: 0.5, y: 0}}
                             colors={['rgba(37,23,12,1)', 'rgba(37,23,12,0.64)', 'rgba(37,23,12,0)']}
                     />
-                    <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 88, marginHorizontal:24}}>
-                        <View style={{width: '70%'}}>
-                        <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.light, lineHeight: 24}}>
-                            {title}
-                        </Text>
-                        </View>
+                    <View style={{alignItems: 'flex-start', marginTop: 88}}>
                         {type === 'habit'&& (
                             <View
                             style={{
@@ -254,7 +204,8 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                                 backgroundColor: hexToRGBA(kauriColors.primary.seaGreen, 0.8),
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
-                                marginHorizontal: 24
+                                alignItems: 'center',
+                                marginBottom: 8
                             }}>
                             <Text
                                 style={{
@@ -265,17 +216,24 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                             </Text>
                             </View>
                         )}
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <View style={{width: '80%'}}>
+                                <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.light}}>
+                                    {title}
+                                </Text>
+                            </View>
+                            <View>
+                                <TryBtn onPress={() => onPress(actionId+"")}/>
+                            </View>
+                        </View>
                     </View>
-                    {
-                    impactDist && <ImpactDistribution impactDist={impactDist} style={"light"}/>}
                     <Text 
-                        style={{marginTop: 8, textAlign: 'center',paddingHorizontal: 16, color: kauriColors.primary.light, ...designSystem.textStyles.captions}} numberOfLines={2}>
+                        style={{marginTop: 8, textAlign: 'left', width: '90%', color: kauriColors.primary.light, ...designSystem.textStyles.captions}} numberOfLines={2}>
                         {description}
                     </Text>
 
-                    <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', marginTop: 24}}>
+                    <View style={{ justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 24}}>
                         <StaggeredHex topCauses={topCauses} totalCauses={totalCauses}/>
-                        <TryBtn onPress={() => onPress(actionId+"")}/>
                     </View>
                     <View style={{flexDirection: 'row', position: 'absolute', top: 0, left:0, backgroundColor: '#A28362', paddingHorizontal:8, paddingVertical:4, borderBottomRightRadius: 12}}>
                                 <Animated.Text style={[{...designSystem.textStyles.smallTextsBold, color: kauriColors.primary.light}]}>

@@ -95,13 +95,13 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                         </View>
                     </View>
                     <View style={{width: '100%', paddingHorizontal: 16, marginTop: 16}}>
-                        <Text style={{...designSystem.textStyles.titleSmall, color: kauriColors.primary.dark}}>
+                        <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
                             {item.title}
                         </Text>
                         <Text style={{...designSystem.textStyles.smallTextsSemi, marginTop:8, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
                             {geti18n("actions.contributedBy")} {item.owner==='Kauri'?<View style={{height: 10}}><KauriLogo/></View>:item.owner} • {item.likes} {geti18n("common.likes")} • {item.total} {geti18n("common.actions")}
                         </Text>
-                        <Text style={{...designSystem.textStyles.paragraph, marginTop:16, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                        <Text style={{...designSystem.textStyles.captions, marginVertical:16, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
                             {item.description}
                         </Text>
                     </View>

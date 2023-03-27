@@ -6,9 +6,9 @@ import { memo } from 'react';
 
 export const TryBtn = memo(({onPress}:{onPress}) => {
     return (
-        <TouchableOpacity activeOpacity={0.9} onPress={onPress} style={{...$nextBtn, backgroundColor: kauriColors.secondary.tanBrown, flex:1, flexDirection: 'row', justifyContent: 'center'}}>
-                    <Text style={{color: kauriColors.primary.light, ...designSystem.textStyles.captionsBold}}>
-                        {geti18n("common.try")}
+        <TouchableOpacity activeOpacity={0.9} onPress={onPress} style={{...$nextBtn, backgroundColor: kauriColors.primary.yellow, flexDirection: 'row', justifyContent: 'center'}}>
+                    <Text style={{color: kauriColors.primary.light, ...designSystem.textStyles.captionsExtraBold}}>
+                        {geti18n("common.try").toUpperCase()}
                     </Text>
         </TouchableOpacity>
     )
@@ -16,9 +16,8 @@ export const TryBtn = memo(({onPress}:{onPress}) => {
 
 
 const $nextBtn:ViewStyle = {
-    flex:1,
-    margin: 16,
     alignItems: 'center',
-    paddingVertical: 12,
-    borderRadius: 12
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    borderRadius: 50
 }

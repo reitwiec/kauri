@@ -98,11 +98,11 @@ const ReadDetail:FC<ReadDetailProps> = ({}) => {
                         return (
                             <View style={{marginTop: 24 }} key={dimIndex}>
                                 <View style={{borderTopColor: hexToRGBA(kauriColors.primary.chipBar, 0.5), borderTopWidth: 1.2, marginHorizontal: 32, paddingTop: 16}}>
-                                    <Text style={{...designSystem.textStyles.titleSmall, color: kauriColors.primary.dark, }}>
+                                    <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark, }}>
                                     {item}
                                     </Text>
                                 </View>
-                                <Text style={{paddingHorizontal: 32, paddingTop: 8, ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
+                                <Text style={{paddingHorizontal: 32, ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
                                     See All
                                 </Text>
                                 <View style={{ width: windowWidth}}>

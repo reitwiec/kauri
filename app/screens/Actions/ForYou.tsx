@@ -9,7 +9,7 @@ import { Easing, SharedValue, useDerivedValue, useSharedValue, withRepeat, withT
 import { FeatureThumbnail } from "./FeatureThumbnail";
 import { RetryIcon } from "../../svgs";
 import { hexToRGBA } from "../../utils/hexToRGBA";
-import { BusyIndicator, PlaylistListItem, StylisedTitle } from "../../components";
+import { BusyIndicator, LineSeparator, PlaylistListItem, StylisedTitle } from "../../components";
 import { Completion } from "./Completion";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
@@ -41,27 +41,26 @@ interface HeaderProps {
 const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
     return(
         <View style={{ width: '100%', alignItems: 'center'}}>
-            <View style={{ width: '100%', alignItems: 'center', paddingBottom: 24, paddingTop: 16}}>
-                <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
-            <View style={{width: '100%', paddingHorizontal: 16, marginTop: 24, alignItems: 'center'}}>
-                    <View style={{marginTop: 24}}>
-                        <StylisedTitle text={"Your full roadmap"} alt={true} small={true}/>
+            <View style={{ width: '100%', alignItems: 'center'}}>
+                    <View style={{ width: '100%', alignItems: 'flex-start', paddingHorizontal: 16}}>
+                        <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
+                            Your complete roadmap
+                        </Text>
                     </View>
-            </View>
-            <View style={{width: '100%'}}>
-                    <View style={{marginHorizontal:8}}>
-                        <Completion total={roadMap.count} completed={roadMap.completed}/>
-                        <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
-                            <View style={{opacity: 0.6}}>
-                                <RetryIcon/>
-                            </View>
-                            <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
-                                {geti18n("actions.recreate")}
-                            </Text>
-                        </Pressable>
+                    <View style={{width: '100%', marginBottom: 24}}>
+                                <Completion total={roadMap.count} completed={roadMap.completed}/>
+                                <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
+                                    <View style={{opacity: 0.6}}>
+                                        <RetryIcon/>
+                                    </View>
+                                    <Text style={{...designSystem.textStyles.smallTextsSemi, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>
+                                        {geti18n("actions.recreate")}
+                                    </Text>
+                                </Pressable>
                     </View>
+                    <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
             </View>
-            </View>
+            <LineSeparator/>
         </View>
     )
 }

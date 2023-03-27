@@ -7,7 +7,7 @@ import { FC, memo, useEffect } from "react";
 import { ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { StylisedTitle, Thumbnail } from "../../components";
+import { LineSeparator, StylisedTitle, Thumbnail } from "../../components";
 import { BusyIndicator } from "../../components/BusyIndicator";
 import { newActions, singletonResource } from "../../mockdata";
 import type { AppStackParamList } from "../../navigators";
@@ -48,7 +48,7 @@ const CollectionItem = memo(({resource, index, windowWidth, goToCollectionDetail
                 onPress={()=>{
                     goToCollectionDetails(resource.id)
                 }}
-                style={{flex:1, alignItems: 'center', marginBottom:24}}>
+                style={{flex:1, alignItems: 'center', marginBottom: index>1?0:24}}>
                 <View style={{flexDirection: "row", flexWrap: 'wrap', justifyContent: 'center'}} key={index}>
                     {
                         resource.featured.map((item, index)=>{
@@ -122,9 +122,11 @@ const SingletonItem = ({item, index, sectionLength, sectionIndex, goToActionDeta
 const SkeletonItem = ({item:sectionItem, index: sectionIndex, goToActionDetails, goToCollectionDetails, windowWidth}) => {
     if(sectionItem.type === 'singleton'){
         return (
-            <View style={[{marginBottom:40}, ]} key={sectionIndex}>
-                <View style={{paddingHorizontal: 16, marginBottom: 24}}>
-                    <StylisedTitle text={sectionItem.title} alt={false} small/>
+            <View key={sectionIndex}>
+                <View style={{paddingHorizontal: 16, marginBottom: 8}}>
+                    <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
+                        {sectionItem.title}
+                    </Text>
                 </View>
                 <FlashList
                     horizontal={true}
@@ -143,10 +145,12 @@ const SkeletonItem = ({item:sectionItem, index: sectionIndex, goToActionDetails,
     }
 
     return (
-        <View style={{marginBottom:40-24}} key={sectionIndex}>
-            <View style={{paddingHorizontal: 16, marginBottom: 24}}>
-                <StylisedTitle text={sectionItem.title} alt={false} small/>
-            </View>
+        <View key={sectionIndex}>
+            <View style={{paddingHorizontal: 16, marginBottom: 8}}>
+                    <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
+                        {sectionItem.title}
+                    </Text>
+                </View>
             <View style={{flexDirection: "row", flex:1, flexWrap: 'wrap'}}>
                 {
                     sectionItem.resources.map((resource, index) => {
@@ -201,6 +205,7 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                     onScroll={scrollHandler}
                     scrollEventThrottle={16}
                     ref={scrollRef}
+                    ItemSeparatorComponent={LineSeparator}
                     keyExtractor={(item, index) => index + ""}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}

@@ -21,8 +21,8 @@ export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> =
     }
     const fontColor = style === 'dark'? kauriColors.primary.dark: kauriColors.primary.light
     return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginTop: 24}}>
-            <View style={$impactIcon}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 24}}>
+            <View style={[$impactIcon, {marginLeft: 0}]}>
                 {impactMap.impact[impactDist?.impact]}
                 <Text style={[$impactIconText, {color: fontColor}]}>
                     {geti18n(`common.${impactDist?.impact}`)}
@@ -31,7 +31,7 @@ export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> =
                     {geti18n('common.impact')}
                 </Text>
             </View>
-            <View style={$impactIcon}>
+            <View style={[$impactIcon] }>
                 {impactMap.expense[impactDist?.expense]}
                 <Text style={[$impactIconText, {color: fontColor}]}>
                     {geti18n(`common.${impactDist?.expense}`)}
@@ -54,7 +54,8 @@ export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> =
 })
 
 const $impactIcon:ViewStyle = {
-    alignItems: 'center'
+    alignItems: 'center',
+    marginHorizontal: 24
 }
 
 const $impactIconText:TextStyle = {
