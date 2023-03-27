@@ -3,17 +3,15 @@ import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
-import { BusyIndicator } from "../../components";
+import { BusyIndicator, CrossBtn } from "../../components";
 import type { AppStackParamList } from "../../navigators";
 import type { TabStackParamList } from "../Tabs/Tabs";
-import {Image, ScrollView, StatusBar, Text, TextStyle, useWindowDimensions, View, ViewStyle} from 'react-native'
-import { CrossIcon, KauriLogo, ShareIcon, Treering } from "../../svgs";
+import {ScrollView, StatusBar, Text, TextStyle, useWindowDimensions, View, ViewStyle} from 'react-native'
+import { KauriLogo, ShareIcon, Treering } from "../../svgs";
 import { designSystem, kauriColors } from "../../theme";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { dimensionColorMap } from "../../utils/hexDetails";
 import { shadowGenerator } from "../../utils/shadowGenerator";
-import { hexToRGBA } from "../../utils/hexToRGBA";
 import {translate as geti18n} from '../../i18n';
 
 type TrailProps = CompositeScreenProps<
@@ -23,7 +21,7 @@ type TrailProps = CompositeScreenProps<
 export const Trail:FC<TrailProps> = observer(function Trail(_props){
     const [cumulativeSeconds, setCumulativeSeconds] = useState<number[]>([])
     const [selectedColor, setSelectedColor] = useState("rgb(240,115,116)")
-    const total = 50
+    const total = 200
     const $containerInsets = useSafeAreaInsetsStyle(['top'])
     const {width: windowWidth, height: windowHeight} = useWindowDimensions()
     const [isBusy, setIsBusy] = useState(true)
@@ -124,11 +122,7 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
                 </View>
                 }
             </ScrollView>
-            <View style={{ position: 'absolute', top: $containerInsets.paddingTop, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
-                    <TouchableOpacity style={{width: 16}} activeOpacity={0.9} onPress={()=>_props.navigation.goBack()}>
-                        <CrossIcon color={kauriColors.primary.dark}/>
-                    </TouchableOpacity>
-            </View>
+            <CrossBtn/>
         </>
 )})
 

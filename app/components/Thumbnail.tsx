@@ -203,7 +203,8 @@ export const Thumbnail: FC<ThumbnailProps> = observer(function thumbnail({
             }}
             start={{x: 1, y: 1}}
             end={{x: 0.5, y: 0}}
-            colors={['rgba(92,58,36,0.8)', kauriColors.primary.yellow,  'rgba(92,58,36, 0.25)']}
+            locations={[0, 0.2, 1]}
+            colors={['#755635', kauriColors.primary.yellow,  '#A28362']}
           />
         </Animated.View>
       )}

@@ -2,19 +2,17 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import type { CompositeScreenProps } from "@react-navigation/native"
 import type { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { FC, useEffect, useState } from "react"
-import { Image, ScrollView, StatusBar, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native"
+import { ScrollView, StatusBar, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native"
 import Animated, { useSharedValue } from "react-native-reanimated"
 import { hexIntro } from "../../mockdata"
 import type { AppStackParamList } from "../../navigators"
-import { CrossIcon, KauriLogo, ShareIcon } from "../../svgs"
-import { designSystem, kauriColors, kauriTypography } from "../../theme"
+import { KauriLogo, ShareIcon } from "../../svgs"
+import { designSystem, kauriColors } from "../../theme"
 import {translate as geti18n} from '../../i18n';
 import { hexToRGBA } from "../../utils/hexToRGBA"
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle"
 import type { TabStackParamList } from "../Tabs/Tabs"
-import LinearGradient from "react-native-linear-gradient"
-import { BusyIndicator, Header } from "../../components"
-import { SharedElement } from "react-navigation-shared-element"
+import { BusyIndicator, CrossBtn } from "../../components"
 import { FlashList } from "@shopify/flash-list"
 import { Hex } from "../../components/Hex"
 import FastImage from "react-native-fast-image"
@@ -24,7 +22,7 @@ type ReadDetailProps = CompositeScreenProps<
     BottomTabScreenProps<TabStackParamList>
 >
 
-const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
+const ReadDetail:FC<ReadDetailProps> = ({}) => {
     const {width:windowWidth, height: windowHeight} = useWindowDimensions()
     const [isBusy, setIsBusy] = useState(true)
     const $containerInsets = useSafeAreaInsetsStyle(['top'])
@@ -165,11 +163,7 @@ const ReadDetail:FC<ReadDetailProps> = ({navigation, route}) => {
                 </View>
                 <View style={{width: '100%', height: 100}}/>
             </ScrollView>}
-            <View style={{ position: 'absolute', top: $containerInsets.paddingTop?$containerInsets.paddingTop:16, right: 16, backgroundColor: hexToRGBA(kauriColors.primary.chipBar, 0.3), padding:6, borderRadius: 24}}>
-                    <TouchableOpacity style={{width: 16}} activeOpacity={0.9} onPress={()=>navigation.goBack()}>
-                        <CrossIcon color={kauriColors.primary.dark}/>
-                    </TouchableOpacity>
-            </View>
+            <CrossBtn/>
         </View>
     )
 }

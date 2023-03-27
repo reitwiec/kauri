@@ -187,7 +187,8 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                         }}
                         start={{x: 1, y: 1}}
                         end={{x: 0.5, y: 0}}
-                        colors={['rgba(92,58,36,0.8)', kauriColors.primary.yellow,  'rgba(92,58,36, 0.25)']}
+                        locations={[0, 0.2, 1]}
+                        colors={['#755635', kauriColors.primary.yellow,  '#A28362']}
                     />
                 </View>
                 <View style={{width: desiredImageHeight, minHeight: desiredImageHeight, padding: 16, justifyContent: 'flex-end'}} onLayout={(e)=>{setCardHeight(e.nativeEvent.layout.height)}}>
@@ -273,21 +274,12 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                     </Text>
 
                     <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', marginTop: 24}}>
-                        <TryBtn onPress={() => onPress(actionId+"")}/>
                         <StaggeredHex topCauses={topCauses} totalCauses={totalCauses}/>
+                        <TryBtn onPress={() => onPress(actionId+"")}/>
                     </View>
-                    <View style={{flexDirection: 'row', width: '100%', position: 'absolute', top: 8, left:8}}>
-                                    {
-                                        arrows.map((i)=>{
-                                            const end = i * delta
-                                            const start = (i+1)*delta
-                                            return (
-                                                <Arrow start={start}  end={end} progress={progress} key={i}/>
-                                            )
-                                        })
-                                    }
-                                <Animated.Text style={[{...designSystem.textStyles.captionsBold, color: kauriColors.primary.light, marginLeft: 8}, $animatedStyles.progress]}>
-                                    {geti18n("actions.nextActionForYou")}
+                    <View style={{flexDirection: 'row', position: 'absolute', top: 0, left:0, backgroundColor: '#A28362', paddingHorizontal:8, paddingVertical:4, borderBottomRightRadius: 12}}>
+                                <Animated.Text style={[{...designSystem.textStyles.smallTextsBold, color: kauriColors.primary.light}]}>
+                                    {geti18n("actions.nextActionForYou").toUpperCase()}
                                 </Animated.Text>
                         </View>
                     

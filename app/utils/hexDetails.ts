@@ -1,6 +1,17 @@
 import {kauriColors} from '../theme';
 import {hexToRGBA} from './hexToRGBA';
 
+export const dimensionNameMap = (dimension) => {
+  const map = {
+    dimension1: 'Empowering & uplifting communities',
+    dimension2: 'Clean & responsible energy usage',
+    dimension3: 'Protecting biodiversity & ethical treatment of animals',
+    dimension4: 'Stable climate & clean climate',
+    dimension5: 'Health and mental wellbeing'
+  }
+  return map[dimension]
+}
+
 export const dimensionColorMap = () => {
   return {
     dimension1: "#D49A9A",

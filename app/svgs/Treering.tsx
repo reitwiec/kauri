@@ -12,7 +12,7 @@ const maxScale = (windowWidth-32-32)/179
     <View style={{aspectRatio: 1}}>
       <Svg viewBox="0 0 72 72" width={"100%"} height={"100%"}>
       {Array.from({length: total}).map((i, j)=>{
-                        const isYearEnd = j!== 0 && j%500 ===0
+                        const isYearEnd = j!== 0 && j%100 ===0
                         let scale = 1
                         let strokeWidth = isYearEnd ? 1: 0.2
                         if(cumulativeSeconds.length > j && typeof cumulativeSeconds[j] === "number") {

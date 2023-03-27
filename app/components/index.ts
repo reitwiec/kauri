@@ -9,3 +9,4 @@ export * from './BusyIndicator';
 export * from './ImpactDistribution'
 export * from './Header'
 export * from './ReadCard'
+export * from './CrossBtn'

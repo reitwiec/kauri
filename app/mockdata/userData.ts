@@ -15,67 +15,67 @@ export const userDataSummary = {
     subdimensionDistribution: [
         {
             dimension: "dimension1",
-            subdimension: "subdimension_1",
+            subdimension: "Support Farmers",
             count: 2
         } ,
         {
             dimension: "dimension2",
-            subdimension: "subdimension_2",
+            subdimension: "Sustainable Fashion",
             count: 1
         },
         {
             dimension: "dimension3",
-            subdimension: "subdimension_3",
+            subdimension: "Vegan Lifestyle",
             count: 17
         },
         {
             dimension: "dimension1",
-            subdimension: "subdimension_4",
+            subdimension: "Female Led",
             count: 3
         },
         {
             dimension: "dimension1",
-            subdimension: "subdimension_5",
+            subdimension: "Made in India",
             count: 2
         },
         {
             dimension: "dimension2",
-            subdimension: "subdimension_6",
+            subdimension: "Avoid Single-Use",
             count: 2
         },
         {
             dimension: "dimension2",
-            subdimension:  "subdimension_7",
+            subdimension:  "Renewable Energy",
             count: 3
         },
         {
             dimension: "dimension3",
-            subdimension: "subdimension_8",
+            subdimension: "Combat Poaching",
             count: 2
         },
         {
             dimension: "dimension3",
-            subdimension: "subdimension_9",
+            subdimension: "Help the stray",
             count: 1,
         },
         {
             dimension: "dimension5",
-            subdimension: "subdimension_10",
+            subdimension: "100% Natural",
             count: 1
         },
         {
             dimension: "dimension5",
-            subdimension: "subdimension_11",
+            subdimension: "Pet-Parent Sustainably",
             count: 1
         },
         {
             dimension: "dimension3",
-            subdimension: "subdimension_12",
+            subdimension: "Stop Animal Cruelty",
             count: 1
         },
         {
             dimension: "dimension4",
-            subdimension: "subdimension_13",
+            subdimension: "Zero Waste",
             count: 1
         }
     ]

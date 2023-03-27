@@ -279,7 +279,7 @@ export const RiveHeader: FC<RiveHeaderProps> = ({
 
   return (
     <Animated.View style={[$container, $animated_container]} ref={headerRef}>
-      {!lottiePlayerDisabled && <LottiePlayer/>}
+      {/* {!lottiePlayerDisabled && <LottiePlayer/>} */}
       {ImagePlayer && <ImagePlayer translationY={translationY}/>}
       <ChipPlayer data={data} screenState={screenState}/>
       {!isSearching && config && config.right && (
