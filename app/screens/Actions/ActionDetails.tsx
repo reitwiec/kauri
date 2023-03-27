@@ -3,11 +3,11 @@ import type { CompositeScreenProps } from '@react-navigation/native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { observer } from 'mobx-react-lite'
 import { FC, memo, useCallback, useEffect, useState } from 'react'
-import {Pressable, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
-import { BusyIndicator, ChipSystem, Header, ImpactDistribution, StylisedTitle, Thumbnail } from '../../components'
+import {Pressable, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle, Image, ScrollView} from 'react-native'
+import { BusyIndicator, ChipSystem, Header, ImpactDistribution, LineSeparator, StylisedTitle, Thumbnail, TryBtn } from '../../components'
 import { actionDetail, getActionDetails, milestone } from '../../mockdata/actionDetails'
 import type { AppStackParamList } from '../../navigators'
-import { designSystem, kauriColors } from '../../theme'
+import { designSystem, kauriColors, kauriTypography } from '../../theme'
 import { hexToRGBA } from '../../utils/hexToRGBA'
 import { useSafeAreaInsetsStyle } from '../../utils/useSafeAreaInsetsStyle'
 import type { TabStackParamList } from '../Tabs/Tabs'
@@ -17,6 +17,7 @@ import { Completion } from './Completion'
 import { Hex } from '../../components/Hex'
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 import LinearGradient from 'react-native-linear-gradient'
+import FastImage from 'react-native-fast-image'
 
 type ActionDetailsProps = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'actionDetails'>,
@@ -39,9 +40,9 @@ export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number
         }
     },[])
     return (
-        <View style={{marginVertical: 24}}>
-            <View style={{flexDirection: 'row'}}>
-                <Text style={{...designSystem.textStyles.captionsExtraBold , marginBottom:8, color: kauriColors.primary.dark, marginRight:4}}>
+        <View>
+            <View style={{flexDirection: 'row', paddingHorizontal: 16,  alignItems: 'center', marginBottom: 8}}>
+                <Text style={{...designSystem.textStyles.titleSans , color: kauriColors.primary.dark, marginRight:4}}>
                     {geti18n("common.kauriUsersContribution")}
                 </Text>
                 <InfoIcon color={kauriColors.primary.dark}/>
@@ -74,7 +75,7 @@ export const Milestones:FC<{milestones: milestone[], kauriUsersCompleted: number
                     </View>
                 </View>
                 <Completion completed={kauriUsersCompleted}  total={milestones[selected]!.targetValue}/>
-                <Text style={{padding:16, ...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark}}>
+                <Text style={{paddingHorizontal:16, paddingTop:8, ...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark}}>
                         {milestones[selected]!.title}
                 </Text>
             </View>
@@ -88,10 +89,12 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
     const {actionId, cameFrom} = _props.route.params
     const [pageState, setPageState] = useState<'allDetails'|'history'>('allDetails')
     const [busy, setBusy] = useState(true)
-    const {height:windowHeight} = useWindowDimensions()
+    const {height:windowHeight, width:windowWidth} = useWindowDimensions()
     const shake = useSharedValue(0)
     const shakeScale = useSharedValue(1)
     const rippleProgress = useSharedValue(0)
+    const [desiredImageHeight, setDesiredImageHeight] = useState(0)
+    const [desiredImageWidth, setDesiredImageWidth] = useState(0)
 
     const [item, setItem] = useState<actionDetail>({
         id: -1,
@@ -121,7 +124,13 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
 
     useEffect(() => {
         setTimeout(()=>{
-            setItem(getActionDetails(actionId))
+            const fetchedItem =  getActionDetails(actionId)
+            setItem(fetchedItem)
+            let {width: imageWidth, height: imageHeight} = Image.resolveAssetSource(fetchedItem.url);
+            const desiredImgHeight = windowWidth
+            setDesiredImageHeight(desiredImgHeight)
+            const desiredImgWidth = (desiredImgHeight/imageHeight) * imageWidth
+            setDesiredImageWidth(desiredImgWidth)
             setBusy(false)
             shake.value = withDelay(250, withRepeat(withSequence(
                     withTiming(
@@ -211,40 +220,81 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
         }
     })
 
+
+
     return (
-        <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
+        <View style={{...$container}}>
             { busy?
                 <BusyIndicator style='light'/>:
                 <>
-                    <Animated.ScrollView onScroll={scrollHandler} showsVerticalScrollIndicator={false} scrollEventThrottle={16} style={{paddingTop: 40}}>
+                    <Animated.ScrollView bounces={false} onScroll={scrollHandler} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
                         
-                        <View style={{paddingHorizontal: 16}}>
-                            <View style={{flexDirection: 'row'}}>
-                                <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} pretty={true} status={item.status} isNew={false}/>
-                                <View style={{marginLeft: 16, justifyContent: 'flex-end'}}>
-                                    <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.dark, width: '90%', marginBottom:16}}>
-                                        {item.title}
-                                    </Text>
-                                    <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-                                        {item.type === 'habit' && (
-                                        <View
+                        <View style={{width: desiredImageHeight,overflow:"hidden", height: desiredImageHeight}}>
+                            <FastImage
+                                source={item.url as any}
+                                style={{
+                                    flex: 1,
+                                    width: desiredImageWidth,
+                                    height: desiredImageHeight,
+                                }}
+                                />
+                            <View
+                                style={{
+                                top: 0,
+                                right: 0,
+                                left: 0,
+                                bottom: 0,
+                                flex: 1,
+                                backgroundColor: 'rgba(0,0,0,0.4)',
+                                position: 'absolute',
+                                }}
+                            />
+                            <LinearGradient
+                                style={{
+                                top: 0,
+                                right: 0,
+                                left: 0,
+                                bottom: 0,
+                                flex: 1,
+                                position: 'absolute',
+                                }}
+                                start={{x: 0.5, y: 1}}
+                                end={{x: 0.5, y: 0}}
+                                colors={['rgba(92,58,36,0.75)', 'rgba(92,58,36,0)']}
+                            />
+                            <LinearGradient
+                                    style={{
+                                    top: 0,
+                                    right: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    flex: 1,
+                                    position: 'absolute',
+                                    }}
+                                    locations={[0, 0.7, 1]}
+                                    start={{x: 0.5, y: 0.7}}
+                                    end={{x: 0.5, y: 0}}
+                                    colors={['rgba(37,23,12,0.64)', 'rgba(37,23,12,0.14)', 'rgba(37,23,12,0)']}
+                            />
+                            <View style={{position: 'absolute', bottom: 24, paddingHorizontal: 16}}>
+                                    <View style={{flexDirection: 'row', justifyContent: 'flex-start',alignItems: 'center', marginBottom:8}}>
+                                        {item.type === 'habit'&& (
+                                            <View
                                             style={{
-                                            borderRadius: 50,
-                                            backgroundColor: hexToRGBA(
-                                                kauriColors.primary.seaGreen,
-                                                0.8,
-                                            ),
-                                            paddingHorizontal: 8,
-                                            paddingVertical: 4,
+                                                borderRadius: 50,
+                                                backgroundColor: hexToRGBA(kauriColors.primary.seaGreen, 0.8),
+                                                paddingHorizontal: 8,
+                                                paddingVertical: 4,
+                                                alignItems: 'center',
                                             }}>
                                             <Text
-                                            style={{
+                                                style={{
                                                 color: kauriColors.primary.light,
                                                 ...designSystem.textStyles.smallTexts,
-                                            }}>
-                                            {geti18n('common.habit')}
+                                                }}>
+                                                {geti18n('common.habit')}
                                             </Text>
-                                        </View>
+                                            </View>
                                         )}
                                         <View style={{...$statusConfig}}>
                                         <Text style={{...$statusTextConfig}}>
@@ -252,95 +302,98 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                         </Text>
                                         </View>
                                     </View>
-                                </View>
-                            </View>
-                            <ImpactDistribution impactDist={item.impactDist} style={"dark"}/>
-                            <View style={{marginTop: 16}}>
-                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8}}>
-                                    <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark, marginRight:4}}>
-                                        {geti18n("actions.causesImpactedHighest")}
-                                    </Text>
-                                    <TouchableOpacity activeOpacity={0.8}>
-                                        <Text style={{ ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
-                                            See All
+                                    <View style={{alignItems: 'flex-start'}}>
+                                        <Text style={{...designSystem.textStyles.titleBig, color: kauriColors.primary.light, marginBottom: 16}}>
+                                            {item.title}
                                         </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{flexDirection: 'row', flexWrap: 'wrap', width:'100%'}}>
-                                    {
-                                        item.topCauses.map((cause, index)=>{
-                                            return(
-                                                <View style={{flexBasis: '50%', paddingRight:index%2===0?8:0, paddingLeft:index%2===0?0:8, justifyContent: index%2===0?'flex-start':'flex-end'}} key={index}>
-                                                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 8}}>
-                                                        <Hex dimension={cause.dimension} title={null}/>
-                                                        <Text style={{width:'50%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
-                                                            {cause.note}
+                                            <ImpactDistribution impactDist={item.impactDist} style={"light"}/>
+                                            <Animated.View style={{transform:[{translateX: shake}, {scale: shakeScale}]}}>
+                                                <TouchableOpacity
+                                                    style={{
+                                                        marginTop:16,
+                                                        alignItems: 'center',
+                                                        paddingVertical: 12,
+                                                        paddingHorizontal: 16,
+                                                        borderRadius: 10,
+                                                        backgroundColor: kauriColors.secondary.completed,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'center'
+                                                    }}
+                                                    activeOpacity={0.9}
+                                                    onPressIn={()=>{
+                                                        shakeScale.value = withTiming(0.98)
+                                                    }}
+                                                    onPress={()=>{
+                                                        _props.navigation.push('collectionDetails', {collectionId: '1', cameFrom: 'home'})
+                                                    }}
+                                                >
+                                                    <MindfulIcons type='flower' color={kauriColors.primary.light}/>
+                                                        <Text style={{color: kauriColors.primary.light, ...designSystem.textStyles.captionsExtraBold, marginLeft: 8}}>
+                                                            {geti18n('actions.startHabit')}
                                                         </Text>
-                                                    </View>
-                                                </View>
-                                            )
-                                        })
-                                    }
+                                                </TouchableOpacity>
+                                            </Animated.View>
                                 </View>
                             </View>
-                            <Milestones milestones={item.milestones} kauriUsersCompleted={item.kauriUsersCompleted}/>
                         </View>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, marginTop: 16, paddingHorizontal:16}}>
+                                <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
+                                    {geti18n("actions.causesImpactedHighest")}
+                                </Text>
+                                <TouchableOpacity activeOpacity={0.8}>
+                                    <Text style={{ ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
+                                        See All
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <ScrollView horizontal style={{marginTop:8}} showsHorizontalScrollIndicator={false}>
+                                {
+                                    item.topCauses.map((cause, index)=>{
+                                        return(
+                                            <View style={{width:104}} key={index}>
+                                                <View style={{ alignItems: 'center'}}>
+                                                    <Hex dimension={cause.dimension} title={null}/>
+                                                    <Text style={{width:'90%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
+                                                        {cause.note}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        )
+                                    })
+                                }
+                            </ScrollView>
+                        <LineSeparator/>
+                        <Milestones milestones={item.milestones} kauriUsersCompleted={item.kauriUsersCompleted}/>
+                        <LineSeparator/>
                         <ChipSystem data={chipData} screenState={(key:any)=>{setPageState(key)}}/>
                         {pageState==='allDetails'?<View style={{paddingHorizontal: 16, marginTop: 24, minHeight: windowHeight/2}}>
                             <View>
-                                <StylisedTitle text={geti18n("common.problemStatement")} alt={false} small/>
-                                <Text style={{...designSystem.textStyles.paragraph,marginTop:16, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                                <Text style={[{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}]}>
+                                    {geti18n("common.problemStatement")}
+                                </Text>
+                                <Text style={{...designSystem.textStyles.paragraph,marginTop:8, color: hexToRGBA(kauriColors.primary.dark, 0.7), fontSize: 16}}>
                                     {item.problemStatement}
                                 </Text>
                             </View>
                             <View style={{marginTop:24}}>
-                                <StylisedTitle text={geti18n("common.solution")} alt={false} small/>
-                                <Text style={{...designSystem.textStyles.paragraph,marginTop:16, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                                <Text style={[{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}]}>
+                                        {geti18n("common.solution")}
+                                </Text>
+                                <Text style={{...designSystem.textStyles.paragraph,marginTop:8, color: hexToRGBA(kauriColors.primary.dark, 0.7), fontSize: 16}}>
                                     {item.solution}
                                 </Text>
                             </View>
                         </View>:<View style={{paddingHorizontal: 16, marginTop: 24, minHeight: windowHeight/2, alignItems: 'center', justifyContent: 'center'}}>
-                            <Text style={{...designSystem.textStyles.titleSmall, color:hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                            <Text style={{...designSystem.textStyles.titleSans, color:hexToRGBA(kauriColors.primary.dark, 0.7)}}>
                                 {geti18n('actions.historyTitle')}
                             </Text>
                             <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.unselectedLight}}>
                                 {geti18n('actions.noHistory')}
                             </Text>
                         </View>}
-                        <View style={{width: '100%', height:150}}/>
+                        <View style={{width: '100%', height:50}}/>
                     </Animated.ScrollView>
-
-                    {/* <Animated.View style={[{width: 50, height: 50, borderRadius:50, backgroundColor: kauriColors.secondary.completed, position: 'absolute', bottom: typeof $containerInsets.paddingBottom ==='number'?  $containerInsets.paddingBottom + 8:  $containerInsets.paddingBottom, alignSelf: 'center', transform: [{scale:2}]}, $rippleAnim]}/> */}
-                    <Animated.View style={{transform:[{translateX: shake}, {scale: shakeScale}], marginBottom: 8}}>
-                        <TouchableOpacity
-                            activeOpacity={0.9}
-                            onPressIn={()=>{
-                                shakeScale.value = withTiming(0.98)
-                            }}
-                            onPress={()=>{
-                                _props.navigation.push('collectionDetails', {collectionId: '1', cameFrom: 'home'})
-                            }}
-                        >
-                            <LinearGradient colors={["#9ABB9C", kauriColors.secondary.completed]} style={[{
-                                    marginBottom: $containerInsets.paddingBottom,
-                                    paddingHorizontal: 16,
-                                    paddingVertical: 8,
-                                    borderRadius: 100,
-                                    // paddingTop: $containerInsets.paddingBottom && typeof $containerInsets.paddingBottom === 'number'?($containerInsets.paddingBottom)/2:24, 
-                            }, $bottomActionBar]}>
-                                <MindfulIcons type='flower' color={kauriColors.primary.light}/>
-                                <Text style={{
-                                    ...designSystem.textStyles.captionsExtraBold,
-                                    color: kauriColors.primary.light,
-                                    width: '100%',
-                                    textAlign: 'center',
-                                }}>
-                                    {geti18n('actions.startHabit')}
-                                </Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </Animated.View>
-                    <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title}(${item.kauriUsersCompleted} ${geti18n('common.completed').toLowerCase()})`} translationY={translationY}/>
+                    <Header style={'light'} backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title}(${item.kauriUsersCompleted} ${geti18n('common.completed').toLowerCase()})`} translationY={translationY}/>
                 </>
                 }
         </View>

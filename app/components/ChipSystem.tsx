@@ -127,9 +127,11 @@ export const ChipSystem = memo(({
                   return;
                 }
                 //initial set here
-                setScreen(item.to)
-                chipFeaturesVal.value = {x, y, width};
-                initialMountOfChips.value = "END";
+                if(initialMountOfChips.value === 'START'){
+                  setScreen(item.to)
+                  chipFeaturesVal.value = {x, y, width};
+                  initialMountOfChips.value = "END";
+                }
               }}>
               <View
                 style={{

@@ -3,7 +3,7 @@ import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StatusBar, Text, useWindowDimensions, View, ViewStyle, Image } from "react-native";
+import { StatusBar, Text, useWindowDimensions, View, ViewStyle, Image, Platform } from "react-native";
 import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import type { AppStackParamList } from "../../navigators";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
@@ -235,7 +235,7 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
         const dataAvailable = [shopData, shopDataAlt]
         const rand = dataAvailable[Math.floor(Math.random() * dataAvailable.length)]
         if(scrollRef.current){
-            scrollRef.current.scrollToOffset({offset:0, animated:false})
+            scrollRef.current.scrollToOffset({offset:0, animated: Platform.OS === 'ios'})
         }
         if(rand){
             setIsLoading(true)
@@ -374,6 +374,7 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
                     estimatedListSize={{height: windowHeight, width: windowWidth}}
                     getItemType={(item) => item.type}
                     data={data}
+                    scrollEnabled={true}
                     ref={scrollRef}
                     numColumns={columnCount}
                     estimatedItemSize={300}

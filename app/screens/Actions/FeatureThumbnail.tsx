@@ -134,7 +134,7 @@ export const FeatureThumbnail:FC<FeatureThumbnailProps> = ({data, progress, onPr
                     onPress(actionId+"")
                 }}
             >
-                <View style={{...shadowGenerator(5), backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+10, height: cardHeight+10, position: 'absolute',left:-5, top:-5, borderRadius:12}}>
+                <View style={{ backgroundColor: kauriColors.secondary.lightBrown,width: desiredImageHeight+10, height: cardHeight+10, position: 'absolute',left:-5, top:-5, borderRadius:12}}>
                     <LinearGradient
                         style={{
                         borderRadius: 12,

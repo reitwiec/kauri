@@ -227,7 +227,7 @@ export const Impact:FC<ImpactProps> = observer(function impact({riveHeight, navi
                         </View>
                     </View>
             }
-            <View style={{height:riveHeight*1.25, width:windowWidth}}/>
+            <View style={{height:riveHeight*1.4, width:windowWidth}}/>
         </View>
     )
 })

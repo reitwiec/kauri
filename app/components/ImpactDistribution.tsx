@@ -21,33 +21,39 @@ export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> =
     }
     const fontColor = style === 'dark'? kauriColors.primary.dark: kauriColors.primary.light
     return (
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 24}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center'}}>
             <View style={[$impactIcon, {marginLeft: 0}]}>
                 {impactMap.impact[impactDist?.impact]}
-                <Text style={[$impactIconText, {color: fontColor}]}>
-                    {geti18n(`common.${impactDist?.impact}`)}
-                </Text>
-                <Text style={[$impactIconSubText, {color: fontColor}]}>
-                    {geti18n('common.impact')}
-                </Text>
+                <View style={{marginLeft: 8}}>
+                    <Text style={[$impactIconText, {color: fontColor}]}>
+                        {geti18n(`common.${impactDist?.impact}`)}
+                    </Text>
+                    <Text style={[$impactIconSubText, {color: fontColor}]}>
+                        {geti18n('common.impact')}
+                    </Text>
+                </View>
             </View>
             <View style={[$impactIcon] }>
                 {impactMap.expense[impactDist?.expense]}
-                <Text style={[$impactIconText, {color: fontColor}]}>
-                    {geti18n(`common.${impactDist?.expense}`)}
-                </Text>
-                <Text style={[$impactIconSubText, {color: fontColor}]}>
-                    {geti18n('common.expense')}
-                </Text>
+                <View style={{marginLeft: 8}}>
+                    <Text style={[$impactIconText, {color: fontColor}]}>
+                        {geti18n(`common.${impactDist?.expense}`)}
+                    </Text>
+                    <Text style={[$impactIconSubText, {color: fontColor}]}>
+                        {geti18n('common.expense')}
+                    </Text>
+                </View>
             </View>
             <View style={$impactIcon}>
                 {impactMap.effort[impactDist?.effort]}
-                <Text style={[$impactIconText, {color: fontColor}]}>
-                    {geti18n(`common.${impactDist?.effort}`)}
-                </Text>
-                <Text style={[$impactIconSubText, {color: fontColor}]}>
-                    {geti18n('common.effort')}
-                </Text>
+                <View style={{marginLeft: 8}}>
+                    <Text style={[$impactIconText, {color: fontColor}]}>
+                        {geti18n(`common.${impactDist?.effort}`)}
+                    </Text>
+                    <Text style={[$impactIconSubText, {color: fontColor}]}>
+                        {geti18n('common.effort')}
+                    </Text>
+                </View>
             </View>
         </View>
     )
@@ -55,15 +61,16 @@ export const ImpactDistribution:FC<{impactDist:impacts, style:'light'|'dark'}> =
 
 const $impactIcon:ViewStyle = {
     alignItems: 'center',
-    marginHorizontal: 24
+    marginHorizontal: 16,
+    flexDirection: 'row'
 }
 
 const $impactIconText:TextStyle = {
     marginTop: 8,
-    ...designSystem.textStyles.smallSerifBigger,
+    ...designSystem.textStyles.smallTextsBold,
 }
 
 const $impactIconSubText:TextStyle = {
-    ...designSystem.textStyles.smallSerif,
+    ...designSystem.textStyles.smallTextsSemi,
     textTransform: 'lowercase',
 }

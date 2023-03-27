@@ -10,9 +10,13 @@ interface HeaderProps{
     backTitle?: string,
     onBackPress?: () => void,
     title: string,
+    style?: 'light'|'dark',
     translationY: SharedValue<number>
 }
-export const Header:FC<HeaderProps> = ({backTitle, onBackPress, title, translationY}) => {
+export const Header:FC<HeaderProps> = ({backTitle, onBackPress, title, translationY, style}) => {
+    if(!style){
+        style= 'dark'
+    }
     const $containerInsets = useSafeAreaInsetsStyle(["top", "bottom"]);
     const $headerAnim = useAnimatedStyle(()=>{
         const opacity = interpolate(translationY.value, [0, 150], [0,1], Extrapolate.CLAMP)
@@ -52,9 +56,9 @@ export const Header:FC<HeaderProps> = ({backTitle, onBackPress, title, translati
                                 hitSlop={{top:5, bottom:5, right:5, left:5}}
                                 style={{ flexDirection: 'row', alignItems: 'center'}}>
                                 <View style={{height:12, marginRight:8}}>
-                                    <BackArrow color={kauriColors.primary.dark} alt/>
+                                    <BackArrow color={style === 'dark'?kauriColors.primary.dark: kauriColors.primary.light} alt/>
                                 </View>
-                                <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark}}>
+                                <Text style={{...designSystem.textStyles.captionsBold, color: style === 'dark'?kauriColors.primary.dark: kauriColors.primary.light}}>
                                     {backTitle}
                                 </Text>
                 </TouchableOpacity>

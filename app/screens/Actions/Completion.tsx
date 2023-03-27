@@ -15,7 +15,7 @@ export const Completion:FC<CompletionProps> = ({total, completed}) => {
         <View style={{width: '100%', paddingHorizontal: 16}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex:1, alignItems: 'flex-start'}}>
-                    <Text style={{...designSystem.textStyles.captionsBold, color:kauriColors.primary.dark}}>
+                    <Text style={{...designSystem.textStyles.captionsExtraBold, color:kauriColors.primary.dark}}>
                         {completed}/{total}
                     </Text>
                     <Text style={{...designSystem.textStyles.smallTextsBold, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>

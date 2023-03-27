@@ -407,7 +407,7 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                 <WhatNext onPress={goToActionDetails} roadMap={data.roadmap}/>
                 <LineSeparator/>
                <ReadCard title={hexIntro.title} image={hexIntro.url} description={hexIntro.description} onPress={goToReadDetails}/> 
-                <View style={{height:riveHeight*1.25, width:windowWidth}}>
+                <View style={{height:riveHeight*1.4, width:windowWidth}}>
                 </View>
             </>}
         </View>
