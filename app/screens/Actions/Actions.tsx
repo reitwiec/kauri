@@ -2,8 +2,8 @@ import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
-import { FlatList, ScrollView, StatusBar, Text, View, ViewStyle } from "react-native";
-import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { FlatList, Platform, ScrollView, StatusBar, Text, View, ViewStyle } from "react-native";
+import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { RiveHeader } from "../../components";
 import { actionsChips, exploreSkeleton, newActions, roadMap } from "../../mockdata";
 import useIsReady from "../../utils/useIsReady";
@@ -15,6 +15,7 @@ import debounce from "lodash.debounce";
 import { designSystem, kauriColors } from "../../theme";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { AppStackParamList } from "../../navigators";
+import useScrollToTop from "../../utils/useScrollToTop";
 
 type ActionsProps = CompositeScreenProps<
     BottomTabScreenProps<TabStackParamList, 'actions'>,
@@ -48,7 +49,39 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const flatRef = useRef<any>()
     const exploreRef = useRef<any>()
     const forYouRef = useRef<any>()
-    const states = {'forYou': {index: 0, ref: forYouRef, scrollToTop: () => forYouRef.current.scrollToOffset({offset:0, animated:false})}, 'explore': {index: 1, ref: exploreRef, scrollToTop: () => exploreRef.current.scrollToOffset({offset:0, animated:false})}, 'habits': {index: 2, ref: forYouRef}}
+    const momentumState = useSharedValue('ENDED')
+    const updateMomentumState = (momState) => {
+        momentumState.value = momState
+    }
+    const states = {
+        'forYou': {
+            index: 0,
+            ref: forYouRef,
+            scrollToTop: () => {
+                if(momentumState.value === 'ENDED' || Platform.OS === 'ios'){
+                    forYouRef.current.scrollToOffset({offset:0, animated:true})
+                    translationY.value = withTiming(0)
+                }
+            }
+        }, 
+        'explore': {
+            index: 1,
+            ref: exploreRef,
+            scrollToTop: () => {
+                if(momentumState.value === 'ENDED' || Platform.OS === 'ios'){
+                    exploreRef.current.scrollToOffset({offset:0, animated:true})
+                    translationY.value = withTiming(0)
+                }
+            }
+        }, 
+        'habits': 
+        {
+            index: 2,
+            ref: forYouRef
+        }}
+    
+    useScrollToTop(exploreRef, states['explore'].scrollToTop)
+    useScrollToTop(forYouRef, states['forYou'].scrollToTop)
     
     const updateActionsState = useCallback((key:any) =>{
         if(flatRef.current){
@@ -156,13 +189,13 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
         if(item.name === 'forYou'){
             return(
                     <Animated.View style={$scrollContainer_animated}>
-                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef} navigationProps={_props.navigation} data={item.data}/>
+                        <ForYou riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={forYouRef} navigationProps={_props.navigation} data={item.data} updateMomentumState={updateMomentumState}/>
                     </Animated.View>
             )
         }else{
             return(
                     <Animated.View style={$scrollContainer_animated}>
-                        <Explore riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={exploreRef} navigationProps={_props.navigation} data={item.data}/>
+                        <Explore riveHeight={riveHeight} translationY={translationY} actionsStateValue={actionsStateValue} scrollRef={exploreRef} navigationProps={_props.navigation} data={item.data} updateMomentumState={updateMomentumState}/>
                     </Animated.View>
             )
         }

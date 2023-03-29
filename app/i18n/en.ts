@@ -1,5 +1,6 @@
 const en = {
   common: {
+    assistant: 'Assistant',
     next: 'Next',
     saveContinue: 'Save and Continue',
     home: 'Home',

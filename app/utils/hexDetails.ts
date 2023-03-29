@@ -12,10 +12,10 @@ export const dimensionNameMap = (dimension) => {
   return map[dimension]
 }
 
-export const dimensionColorMap = () => {
+export const dimensionColorMap1 = () => {
   return {
     dimension1: "#D49A9A",
-    dimension2: "#8CD9D4",
+    dimension2: "#87C7D5",
     dimension3: "#9ABB9C",
     dimension4: "#93A0D0",
     dimension5: "#C09CC9",
@@ -23,10 +23,21 @@ export const dimensionColorMap = () => {
   };
 };
 
+export const dimensionColorMap = () => {
+  return {
+    dimension1: "#DB9393",
+    dimension2: "#7DCDDF",
+    dimension3: "#91C495",
+    dimension4: "#8B9BD8",
+    dimension5: "#C594D1",
+    default: "#F6F6F2",
+  };
+};
+
 export const dimensionColorMapContrast = () => {
   return {
     dimension1: "#F17D7D",
-    dimension2: "#75F0E8",
+    dimension2: "#6DD7EF",
     dimension3: "#6FE677",
     dimension4: "#7B92E8",
     dimension5: "#D37DE8",

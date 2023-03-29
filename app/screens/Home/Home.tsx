@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
-import { FlatList, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { FlatList, Platform, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
+import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { RiveHeader } from "../../components";
 import { getMostImpacted, homeChips, roadMap, userDataSummary } from "../../mockdata";
 import { translate as geti18n } from "../../i18n"
@@ -15,6 +15,7 @@ import type { AppStackParamList } from "../../navigators";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import useIsReady from "../../utils/useIsReady";
+import useScrollToTop from "../../utils/useScrollToTop";
 
 type HomeProps = CompositeScreenProps<
     BottomTabScreenProps<TabStackParamList, 'home'>,
@@ -65,8 +66,33 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const flatRef = useRef<any>()
     const overviewRef = useRef<any>()
     const impactRef = useRef<any>()
-    const states = {'overview': {index: 0, ref: overviewRef, scrollToTop: () => overviewRef.current.scrollTo({x: 0, y: 0, animated: true})}, 'impact':  {index: 1, ref: impactRef, scrollToTop: () => impactRef.current.scrollTo({x: 0, y: 0, animated: true})}}
+    const momentumState = useSharedValue('ENDED')
+    const updateMomentumState = (momState) => {
+        momentumState.value = momState
+    }
+    const states = {
+        'overview': {
+            index: 0,
+            ref: overviewRef,
+            scrollToTop: () => {
+                if(momentumState.value === 'ENDED' || Platform.OS === 'ios'){
+                    overviewRef.current.scrollTo({x: 0, y: 0, animated: true})
+                    translationY.value = withTiming(0)
+                }
+            }},
+        'impact':  {
+            index: 1,
+            ref: impactRef,
+            scrollToTop: () => {
+                if(momentumState.value === 'ENDED' || Platform.OS === 'ios'){
+                    impactRef.current.scrollTo({x: 0, y: 0, animated: true})
+                    translationY.value = withTiming(0)
+                }
+            }}}
     
+    useScrollToTop(overviewRef, states['overview'].scrollToTop)
+    useScrollToTop(impactRef, states['impact'].scrollToTop)
+
     const updateHomeState = useCallback((key:any) =>{
         if(flatRef.current){
             flatRef.current.scrollToIndex({
@@ -139,13 +165,38 @@ export const Home:FC<HomeProps> = observer(function Home(_props){
     const renderSubview = useCallback(({item})=>{
         if(item.name === 'overview'){
             return(
-                <Animated.ScrollView ref={overviewRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+                <Animated.ScrollView 
+                    onScrollBeginDrag={()=>{
+                        updateMomentumState('START')
+                    }}
+                    onMomentumScrollEnd={()=>{
+                        updateMomentumState('ENDED')
+                    }}  
+                    ref={overviewRef} 
+                    decelerationRate={Platform.OS === 'android'?0.95:'normal'}
+                    onScroll={scrollHandler} 
+                    scrollEventThrottle={16} 
+                    style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} 
+                    showsVerticalScrollIndicator={false} 
+                    nestedScrollEnabled={true}>
                     <Overview riveHeight={riveHeight} Greeting={Greeting} userData={userData} navigationProps={_props.navigation} data={item.data}/>
                 </Animated.ScrollView>
             )
         }else{
             return(
-                <Animated.ScrollView ref={impactRef} onScroll={scrollHandler} scrollEventThrottle={16} style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} showsVerticalScrollIndicator={false}>
+                <Animated.ScrollView 
+                    onScrollBeginDrag={()=>{
+                        updateMomentumState('START')
+                    }}
+                    onMomentumScrollEnd={()=>{
+                        updateMomentumState('ENDED')
+                    }}
+                    ref={impactRef} 
+                    onScroll={scrollHandler} 
+                    decelerationRate={Platform.OS === 'android'?0.95:'normal'}
+                    scrollEventThrottle={16} 
+                    style={[$scrollContainer, $scrollContainer_animated, {width: winWidth}]} 
+                    showsVerticalScrollIndicator={false}>
                     <Impact riveHeight={riveHeight} navigationProps={_props.navigation}/>
                 </Animated.ScrollView>
             )

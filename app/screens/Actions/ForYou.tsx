@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useState } from "react";
-import { FlatList, Pressable, Text, useWindowDimensions, View, StyleSheet } from "react-native";
+import { FlatList, Pressable, Text, useWindowDimensions, View, StyleSheet, Platform } from "react-native";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { roadMap as mockRoadmap } from "../../mockdata";
@@ -25,6 +25,7 @@ export interface ForYouProps{
     translationY: SharedValue<number>,
     actionsStateValue: SharedValue<string>,
     scrollRef: React.MutableRefObject<any>,
+    updateMomentumState: (momState) => void,
     data: {count: number,
         resources: any[],
         nextAction: any,
@@ -65,7 +66,7 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
     )
 }
 
-export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps, data}){
+export const ForYou:FC<ForYouProps> = observer(function analytics({translationY, actionsStateValue, scrollRef, navigationProps, data, updateMomentumState}){
     const {width:windowWidth, height:windowHeight} = useWindowDimensions()
     let resources = data.resources
 
@@ -124,11 +125,18 @@ export const ForYou:FC<ForYouProps> = observer(function analytics({translationY,
                     <FlashList
                         contentOffset={{x:0, y: translationY.value}}
                         data={resources}
+                        onScrollBeginDrag={()=>{
+                            updateMomentumState('START')
+                        }}
+                        onMomentumScrollEnd={()=>{
+                            updateMomentumState('ENDED')
+                        }}
                         renderItem={_renderItem}
                         keyExtractor={(item, index) => index+""}
                         scrollEventThrottle={16}
                         ItemSeparatorComponent={() => <View style={{height: 1.25, backgroundColor: kauriColors.primary.light, width: '80%', marginLeft: '10%', marginRight: '10%'}}/>}
                         showsVerticalScrollIndicator={false}
+                        decelerationRate={Platform.OS === 'android'?0.95:'normal'}
                         ref={scrollRef}
                         ListHeaderComponent={<Header progress={progress} onPress={goToActionDetails} roadMap={data}/>}
                         estimatedItemSize={80}

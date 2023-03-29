@@ -50,3 +50,12 @@ What milestones have you helped achieve?
 - Need to make it more component based
 - Add minimum check for width
 - Add translations
+
+
+## Actions
+
+- 15 max cap causes
+- Causes to show: mandatory causes (union) (action causes (intersection) user interests)
+- sort causes based on interests
+- When redirected to marketplace two filters applied: My interests and Product type
+- Below every filter show similar products

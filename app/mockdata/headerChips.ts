@@ -37,8 +37,8 @@ export const actionsChips:Chips[] = [
 
 export const shopChips:Chips[] = [
     {   id: 1, 
-        title: 'For You',
-        to: 'forYou'
+        title: 'All Products',
+        to: 'allProducts'
     },
     {
         id: 2,
@@ -52,31 +52,36 @@ export const shopChips:Chips[] = [
     },
     {
         id: 4,
+        title: 'Refill Available',
+        to: 'refillAvailable'
+    },
+    {
+        id: 5,
         title: 'Womens',
         to:'womens'
     },
     {
-        id: 5,
+        id: 6,
         title: 'Beauty',
         to:'beauty'
     },
     {
-        id: 6,
+        id: 7,
         title: 'Home Essentials',
         to:'homeEssentials'
     },
     {
-        id: 7,
+        id: 8,
         title: 'Kitchen',
         to:'kitchen'
     },
     {
-        id: 8,
+        id: 9,
         title: 'Sport',
         to:'sport'
     },
     {
-        id: 9,
+        id: 10,
         title: 'Hygiene',
         to:'hygiene'
     },

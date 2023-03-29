@@ -6,7 +6,7 @@ const palette = {
     light: '#F6F6F2',
     chipBar: '#E0E0D2',
     unselectedLight: '#B8B8AC',
-    seaGreen: '#648678',
+    seaGreen: '#52987B',
   },
   secondary: {
     lightBrown: '#C29A70',

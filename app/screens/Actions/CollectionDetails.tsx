@@ -107,7 +107,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                     </View>
                     <Completion total={item.total} completed={completedActions}/>
                     <View style={{marginTop: 24, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}}>
                             <View style={{width: 16}}>
                                 <PlusIcon color={kauriColors.primary.dark}/>
                             </View>
@@ -116,7 +116,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                             </Text>
                         </TouchableOpacity>
                         
-                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}}>
                             <View style={{width: 16}}>
                                 <ShuffleIcon color={kauriColors.primary.dark}/>
                             </View>
@@ -125,7 +125,7 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                             </Text>
                         </TouchableOpacity>
                         
-                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}} activeOpacity={0.9}>
+                        <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', ...designSystem.card}}>
                             <View style={{height: 18}}>
                                 <ShareIcon color={kauriColors.primary.dark}/>
                             </View>

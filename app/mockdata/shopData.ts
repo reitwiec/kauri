@@ -6,7 +6,8 @@ interface shopItem {
     title: string,
     price: string,
     aspectRatio: number,
-    type: '1' | '2' | '3'
+    type: '1' | '2' | '3',
+    refillable: boolean,
 }
 
 export const shopFeatImages = [require('./shopFeat.png'), require('./shopFeat1.png'), require('./shopFeat2.png')]
@@ -69,10 +70,11 @@ const availableItems:{src: ImageSourcePropType,
     },
 ]
 
-const generateShopList = (total:number):shopItem[] => {
+const generateShopList = (total:number, refill?:boolean):shopItem[] => {
     const shopList:shopItem[] = []
+    
     for(let i=1; i<=total; i++){
-        const item = {id: i , ...availableItems[Math.floor(Math.random() * availableItems.length)]}
+        const item = {id: i , ...availableItems[Math.floor(Math.random() * availableItems.length)], refillable: refill?refill:(i-1)%8 === 0}
         if(item){
             shopList.push(item as any)
         }
@@ -81,3 +83,4 @@ const generateShopList = (total:number):shopItem[] => {
 }
 export const shopData:shopItem[] = generateShopList(500)
 export const shopDataAlt:shopItem[] = generateShopList(100)
+export const shopDataRefills:shopItem[] = generateShopList(150, true)

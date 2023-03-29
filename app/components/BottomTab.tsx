@@ -12,7 +12,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useSafeAreaInsetsStyle} from '../utils/useSafeAreaInsetsStyle';
-import {ActionsIcon, HomeIcon, ReadIcon, ShopIcon} from '../svgs';
+import {ActionsIcon, HomeIcon, ReadIcon, ShopIcon, AssistantIcon} from '../svgs';
 import {designSystem, kauriColors} from '../theme';
 import {hexToRGBA} from '../utils/hexToRGBA';
 
@@ -43,8 +43,10 @@ export const BottomTab: FC<BottomTabBarProps> = observer(function BottomTab({
     <View
       style={[
         $container,
-        {height: 56 + Number($containerInsets.paddingBottom)},
-        $containerInsets,
+        { height: $containerInsets.paddingBottom? 56 + Number($containerInsets.paddingBottom): 56 + 16,
+          paddingBottom: $containerInsets.paddingBottom?$containerInsets.paddingBottom:16
+        },
+        ,
       ]}>
       {state.routes.map((route, index) => {
         const isFocused = state.index === index;
@@ -70,10 +72,18 @@ export const BottomTab: FC<BottomTabBarProps> = observer(function BottomTab({
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <TabIconSelector route={route.name} active={isFocused} />
-            <Text style={isFocused ? $title_selected : $title_unselected}>
-              {geti18n(title)}
-            </Text>
+              {
+                route.name === 'assistant'?
+                <>
+                  <AssistantIcon active={isFocused}/>
+                </>:
+                <>
+                  <TabIconSelector route={route.name} active={isFocused} />
+                  <Text style={isFocused ? $title_selected : $title_unselected}>
+                    {geti18n(title)}
+                  </Text>
+                </>
+              }
           </Pressable>
         );
       })}

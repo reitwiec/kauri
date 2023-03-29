@@ -4,7 +4,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { FlashList } from "@shopify/flash-list";
 import { observer } from "mobx-react-lite";
 import { FC, memo, useEffect } from "react";
-import { ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { Platform, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { LineSeparator, StylisedTitle, Thumbnail } from "../../components";
@@ -20,6 +20,7 @@ export interface ExploreProps{
     translationY: SharedValue<number>,
     actionsStateValue: SharedValue<string>,
     scrollRef: React.MutableRefObject<any>,
+    updateMomentumState: (momState) => void,
     navigationProps: CompositeNavigationProp<BottomTabNavigationProp<TabStackParamList, "actions", undefined>, NativeStackNavigationProp<AppStackParamList, 'collectionDetails', undefined>>,
     data: any[]
 }
@@ -131,6 +132,7 @@ const SkeletonItem = ({item:sectionItem, index: sectionIndex, goToActionDetails,
                 <FlashList
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
+                    decelerationRate={Platform.OS === 'android'?0.95:'normal'}
                     data={sectionItem.resources as singletonResource[]}
                     estimatedItemSize={140}
                     keyExtractor={(item, index) => index + ""}
@@ -164,7 +166,7 @@ const SkeletonItem = ({item:sectionItem, index: sectionIndex, goToActionDetails,
     )
 
 }
-export const Explore:FC<ExploreProps> = observer(function explore({translationY, scrollRef, navigationProps, data}){
+export const Explore:FC<ExploreProps> = observer(function explore({translationY, scrollRef, navigationProps, data, updateMomentumState, riveHeight}){
     const {width:windowWidth, height: windowHeight} = useWindowDimensions()
     // data.push({id:-1, type: 'singleton', title: '', resources :[]})
 
@@ -200,16 +202,23 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                 <FlashList
                     data={data}
                     contentOffset={{x:0, y: translationY.value}}
-                    estimatedItemSize={200}
+                    estimatedItemSize={450}
                     getItemType={(item) => item.type}
                     onScroll={scrollHandler}
+                    onScrollBeginDrag={()=>{
+                        updateMomentumState('START')
+                    }}
+                    onMomentumScrollEnd={()=>{
+                        updateMomentumState('ENDED')
+                    }}
                     scrollEventThrottle={16}
                     ref={scrollRef}
+                    decelerationRate={Platform.OS === 'android'?0.95:'normal'}
                     ItemSeparatorComponent={LineSeparator}
                     keyExtractor={(item, index) => index + ""}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
-                    ListFooterComponent={<View style={{height:150, width:'100%'}}/>}
+                    ListFooterComponent={<View style={{height:230*667/windowHeight, width:'100%'}}/>}
                 />
             </View>
     )

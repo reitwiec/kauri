@@ -2,21 +2,25 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
-import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StatusBar, Text, useWindowDimensions, View, ViewStyle, Image, Platform } from "react-native";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { StatusBar, Text, useWindowDimensions, View, ViewStyle, Image, Platform, ScrollView } from "react-native";
 import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import type { AppStackParamList } from "../../navigators";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import debounce from "lodash.debounce";
 import useIsReady from "../../utils/useIsReady";
-import { BusyIndicator, RiveHeader } from "../../components";
-import { shopChips, shopData, shopDataAlt, shopFeatImages } from "../../mockdata";
-import { FlashList, MasonryFlashList } from "@shopify/flash-list";
+import { RiveHeader } from "../../components";
+import { shopChips, shopData, shopDataAlt, shopDataRefills, shopFeatImages } from "../../mockdata";
+import { MasonryFlashList } from "@shopify/flash-list";
 import { dimensionColorMap } from "../../utils/hexDetails";
 import { designSystem, kauriColors } from "../../theme";
 import FastImage from "react-native-fast-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Carousel from "react-native-reanimated-carousel";
+import { RefillIcon } from "../../svgs";
+import { hexToRGBA } from "../../utils/hexToRGBA";
+import useScrollToTop from "../../utils/useScrollToTop";
 
 type ShopProps = CompositeScreenProps<
     BottomTabScreenProps<TabStackParamList, "shop">,
@@ -46,13 +50,7 @@ function useInterval(callback, delay) {
 const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
     const { height:winHeight, width: winWidth} = useWindowDimensions()
     const featImages = 3
-    const INTERVAL_TIME = 4000
     const translationX = useSharedValue(0)
-    const playerRef = useRef<any>()
-
-    const scrollHandler = ({nativeEvent}) => {
-        translationX.value = nativeEvent.contentOffset.x
-    }
     const $opacityAnim = useAnimatedStyle(()=>{
         return (
             {
@@ -65,29 +63,13 @@ const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
             }
         )
     }, [translationY])
-
-    const _goToNextPage = () => {
-        let currSlide = Math.round((translationX.value)/winWidth);
-        if (currSlide >= featImages - 1){
-            currSlide = 0
-        }else {
-            currSlide +=1
-        }
-       playerRef.current.scrollToIndex({
-        index: currSlide,
-        animated: true,
-       });
-     };
-
-    useInterval(()=>{
-        _goToNextPage()
-    }, INTERVAL_TIME)
     
     const $progressAnim = useAnimatedStyle(()=>{
-        const translateX = interpolate(
+        let translateX;
+        translateX = interpolate(
             translationX.value,
-            [0, winWidth*(featImages-1)],
-            [0, 2*winWidth/featImages],
+            [0, -winWidth*(featImages-1)],
+            [0, (featImages-1)*winWidth/featImages],
             Extrapolate.CLAMP
         )
         return {
@@ -95,26 +77,28 @@ const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
                 {translateX: translateX}
             ]
         }
-    })
+    }, [translationX])
 
+    const offsetX = (offsetProgress) => {
+        translationX.value = offsetProgress
+    }
 
     return (
         <Animated.View style={[{ 
         position: 'absolute',
         bottom: 64,}, $opacityAnim]}>
-            <FlashList
-                ref={playerRef}
-                horizontal
-                onScroll={scrollHandler}
-                snapToInterval={winWidth}
-                decelerationRate={0}
-                data={["", "", ""]}
-                bounces={false}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => ""+index}
-                estimatedItemSize={winWidth}
-                renderItem={({item, index}) => {
-                    return (
+            <Carousel
+                loop
+                width={winWidth}
+                height={winWidth}
+                autoPlay={true}
+                windowSize={winWidth}
+                data={[...new Array(shopFeatImages.length).keys()]}
+                scrollAnimationDuration={700}
+                autoPlayInterval={2000}
+                // onSnapToItem={offsetX}
+                onProgressChange={offsetX}
+                renderItem={({ index }:{index:number}) => (
                         <Image
                             source={shopFeatImages[index]}
                             style={
@@ -124,8 +108,7 @@ const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
                             }
                             }
                         />
-                    )
-                }}
+                )}
             />
             <View style={{position: 'absolute', bottom: 0, width: winWidth, backgroundColor: kauriColors.primary.chipBar}}>
                 <Animated.View style={[{ width: winWidth/featImages, height: 4, backgroundColor: kauriColors.primary.yellow}, $progressAnim]}/>
@@ -192,26 +175,45 @@ const ShopListItem = ({item, index, IMAGE_WIDTH}:{item: any, index: any, IMAGE_W
         }, [$pressIn])
     }
     return (
-        <TouchableOpacity 
-            onPressIn={()=>{$pressIn.value = true}}
-            onPressOut={()=>{$pressIn.value = false}}
-            style={{marginLeft: index % 2 === 0?8:4,
-            marginRight: index % 2 === 0?4:8,
-            marginVertical:8,}}
-            activeOpacity={0.9}
-            >
-            <Animated.View style={$animatedStyles.scale}>
-                <ShopListItemImageContainer item={item} IMAGE_WIDTH={IMAGE_WIDTH}/>
-                <View style={{marginLeft: 8}}>
-                    <Text numberOfLines={2} style={{...designSystem.textStyles.captionsMediumBold, color: kauriColors.primary.dark, letterSpacing: -0.5}}>
-                        {item.title}
-                    </Text>
-                    <Text style={{...designSystem.textStyles.smallTexts, color: kauriColors.primary.dark}}>
-                        {`Rs. ${item.price}`}
-                    </Text>
-                </View>
-            </Animated.View>
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity 
+                onPressIn={()=>{$pressIn.value = true}}
+                onPressOut={()=>{$pressIn.value = false}}
+                style={{marginLeft: index % 2 === 0?8:4,
+                marginRight: index % 2 === 0?4:8,
+                marginVertical:12}}
+                activeOpacity={0.9}
+                >
+                <Animated.View style={$animatedStyles.scale}>
+                    <ShopListItemImageContainer item={item} IMAGE_WIDTH={IMAGE_WIDTH}/>
+                    <View style={{marginLeft: 8}}>
+                        <Text numberOfLines={2} style={{...designSystem.textStyles.captionsMediumBold, color: kauriColors.primary.dark, letterSpacing: -0.5}}>
+                            {item.title}
+                        </Text>
+                        <Text style={{...designSystem.textStyles.smallTexts, color: kauriColors.primary.dark}}>
+                            {`Rs. ${item.price}`}
+                        </Text>
+                    </View>
+                </Animated.View>
+            </TouchableOpacity>
+            {item.refillable && 
+            <View style={{position: 'absolute', left: 16, top:16,}}>
+                <TouchableOpacity hitSlop={{top:8, bottom:8, right:8, left:8}} activeOpacity={0.5} style={{
+                                alignItems: 'center', 
+                                width:28, height:28, 
+                                backgroundColor: hexToRGBA(dimensionColorMap()['dimension2'], 1), 
+                                justifyContent: 'center', 
+                                borderRadius: 28, 
+                                borderWidth: 1,
+                                borderColor: '#fff',
+                                }}>
+                    <View style={{height: 20}}>
+                        <RefillIcon color={'#fff'}/>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            }
+        </View>
     )
 }
 export const Shop:FC<ShopProps> = observer(function Shop(_props){
@@ -220,6 +222,7 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
     const $containerInsets = useSafeAreaInsetsStyle(["top"])
     const [data, setData] = useState(shopData)
     let riveHeight = windowWidth + 48
+    
     // if($containerInsets.paddingTop && typeof $containerInsets.paddingTop === "number"){
     //     riveHeight = riveHeight - $containerInsets.paddingTop
     // }
@@ -229,11 +232,28 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
     const [isLoading, setIsLoading] = useState(false)
     const [searchPhrase, setSearchPhrase] = useState('')
     const scrollRef = useRef<any>()
+    const velocity = useSharedValue(0)
+    const momentumState = useSharedValue('ENDED')
+
+    const scrollToTop = () => {
+        if(scrollRef.current){
+            if(momentumState.value === 'ENDED' || Platform.OS === 'ios'){
+                scrollRef.current.scrollToOffset({offset:0, animated:true})
+                translationY.value = withTiming(0)
+            }
+        } 
+    }
+    useScrollToTop(scrollRef, () => scrollToTop())
 
     const updateShopState = useCallback((key:any)=>{
         console.log(key)
-        const dataAvailable = [shopData, shopDataAlt]
-        const rand = dataAvailable[Math.floor(Math.random() * dataAvailable.length)]
+        let rand;
+        if(key === 'refillAvailable'){
+            rand = shopDataRefills
+        }else{
+            const dataAvailable = [shopData, shopDataAlt]
+            rand = dataAvailable[Math.floor(Math.random() * dataAvailable.length)] 
+        }
         if(scrollRef.current){
             scrollRef.current.scrollToOffset({offset:0, animated: Platform.OS === 'ios'})
         }
@@ -319,11 +339,6 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
         if(!isFocused){
             return
         }
-        // if(nativeEvent.contentOffset.y <0) {
-        //     translationY.value = 0
-        //     return
-        // }
-        // console.log("-->",nativeEvent.contentOffset.y)
         translationY.value = nativeEvent.contentOffset.y
     }
 
@@ -351,7 +366,7 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
                         data={skeletonData}
                         scrollEnabled={false}
                         numColumns={columnCount}
-                        estimatedItemSize={300}
+                        estimatedItemSize={330}
                         keyExtractor={(item, index) => index + ""}
                         renderItem={({item, index}) => {
                             return (
@@ -375,7 +390,14 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
                     getItemType={(item) => item.type}
                     data={data}
                     scrollEnabled={true}
+                    onScrollBeginDrag={()=>{
+                        momentumState.value = 'START'
+                    }}
+                    onMomentumScrollEnd={()=> {
+                        momentumState.value = 'ENDED'
+                    }}
                     ref={scrollRef}
+                    decelerationRate={Platform.OS === 'android'?0.95:'normal'}
                     numColumns={columnCount}
                     estimatedItemSize={300}
                     onScroll={scrollHandler}

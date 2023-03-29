@@ -41,21 +41,36 @@ const actionDetails:actionDetail[] = [
         kauriUsersCompleted: 11400,
         topCauses: [
             {
-                dimension: "dimension1",
-                note: "7 litres of water saved"
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
             },
             {
-                dimension: "dimension2",
-                note: "4 kWh of energy saved"
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
             },
             {
                 dimension: "dimension3",
-                note: "0.5 kg CO2e of emissions saved"
+                subdimension: "Vegan Lifestyle"
             },
             {
-                dimension: "dimension4",
-                note: "20kgs of plastic saved"
-            }
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
+            {
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension3",
+                note: "0.5 kg CO2e of emissions saved",
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension5",
+                subdimension: "Female Led"
+            },
         ],
         causes: [
             {
@@ -133,20 +148,35 @@ const actionDetails:actionDetail[] = [
         topCauses: [
             {
                 dimension: "dimension2",
-                note: "7 litres of water saved"
+                subdimension: "Renewable Energy",
             },
             {
                 dimension: "dimension5",
-                note: "4 kWh of energy saved"
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
             },
             {
                 dimension: "dimension3",
-                note: "0.5 kg CO2e of emissions saved"
+                subdimension: "Vegan Lifestyle"
             },
             {
-                dimension: "dimension4",
-                note: "20kgs of plastic saved"
-            }
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
+            {
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension3",
+                note: "0.5 kg CO2e of emissions saved",
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension5",
+                subdimension: "Female Led"
+            },
         ],
         causes: [
             {
@@ -219,21 +249,36 @@ const actionDetails:actionDetail[] = [
         kauriUsersCompleted: 400,
         topCauses: [
             {
-                dimension: "dimension1",
-                note: "7 litres of water saved"
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
+            {
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
             },
             {
                 dimension: "dimension3",
-                note: "4 kWh of energy saved"
-            },
-            {
-                dimension: "dimension3",
-                note: "0.5 kg CO2e of emissions saved"
+                subdimension: "Vegan Lifestyle"
             },
             {
                 dimension: "dimension2",
-                note: "20kgs of plastic saved"
-            }
+                subdimension: "Renewable Energy",
+            },
+            {
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension3",
+                note: "0.5 kg CO2e of emissions saved",
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension5",
+                subdimension: "Female Led"
+            },
         ],
         causes: [
             {
@@ -310,21 +355,71 @@ const actionDetails:actionDetail[] = [
         kauriUsersCompleted: 2481,
         topCauses: [
             {
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
+            {
                 dimension: "dimension5",
-                note: "7 litres of water saved"
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
             },
             {
                 dimension: "dimension3",
-                note: "4 kWh of energy saved"
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
             },
             {
                 dimension: "dimension5",
-                note: "0.5 kg CO2e of emissions saved"
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
             },
             {
-                dimension: "dimension1",
-                note: "20kgs of plastic saved"
-            }
+                dimension: "dimension3",
+                note: "0.5 kg CO2e of emissions saved",
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension5",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
+            {
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension3",
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
+            {
+                dimension: "dimension5",
+                note: "4 kWh of energy saved",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension3",
+                note: "0.5 kg CO2e of emissions saved",
+                subdimension: "Vegan Lifestyle"
+            },
+            {
+                dimension: "dimension5",
+                subdimension: "Female Led"
+            },
+            {
+                dimension: "dimension2",
+                subdimension: "Renewable Energy",
+            },
         ],
         causes: [
             {

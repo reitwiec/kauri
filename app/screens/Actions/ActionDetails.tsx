@@ -340,24 +340,29 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                 <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
                                     {geti18n("actions.causesImpactedHighest")}
                                 </Text>
-                                <TouchableOpacity activeOpacity={0.8}>
+                                {/* <TouchableOpacity activeOpacity={0.8}>
                                     <Text style={{ ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
                                         See All
                                     </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </View>
                             <ScrollView horizontal style={{marginTop:8}} showsHorizontalScrollIndicator={false}>
                                 {
                                     item.topCauses.map((cause, index)=>{
                                         return(
-                                            <View style={{width:104}} key={index}>
+                                            <TouchableOpacity style={{width:112}} key={index} activeOpacity={0.9}>
                                                 <View style={{ alignItems: 'center'}}>
-                                                    <Hex dimension={cause.dimension} title={null}/>
+                                                    {/* <Hex dimension={cause.dimension} title={null}/>
                                                     <Text style={{width:'90%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
                                                         {cause.note}
-                                                    </Text>
+                                                    </Text> */}
+
+                                                    <Hex dimension={cause.dimension} title={cause.subdimension} titleVisible={!cause.note}/>
+                                                    {cause.note && <Text style={{marginTop:0, width:'90%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
+                                                        {cause.note}
+                                                    </Text>}
                                                 </View>
-                                            </View>
+                                            </TouchableOpacity>
                                         )
                                     })
                                 }

@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useRef, useState } from "react";
-import { StatusBar, Text, View, ViewStyle } from "react-native";
+import { Button, StatusBar, Text, View, ViewStyle } from "react-native";
 import { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import type { AppStackParamList } from "../../navigators";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
@@ -95,6 +95,9 @@ export const Read:FC<ReadProps> = observer(function Read(_props){
         <View style={[$container, $containerInsets]}>
             <StatusBar barStyle={'dark-content'} backgroundColor="#fff"/>
             <RiveHeader translationY={translationY} data={readChips} config={{right: ['customise'],left:["filter", "search"], height: riveHeight}} screenState={updateReadState} isSearching={isSearching} searchClicked={searchClicked} updateSearchPhrase={updateSearchPhrase}/>
+            <Button title="Go to onboarding" onPress={()=>{
+                _props.navigation.navigate('onboarding_interests_hive',{totalDimensions: 23})
+            }}/>
         </View>
     )
 })

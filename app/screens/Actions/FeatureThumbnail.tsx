@@ -25,7 +25,7 @@ const StaggeredHex = ({topCauses, totalCauses}) => {
                     topCauses.map((cause, index)=>{
                         return (
                             <View key={index} style={{marginLeft: index>0?4:0, marginRight:4}}>
-                                <Hex dimension={cause.dimension} title={null}/>
+                                <Hex dimension={cause.dimension} title={cause.subdimension}/>
                             </View>
                             )
                         })   

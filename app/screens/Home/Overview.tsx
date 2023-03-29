@@ -1,25 +1,24 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Image, Platform, Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
-import Animated, { Easing, Extrapolate, interpolate, SharedTransition, SharedValue, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import React, { FC, memo, useEffect, useMemo, useState } from "react";
+import { Pressable, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle } from "react-native";
+import Animated, { Easing, Extrapolate, interpolate, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
 import { hexToRGBA } from "../../utils/hexToRGBA";
 import { MindfulIcons } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
 import { dimensionColorMap, dimensionNameMap } from "../../utils/hexDetails";
-import { BusyIndicator, LineSeparator, ReadCard, StylisedTitle, Thumbnail, TryBtn } from "../../components";
+import { BusyIndicator, LineSeparator, ReadCard, Thumbnail, TryBtn } from "../../components";
 import { Hex } from "../../components/Hex";
-import { shadowGenerator } from "../../utils/shadowGenerator";
-import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
+import type { CompositeNavigationProp } from "@react-navigation/native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { TabStackParamList } from "../Tabs/Tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { AppStackParamList } from "../../navigators";
-import { FlashList } from "@shopify/flash-list";
 import { hexIntro } from "../../mockdata";
-import { SharedElement } from "react-navigation-shared-element";
 import { Path, Svg } from "react-native-svg";
+import Carousel from "react-native-reanimated-carousel";
+import { parallaxLayout } from "./Parallax";
 
 export interface OverviewProps {
     riveHeight: number,
@@ -39,50 +38,49 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
 
     const [currentItem, setCurrentItem] = useState<any>(roadMap.resources[0])
     const [currentIndex, setCurrentIndex] = useState(0)
-    const isFocused = useIsFocused()
 
-    const translationX = useSharedValue(0);
-    const scrollHandler = ({nativeEvent}) => {
-        translationX.value = nativeEvent.contentOffset.x
+    const updateCurrent = (index) => {
+        setCurrentItem(roadMap.resources[index])
+        setCurrentIndex(index) 
     }
-    const onScrollEnd = () => {
-        const selectedIndex = Math.round(translationX.value/(winWidth - THUMBNAIL_WIDTH - 32))
-        if(currentIndex !== selectedIndex) {
-            setCurrentItem(roadMap.resources[selectedIndex])
-            setCurrentIndex(selectedIndex)
-        }
-    }
-    const renderItem = useCallback(({item, index}) =>{
-        return(
-                <RoadmapThumbs item={item} index={index} key={index} translationX={translationX} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH} onPress={onPress}/>
-        )
-    },[])
     
     return (
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <View style={{height: THUMBNAIL_WIDTH * 1.5}}>
-                <FlashList
-                    data={roadMap.resources}
-                    decelerationRate={0}
-                    estimatedItemSize={winWidth - THUMBNAIL_WIDTH - 32}
-                    horizontal 
-                    snapToOffsets={[...Array(roadMap.resources.length)].map((x, i) => (i * (winWidth - THUMBNAIL_WIDTH - 32) ))}
-                    bounces={false}
-                    contentContainerStyle={{
-                        paddingTop:((THUMBNAIL_WIDTH*1.5) - (THUMBNAIL_WIDTH+8))/2
-                    }}
-                    // pagingEnabled
-                    onScroll={scrollHandler}
-                    onMomentumScrollEnd={onScrollEnd}
-                    scrollEventThrottle={16}
-                    ListHeaderComponent={()=><View style={{width:THUMBNAIL_WIDTH/2 + 16, height: THUMBNAIL_WIDTH}}/>}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(_ , index) => `${index}`}
-                    renderItem={renderItem}
-                />
-            </View>
 
-            {currentItem && <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{marginVertical: 24}}>
+            <Carousel
+                    onSnapToItem={updateCurrent}
+                    loop={false}
+                    autoPlay={false}
+                    style={{
+                        width: winWidth,
+                        height: THUMBNAIL_WIDTH+8,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                    windowSize={winWidth}
+                    width={THUMBNAIL_WIDTH+8}
+                    data={roadMap.resources}
+                    renderItem={({ item, index, animationValue }) => {
+                        return(<RoadmapThumbs item={item} index={index} key={index} translationX={animationValue} THUMBNAIL_WIDTH={THUMBNAIL_WIDTH} onPress={onPress}/>)
+                    }}
+                    customAnimation={parallaxLayout(
+                    {
+                        size: THUMBNAIL_WIDTH+8,
+                        vertical: false,
+                    },
+                    {
+                        parallaxScrollingScale: 1,
+                        parallaxAdjacentItemScale: 0.75,
+                        parallaxScrollingOffset: 0,
+                    },
+                    )}
+                    scrollAnimationDuration={400}
+                />
+        </View>
+
+
+            {currentItem && <View style={[{alignItems: 'center', justifyContent: 'center'}]}>
                         <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: "80%", marginBottom: 16, paddingHorizontal:16}}>
                         {
                             currentItem.topCauses.map((cause, index)=>{
@@ -124,26 +122,18 @@ interface RoadmapThumbsProps {
 }
 
 const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({item, index, translationX, THUMBNAIL_WIDTH, onPress}){
-    const winWidth = useWindowDimensions().width
-    const offsetFactor = (winWidth - THUMBNAIL_WIDTH - 32)
-    const inputRange = [(index -1)*offsetFactor, index * offsetFactor, (index+1) * offsetFactor]
+    const inputRange = [-1, 0, 1]
     const isPressing = useSharedValue(false)
     
     const $animStyles = {
         thumbnail: useAnimatedStyle(()=>{
-            const style = Platform.OS === 'ios'? 
-                {
-                    transform: [{translateY: withTiming(interpolate(translationX.value, inputRange, [24,0,24], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})}, 
-                                {scale: isPressing.value?withTiming(0.98):withTiming(interpolate(translationX.value, inputRange, [0.92, 1, 0.92], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)})}],
+            return {
                     opacity: withTiming(interpolate(translationX.value, inputRange, [1/4, 1, 1/4], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)}),
-                }:{
-                    transform: [{scale: isPressing.value?withTiming(0.98):withTiming(1)}]
                 }
-            return style
         }, [translationX, isPressing]),
         border: useAnimatedStyle(()=>{
             return {    
-                opacity: withTiming(interpolate(translationX.value, inputRange, [0, 1, 0], Extrapolate.CLAMP), {duration: 200, easing: Easing.inOut(Easing.ease)}), 
+                opacity: withTiming(interpolate(translationX.value, inputRange, [0, 1, 0], Extrapolate.CLAMP), {duration: 100, easing: Easing.inOut(Easing.ease)}), 
             }
         }, [translationX])
     }
@@ -161,7 +151,7 @@ const RoadmapThumbs:FC<RoadmapThumbsProps> = React.memo(function roadmapThumbs({
             onPress(item.id)
         }}
         >
-            <Animated.View style={[$animStyles.thumbnail, { alignItems: 'center', justifyContent:'center', height:THUMBNAIL_WIDTH+8, width: winWidth - THUMBNAIL_WIDTH - 32}]}>
+            <Animated.View style={[$animStyles.thumbnail, { alignItems: 'center', justifyContent:'center', height:THUMBNAIL_WIDTH+8, width: THUMBNAIL_WIDTH +8}]}>
                     <Thumbnail src={item.url} width={THUMBNAIL_WIDTH} height={THUMBNAIL_WIDTH} title={item.title} type={"large"} actionType={item.type} pretty={false} status={item.status}/>
                     <Animated.View style={[$animStyles.border, {zIndex: -1, position: 'absolute', top:0}]}>
                         <LinearGradient
@@ -334,19 +324,21 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     </View> 
                 </View>
                 <View style={{...designSystem.card, marginHorizontal:16}}>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 8}}>
+                    <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark, marginTop: 8}}>
                         {geti18n("common.mostImpactedCauses")}
                     </Text>
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8, paddingHorizontal: 8}}>
                         {
                             mostImpacted.map((item, index)=>{
                                 return (
-                                    <Hex key={index} title={item.subdimension} dimension={item.dimension}/>
+                                    <View key={index} style={{flex:1}}>
+                                        <Hex title={item.subdimension} dimension={item.dimension} titleVisible/>
+                                    </View>
                                     )
                                 })
                             }
                     </View>
-                    <Text style={{...designSystem.textStyles.captionsBold, color: kauriColors.primary.dark, marginTop: 16}}>
+                    <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.dark, marginTop: 16}}>
                         {geti18n("common.totalContributions")}
                     </Text>
                     <View style={{marginTop: 8}}>

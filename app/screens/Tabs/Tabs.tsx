@@ -7,6 +7,7 @@ import { Dimensions, EmitterSubscription, Keyboard, Platform, Text, View, ViewSt
 import { BottomTab } from "../../components";
 import type { AppStackParamList } from "../../navigators";
 import { Actions } from "../Actions/Actions";
+import { Assistant } from "../Assistant/Assistant";
 import { Home } from "../Home/Home";
 import { Read } from "../Read/Read";
 import { Shop } from "../Shop/Shop";
@@ -23,7 +24,8 @@ export type TabStackParamList={
     actions: undefined,
     shop: undefined,
     read: undefined,
-    you: undefined
+    you: undefined,
+    assistant: undefined,
 }
 
 //not required
@@ -76,9 +78,10 @@ export const Tabs:FC<TabsProps> = observer(function Tabs(_props){
             >
                 <Tab.Screen name="home" component={Home} />
                 <Tab.Screen name="actions" component={Actions}/>
+                <Tab.Screen name="assistant" component={Assistant}/>
                 <Tab.Screen name="shop" component={Shop}/>
                 <Tab.Screen name="read" component={Read}/>
-                <Tab.Screen name="you" component={You}/>
+                {/* <Tab.Screen name="you" component={You}/> */}
 
             </Tab.Navigator>
         </View>

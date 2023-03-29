@@ -662,15 +662,15 @@ export const roadMap:thumbnail = {
         topCauses: [
             {
                 dimension: "dimension1",
-                subdimension: "subdimension_1",
+                subdimension: "female led",
             } ,
             {
                 dimension: "dimension2",
-                subdimension: "subdimension_2",
+                subdimension: "renewable energy",
             },
             {
                 dimension: "dimension3",
-                subdimension: "subdimension_3",
+                subdimension: "vegan lifestyle",
             },
         ]
     },

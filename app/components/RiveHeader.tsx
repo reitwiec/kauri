@@ -137,7 +137,7 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
                   updateLocalSearchPhrase('');
                 }
                 searchClicked(false, localSearchPhrase)
-                if(localSearchPhrase.length === 0){ 
+                if(localSearchPhrase.trim().length === 0){ 
                   setIsSearching(false)
                 }
               }}
