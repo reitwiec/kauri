@@ -2,6 +2,7 @@ const en = {
   common: {
     assistant: 'Assistant',
     next: 'Next',
+    variants: 'Variants',
     saveContinue: 'Save and Continue',
     home: 'Home',
     actions: 'Actions',
@@ -78,6 +79,14 @@ const en = {
     whatNextDescription:
       'Next action for you on your roadmap.',
   },
+  shop:{
+    productContribution: 'Product contribution',
+    howIsItManufactured: 'How is it manufactured?',
+    whatMaterialsAreUsed: 'What materials are used?',
+    howMuchBetterIsIt: "How much better is it?",
+    howToDispose: "How to dispose",
+    sizes: "Sizes"
+  }
 };
 
 export default en;

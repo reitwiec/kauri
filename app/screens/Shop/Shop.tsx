@@ -1,5 +1,5 @@
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps, useIsFocused } from "@react-navigation/native";
+import { CompositeScreenProps, useIsFocused, useNavigation } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
@@ -66,10 +66,14 @@ const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
     
     const $progressAnim = useAnimatedStyle(()=>{
         let translateX;
+        let transX = translationX.value
+        if(transX > 0 ) {
+            transX = transX - featImages * winWidth
+        }
         translateX = interpolate(
-            translationX.value,
-            [0, -winWidth*(featImages-1)],
-            [0, (featImages-1)*winWidth/featImages],
+            transX,
+            [-winWidth*(featImages), -winWidth*(featImages-1), 0],
+            [0, (featImages-1)*winWidth/featImages, 0],
             Extrapolate.CLAMP
         )
         return {
@@ -89,6 +93,9 @@ const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
         bottom: 64,}, $opacityAnim]}>
             <Carousel
                 loop
+                panGestureHandlerProps={{
+                    activeOffsetX: [-50, 50],
+                }}
                 width={winWidth}
                 height={winWidth}
                 autoPlay={true}
@@ -163,8 +170,9 @@ const ShopListItemImageContainer = ({item, IMAGE_WIDTH}) => {
     }
     return <View/>
 }
-const ShopListItem = ({item, index, IMAGE_WIDTH}:{item: any, index: any, IMAGE_WIDTH:number}) => {
+const ShopListItem = ({item, index, IMAGE_WIDTH, onPress}:{item: any, index: any, IMAGE_WIDTH:number, onPress: (productId:string) => void}) => {
     const $pressIn = useSharedValue(false)
+    const navigation = useNavigation()
     const $animatedStyles = {
         scale: useAnimatedStyle(()=>{
           return {
@@ -179,6 +187,7 @@ const ShopListItem = ({item, index, IMAGE_WIDTH}:{item: any, index: any, IMAGE_W
             <TouchableOpacity 
                 onPressIn={()=>{$pressIn.value = true}}
                 onPressOut={()=>{$pressIn.value = false}}
+                onPress={()=> onPress(item.id)}
                 style={{marginLeft: index % 2 === 0?8:4,
                 marginRight: index % 2 === 0?4:8,
                 marginVertical:12}}
@@ -305,6 +314,13 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
         debounceFilterCall("searchQuery", phrase)
     }
 
+    const goToProductDetail = (productId: string) => {
+        _props.navigation.navigate('productDetail', {
+            productId,
+            cameFrom: 'shop'
+        })
+    }
+
     const searchClicked = (override, searchPhrase:string) => {
         // if(!isSearching){
         //     states[actionsState].scrollToTop()
@@ -345,7 +361,7 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
     const _renderItem = ({item, index}) => {
 
         return (
-            <ShopListItem item={item} index={index} IMAGE_WIDTH={IMAGE_WIDTH}/>
+            <ShopListItem item={item} index={index} IMAGE_WIDTH={IMAGE_WIDTH} onPress={goToProductDetail}/>
         )
     }
 

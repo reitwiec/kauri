@@ -11,7 +11,6 @@ interface shopItem {
 }
 
 export const shopFeatImages = [require('./shopFeat.png'), require('./shopFeat1.png'), require('./shopFeat2.png')]
-
 // h = w * 1/aspectRatio
 // aspectRatio = w/h
 /*

@@ -16,6 +16,7 @@ import {CartIcon, CrossIcon, CustomiseIcon, FilterIcon, SearchIcon} from '../svg
 import {hexToRGBA} from '../utils/hexToRGBA';
 import {designSystem, kauriColors} from '../theme';
 import Lottie from 'lottie-react-native';
+import { WishlistIcon } from '../svgs/WishlistIcon';
 
 type configOptions = 'customise' | 'filter' | 'search' | 'cart' | 'wishlist';
 
@@ -61,7 +62,7 @@ const OptionBtn = memo(({optionType, left, searchClicked, updateSearchPhrase}: O
       option = <CartIcon />;
       break;
     case 'wishlist':
-      option = <CustomiseIcon />;
+      option = <WishlistIcon />;
       break;
   }
 

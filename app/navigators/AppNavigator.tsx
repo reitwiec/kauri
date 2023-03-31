@@ -9,6 +9,7 @@ import { ActionDetails } from '../screens/Actions/ActionDetails';
 import { CollectionDetails } from '../screens/Actions/CollectionDetails';
 import { Trail } from '../screens/Home/Trail';
 import { ReadDetail } from '../screens/Read/ReadDetail';
+import { ProductDetail } from '../screens/Shop/ProductDetails';
 import { options } from '../utils/cardTransitionOptions';
 
 type mainScreens = 'home' | 'actions' | 'shop' | 'read' | 'you'
@@ -26,6 +27,10 @@ export type AppStackParamList = {
   trail: undefined,
   readDetail: {
     readId: string
+  },
+  productDetail: {
+    productId: string,
+    cameFrom: mainScreens
   }
 };
 
@@ -68,6 +73,11 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen
         name="readDetail"
         component={ReadDetail}
+      />
+      <Stack.Screen
+        name="productDetail"
+        component={ProductDetail}
+        options={{...options, detachPreviousScreen: false}}
       />
     </Stack.Navigator>
   );

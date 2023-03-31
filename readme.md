@@ -8,6 +8,7 @@
 - Move to recyclerListView from flatlist
 
 ## Search and filter system
+Optimize search and filtering system
 
 filteredSettings = {
     searchQuery: "",
@@ -59,3 +60,7 @@ What milestones have you helped achieve?
 - sort causes based on interests
 - When redirected to marketplace two filters applied: My interests and Product type
 - Below every filter show similar products
+
+# Product detail section
+
+- add hsl conversion and custom brand logo color

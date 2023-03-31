@@ -52,6 +52,9 @@ const WhatNext:FC<{onPress:any, roadMap:any}> = memo(({onPress, roadMap}) => {
                     onSnapToItem={updateCurrent}
                     loop={false}
                     autoPlay={false}
+                    panGestureHandlerProps={{
+                        activeOffsetX: [-10, 10],
+                    }}
                     style={{
                         width: winWidth,
                         height: THUMBNAIL_WIDTH+8,

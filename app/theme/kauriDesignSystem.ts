@@ -22,6 +22,7 @@ type textStyles =
   | 'titleSans'
   | 'captionsMediumBold'
   | 'assistantSans'
+  | 'assistantSansBody'
 
 type textStylesMap = {[style in textStyles]: TextStyle};
 
@@ -75,7 +76,12 @@ const textStyles: textStylesMap = {
   assistantSans: {
     fontSize: 24,
     fontFamily: kauriTypography.primary.bold,
-    letterSpacing: letterSpacings[20]
+    letterSpacing: letterSpacings[24]
+  },
+  assistantSansBody: {
+    fontSize: 20,
+    fontFamily: kauriTypography.primary.extraBold,
+    letterSpacing: letterSpacings[20] 
   },
   paragraph: {
     fontSize: 14,

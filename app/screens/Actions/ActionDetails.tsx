@@ -352,10 +352,6 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                         return(
                                             <TouchableOpacity style={{width:112}} key={index} activeOpacity={0.9}>
                                                 <View style={{ alignItems: 'center'}}>
-                                                    {/* <Hex dimension={cause.dimension} title={null}/>
-                                                    <Text style={{width:'90%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
-                                                        {cause.note}
-                                                    </Text> */}
 
                                                     <Hex dimension={cause.dimension} title={cause.subdimension} titleVisible={!cause.note}/>
                                                     {cause.note && <Text style={{marginTop:0, width:'90%', ...designSystem.textStyles.smallTexts, marginLeft: 8, color: kauriColors.primary.dark, textAlign: 'center'}}>
