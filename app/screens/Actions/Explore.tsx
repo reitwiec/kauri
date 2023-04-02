@@ -199,11 +199,11 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                 <BusyIndicator style="light"/>
             </View>:
             <View style={{width: 390, height: 700}}>
-                <FlashList
+                <FlatList
                     data={data}
                     contentOffset={{x:0, y: translationY.value}}
-                    estimatedItemSize={450}
-                    getItemType={(item) => item.type}
+                    // estimatedItemSize={450}
+                    // getItemType={(item) => item.type}
                     onScroll={scrollHandler}
                     onScrollBeginDrag={()=>{
                         updateMomentumState('START')

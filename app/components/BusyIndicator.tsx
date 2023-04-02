@@ -5,7 +5,7 @@ import { opacity } from "react-native-redash"
 import { KauriLogo } from "../svgs"
 import { kauriColors } from "../theme"
 
-export const BusyIndicator = memo(({style}:{style: 'dark' | 'light'}) => {
+export const BusyIndicator = memo(({style, hideLogo}:{style: 'dark' | 'light', hideLogo?:boolean}) => {
     const {height: windowHeight} = useWindowDimensions()
     const progress = useSharedValue(0)
     const $loadingAnim = useAnimatedStyle(()=>{
@@ -25,9 +25,9 @@ export const BusyIndicator = memo(({style}:{style: 'dark' | 'light'}) => {
             <View style={{width: 40, height: 40, alignItems: 'center', justifyContent: 'center'}}>
                 <Animated.View style={[{borderWidth:2, borderColor: "#EBBC38", borderRadius: 20, width: 30, height: 30}, $loadingAnim]}/>
             </View>
-            <View style={{width: 100}}>
+            {!hideLogo && <View style={{width: 100}}>
                 <KauriLogo textColor={style==='dark'?'#fff':kauriColors.primary.dark}/>
-            </View>
+            </View>}
         </View>
     )
 })

@@ -1,7 +1,6 @@
 import type { FC } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import {Text, Image, useWindowDimensions, ImageSourcePropType} from "react-native"
+import {Text, Image, useWindowDimensions, ImageSourcePropType, TouchableOpacity} from "react-native"
 import { designSystem, kauriColors } from "../theme";
 import { hexToRGBA } from "../utils/hexToRGBA";
 import FastImage from "react-native-fast-image";
@@ -23,7 +22,10 @@ export const ReadCard:FC<ReadCardProps> = ({image, title, description, onPress})
         }
     }, [$pressing])
     return (
-        <TouchableOpacity activeOpacity={0.9} onPressIn={()=> $pressing.value = true} onPressOut={()=> $pressing.value = false}  onPress={() => onPress("1")} style={{paddingHorizontal: 16}}>
+        <TouchableOpacity activeOpacity={0.9} onPressIn={()=> $pressing.value = true} onPressOut={()=> $pressing.value = false}  onPress={() => {
+            console.log('clicked')
+            onPress("1")
+            }} style={{paddingHorizontal: 16}}>
                     <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, width: windowWidth-32, height: 4*(windowWidth-32)/3, borderRadius:12}, $pressingAnim]}>
                                     <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', width:'100%'}, description?{bottom:0}:{top:0}]}>
                                             <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>

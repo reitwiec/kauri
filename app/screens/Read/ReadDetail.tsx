@@ -35,14 +35,15 @@ const ReadDetail:FC<ReadDetailProps> = ({}) => {
     }, [])
     
     return (
-        <View style={{backgroundColor: backgroundColor, flex:1}}>
-            <StatusBar barStyle={'light-content'} backgroundColor={hexToRGBA("#25170E", 0.7)}/>
+        <View style={{backgroundColor: '#000', flex:1}}>
+            <StatusBar backgroundColor={"#000"} barStyle="light-content"/>
             {isBusy? 
-                <View style={{width: windowWidth, minHeight: windowHeight/2}}>
+                <View style={{width: '100%', minHeight: '100%', backgroundColor: '#fff'}}>
                     <BusyIndicator style="light"/>
-                </View>:<ScrollView bounces={false}>
-                <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, borderRadius:0,}]}>
-                                    <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, paddingTop:$containerInsets.paddingTop?$containerInsets.paddingTop:16, position:'absolute', width:'100%', top:0}]}>
+                </View>:<><ScrollView bounces={false}>
+                <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, borderTopLeftRadius:32,marginTop:$containerInsets.paddingTop,
+                                        borderTopRightRadius: 32,}]}>
+                                    <Animated.View style={[{backgroundColor: hexToRGBA("#25170E", 0.9), zIndex: 2, padding:16, position:'absolute', width:'100%', bottom:0}]}>
                                             <Text style={{...designSystem.textStyles.captionsExtraBold, color: kauriColors.primary.chipBar}}>
                                                 3 MIN READ
                                             </Text>
@@ -50,7 +51,7 @@ const ReadDetail:FC<ReadDetailProps> = ({}) => {
                                                 {hexIntro.title}
                                             </Text>
                                     </Animated.View>
-                                <View>
+                                {/* <View> */}
                                     <Animated.View style={{width: windowWidth, height:4*windowWidth/3}}>
                                         <FastImage
                                             source={hexIntro.url as any}
@@ -58,9 +59,9 @@ const ReadDetail:FC<ReadDetailProps> = ({}) => {
                                             style={{width: '100%', height:'100%'}}
                                         />
                                     </Animated.View>
-                                </View>
+                                {/* </View> */}
                 </Animated.View>
-                <View style={{paddingHorizontal: 32}}>
+                <View style={{paddingHorizontal: 32, backgroundColor: '#fff'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 16}}>
                         <View style={{height: 20}}><KauriLogo/></View>
                         <View
@@ -88,82 +89,86 @@ const ReadDetail:FC<ReadDetailProps> = ({}) => {
                         <Text style={{...designSystem.textStyles.titleSans, fontSize: 32, color: kauriColors.primary.dark}}>{hexIntro.content[0]}</Text>{hexIntro.content.substring(1)}
                     </Text>
                 </View>
-                {
-                    ["Empowering and uplifting communities",
-                     "Stable climate and clean climate ",
-                     "Health and mental wellbeing",
-                     "Protecting biodiversity and ethical treatment of animals",
-                     "Clean and responsible energy usage"
-                    ].map((item, dimIndex) => {
-                        return (
-                            <View style={{marginTop: 24 }} key={dimIndex}>
-                                <View style={{borderTopColor: hexToRGBA(kauriColors.primary.chipBar, 0.5), borderTopWidth: 1.2, marginHorizontal: 32, paddingTop: 16}}>
-                                    <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark, }}>
-                                    {item}
-                                    </Text>
-                                </View>
-                                <Text style={{paddingHorizontal: 32, ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
-                                    See All
-                                </Text>
-                                <View style={{ width: windowWidth}}>
-                                <FlashList
-                                    horizontal={true}
-                                    estimatedItemSize={windowWidth-64}
-                                    data={Array.from({length: 20})}
-                                    decelerationRate={0}
-                                    snapToInterval={windowWidth -64}
-                                    renderItem={({item, index}) => {
-                                        return (
-                                        <View style={{width: windowWidth-64, paddingVertical: 32, paddingLeft: 32, paddingRight:0, alignItems: 'flex-start'}}>
-                                            <TouchableOpacity activeOpacity={0.9} style={{marginBottom: 16, flexDirection: 'row', alignItems: 'center', borderRadius: 8, width: '100%', padding:8}}>
-                                                <Hex title="" dimension={`dimension${dimIndex+1}`} size={40}/>
-                                                <View style={{marginLeft: 8, width: '80%'}}>
-                                                    <Text style={$causesHead}>
-                                                        {`subdimension_${index+1}`}
-                                                    </Text>
-                                                    <Text style={$causesSubtitle} numberOfLines={2}>
-                                                        This is a dummy description for this cause this is pretty freaking cool isnt import PropTypes from 'prop-types'
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity activeOpacity={0.9} style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding:8, borderRadius: 8}}>
-                                                <Hex title="" dimension={`dimension${dimIndex+1}`} size={40}/>
-                                                <View style={{paddingHorizontal: 8, width: '80%'}}>
-                                                    <Text style={$causesHead}>
-                                                        {`subdimension_${index+2}`}
-                                                    </Text>
-                                                    <Text style={$causesSubtitle} numberOfLines={2}>
-                                                        This is a dummy description for this cause this is pretty freaking cool isnt import PropTypes from 'prop-types'
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                        )
-                                    }}
-                                />
-                            </View>
-                </View>
-                        )
-                    })
-                }
+                <View style={{backgroundColor: '#fff'}}>
 
-                <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 24}}>
-                    <View style={{flexBasis: '50%'}}>
-                                <TouchableOpacity activeOpacity={0.9}>
-                                    <View style={$actionButton}>
-                                        <View style={{width: 12, marginRight: 8}}>
-                                            <ShareIcon color={kauriColors.primary.unselectedLight}/>
-                                        </View>
-                                        <Text style={$actionButtonContent}>
-                                            {geti18n('common.share')}
+                    {
+                        ["Empowering and uplifting communities",
+                        "Stable climate and clean climate ",
+                        "Health and mental wellbeing",
+                        "Protecting biodiversity and ethical treatment of animals",
+                        "Clean and responsible energy usage"
+                        ].map((item, dimIndex) => {
+                            return (
+                                <View style={{marginTop: 24 }} key={dimIndex}>
+                                    <View style={{borderTopColor: hexToRGBA(kauriColors.primary.chipBar, 0.5), borderTopWidth: 1.2, marginHorizontal: 32, paddingTop: 16}}>
+                                        <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark, }}>
+                                        {item}
                                         </Text>
                                     </View>
-                                </TouchableOpacity>
+                                    <Text style={{paddingHorizontal: 32, ...designSystem.textStyles.captionsBold, color: kauriColors.primary.yellow}}>
+                                        See All
+                                    </Text>
+                                    <View style={{ width: windowWidth}}>
+                                    <FlashList
+                                        horizontal={true}
+                                        estimatedItemSize={windowWidth-64}
+                                        data={Array.from({length: 20})}
+                                        decelerationRate={0}
+                                        snapToInterval={windowWidth -64}
+                                        renderItem={({item, index}) => {
+                                            return (
+                                            <View style={{width: windowWidth-64, paddingVertical: 32, paddingLeft: 32, paddingRight:0, alignItems: 'flex-start'}}>
+                                                <TouchableOpacity activeOpacity={0.9} style={{marginBottom: 16, flexDirection: 'row', alignItems: 'center', borderRadius: 8, width: '100%', padding:8}}>
+                                                    <Hex title="" dimension={`dimension${dimIndex+1}`} size={40}/>
+                                                    <View style={{marginLeft: 8, width: '80%'}}>
+                                                        <Text style={$causesHead}>
+                                                            {`subdimension_${index+1}`}
+                                                        </Text>
+                                                        <Text style={$causesSubtitle} numberOfLines={2}>
+                                                            This is a dummy description for this cause this is pretty freaking cool isnt import PropTypes from 'prop-types'
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity activeOpacity={0.9} style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding:8, borderRadius: 8}}>
+                                                    <Hex title="" dimension={`dimension${dimIndex+1}`} size={40}/>
+                                                    <View style={{paddingHorizontal: 8, width: '80%'}}>
+                                                        <Text style={$causesHead}>
+                                                            {`subdimension_${index+2}`}
+                                                        </Text>
+                                                        <Text style={$causesSubtitle} numberOfLines={2}>
+                                                            This is a dummy description for this cause this is pretty freaking cool isnt import PropTypes from 'prop-types'
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
+                                            )
+                                        }}
+                                    />
+                                </View>
                     </View>
+                            )
+                        })
+                    }
                 </View>
-                <View style={{width: '100%', height: 100}}/>
-            </ScrollView>}
-            <CrossBtn/>
+                <View style={{backgroundColor: "#fff"}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 24}}>
+                        <View style={{flexBasis: '50%'}}>
+                                    <TouchableOpacity activeOpacity={0.9}>
+                                        <View style={$actionButton}>
+                                            <View style={{width: 12, marginRight: 8}}>
+                                                <ShareIcon color={kauriColors.primary.unselectedLight}/>
+                                            </View>
+                                            <Text style={$actionButtonContent}>
+                                                {geti18n('common.share')}
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={{width: '100%', height: 100}}/>
+                </View>
+            </ScrollView>
+            <CrossBtn/></>}
         </View>
     )
 }

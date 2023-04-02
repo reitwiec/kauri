@@ -94,7 +94,7 @@ const ImagePlayer = ({translationY}:{translationY: SharedValue<number>}) => {
             <Carousel
                 loop
                 panGestureHandlerProps={{
-                    activeOffsetX: [-50, 50],
+                    activeOffsetX: [-10, 10],
                 }}
                 width={winWidth}
                 height={winWidth}

@@ -55,74 +55,75 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
     return (
         <>
             <StatusBar backgroundColor={"#222222"} barStyle="light-content"/>
-            <ScrollView style={{backgroundColor: "#222222",}} bounces={false}>
                 {isBusy? 
-                <View style={{width: windowWidth, minHeight: windowHeight/2}}>
+                <View style={{width: "100%", height: "100%", backgroundColor:"#222222"}}>
                     <BusyIndicator style="dark"/>
                 </View>:
-                
-                <View style={{paddingTop: $containerInsets.paddingTop, alignItems: 'center', justifyContent: 'center'}}>
-                    <View style={{width: windowWidth-32, padding: 16, backgroundColor: "#FFFDEC", borderRadius: 12, marginTop: 24, ...shadowGenerator(10)}}>
-                        <Treering cumulativeSeconds={cumulativeSeconds} total={total}/>
-                        <View>
-                            <Text style={{...designSystem.textStyles.superTitle, color: selectedColor}}>
-                                Reitwiec
-                            </Text>
-                            <Text style={{...designSystem.textStyles.captionsExtraBold, color: selectedColor, letterSpacing: 3}}>
-                                {`${total} ${geti18n('common.rings').toUpperCase()}`}
-                            </Text>
-                        </View>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={{flexDirection: 'row', marginTop: 75, flexBasis: '50%', alignItems: 'flex-end'}}>
-                                <View style={{borderColor: selectedColor,
-                                        borderLeftWidth: 2,
-                                        borderRightWidth: 0,}}>
-                                    <Text style={[{color: selectedColor, paddingHorizontal: 4, ...designSystem.textStyles.smallTextsSemi, letterSpacing: 0.75}]}>{geti18n('home.generatedOn')}</Text>
-                                    <Text style={[$bottomText, {color: selectedColor}]}>
-                                        {getCurrentDate().toUpperCase()} | {geti18n('common.trail').toUpperCase()}
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={{flexBasis: '50%', marginTop: 75, alignItems: 'flex-end',}}>
-                                <View style={{width:'50%'}}>
-                                    <KauriLogo textColor={selectedColor} flowerColor={selectedColor}/>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 24}}>
-                        <View style={{borderColor: "#FFFDEC", borderWidth:3, width: 16, height: 16, marginHorizontal: 8, borderRadius: 16}}/>
-                        <Text style={{color: '#FFFDEC', ...designSystem.textStyles.smallTextsSemi}}>
-                            {geti18n('home.ringDescription')}
-                        </Text>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{flexBasis: '50%'}}>
-                            <TouchableOpacity activeOpacity={0.9}>
-                                <View style={$actionButton}>
-                                    <Text style={$actionButtonContent}>
-                                        {geti18n('common.save')}
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flexBasis: '50%'}}>
-                            <TouchableOpacity activeOpacity={0.9}>
-                                <View style={$actionButton}>
-                                    <View style={{width: 12, marginRight: 8}}>
-                                        <ShareIcon color={kauriColors.primary.chipBar}/>
+                    <>
+                        <ScrollView style={{backgroundColor: "#222222",}} bounces={false}>
+                            <View style={{paddingTop: $containerInsets.paddingTop, alignItems: 'center', justifyContent: 'center'}}>
+                                <View style={{width: windowWidth-32, padding: 16, backgroundColor: "#FFFDEC", borderRadius: 12, marginTop: 24, ...shadowGenerator(10)}}>
+                                    <Treering cumulativeSeconds={cumulativeSeconds} total={total}/>
+                                    <View>
+                                        <Text style={{...designSystem.textStyles.superTitle, color: selectedColor}}>
+                                            Reitwiec
+                                        </Text>
+                                        <Text style={{...designSystem.textStyles.captionsExtraBold, color: selectedColor, letterSpacing: 3}}>
+                                            {`${total} ${geti18n('common.rings').toUpperCase()}`}
+                                        </Text>
                                     </View>
-                                    <Text style={$actionButtonContent}>
-                                        {geti18n('common.share')}
+                                    <View style={{flexDirection: 'row'}}>
+                                        <View style={{flexDirection: 'row', marginTop: 75, flexBasis: '50%', alignItems: 'flex-end'}}>
+                                            <View style={{borderColor: selectedColor,
+                                                    borderLeftWidth: 2,
+                                                    borderRightWidth: 0,}}>
+                                                <Text style={[{color: selectedColor, paddingHorizontal: 4, ...designSystem.textStyles.smallTextsSemi, letterSpacing: 0.75}]}>{geti18n('home.generatedOn')}</Text>
+                                                <Text style={[$bottomText, {color: selectedColor}]}>
+                                                    {getCurrentDate().toUpperCase()} | {geti18n('common.trail').toUpperCase()}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flexBasis: '50%', marginTop: 75, alignItems: 'flex-end',}}>
+                                            <View style={{width:'50%'}}>
+                                                <KauriLogo textColor={selectedColor} flowerColor={selectedColor}/>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 24}}>
+                                    <View style={{borderColor: "#FFFDEC", borderWidth:3, width: 16, height: 16, marginHorizontal: 8, borderRadius: 16}}/>
+                                    <Text style={{color: '#FFFDEC', ...designSystem.textStyles.smallTextsSemi}}>
+                                        {geti18n('home.ringDescription')}
                                     </Text>
                                 </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+                                <View style={{flexDirection: 'row'}}>
+                                    <View style={{flexBasis: '50%'}}>
+                                        <TouchableOpacity activeOpacity={0.9}>
+                                            <View style={$actionButton}>
+                                                <Text style={$actionButtonContent}>
+                                                    {geti18n('common.save')}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={{flexBasis: '50%'}}>
+                                        <TouchableOpacity activeOpacity={0.9}>
+                                            <View style={$actionButton}>
+                                                <View style={{width: 12, marginRight: 8}}>
+                                                    <ShareIcon color={kauriColors.primary.chipBar}/>
+                                                </View>
+                                                <Text style={$actionButtonContent}>
+                                                    {geti18n('common.share')}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        </ScrollView>
+                        <CrossBtn/>
+                    </>
                 }
-            </ScrollView>
-            <CrossBtn/>
         </>
 )})
 

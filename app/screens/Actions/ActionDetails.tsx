@@ -3,8 +3,8 @@ import type { CompositeScreenProps } from '@react-navigation/native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { observer } from 'mobx-react-lite'
 import { FC, memo, useCallback, useEffect, useState } from 'react'
-import {Pressable, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle, Image, ScrollView} from 'react-native'
-import { BusyIndicator, ChipSystem, Header, ImpactDistribution, LineSeparator, StylisedTitle, Thumbnail, TryBtn } from '../../components'
+import {Pressable, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle, Image, ScrollView, StatusBar} from 'react-native'
+import { BusyIndicator, ChipSystem, CrossBtn, Header, ImpactDistribution, LineSeparator, StylisedTitle, Thumbnail, TryBtn } from '../../components'
 import { actionDetail, getActionDetails, milestone } from '../../mockdata/actionDetails'
 import type { AppStackParamList } from '../../navigators'
 import { designSystem, kauriColors, kauriTypography } from '../../theme'
@@ -224,16 +224,19 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
 
     return (
         <View style={{...$container}}>
+            <StatusBar backgroundColor={"#000"} barStyle="light-content"/>
             { busy?
-                <BusyIndicator style='light'/>:
+                <View style={{width: '100%', height: '100%', backgroundColor: "#fff"}}><BusyIndicator style='light'/></View>:
                 <>
-                    <Animated.ScrollView bounces={false} onScroll={scrollHandler} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
+                    <Animated.ScrollView style={{paddingTop: $containerInsets.paddingTop}} bounces={false} onScroll={scrollHandler} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
                         
                         <View style={{width: desiredImageHeight,overflow:"hidden", height: desiredImageHeight}}>
                             <FastImage
                                 source={item.url as any}
                                 style={{
                                     flex: 1,
+                                    borderTopLeftRadius:32,
+                                    borderTopRightRadius: 32, 
                                     width: desiredImageWidth,
                                     height: desiredImageHeight,
                                 }}
@@ -336,6 +339,8 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                 </View>
                             </View>
                         </View>
+                        <View style={{backgroundColor: "#fff"}}>
+
                             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, marginTop: 16, paddingHorizontal:16}}>
                                 <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
                                     {geti18n("actions.causesImpactedHighest")}
@@ -363,7 +368,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                     })
                                 }
                             </ScrollView>
-                        <LineSeparator/>
+                            <LineSeparator/>
                         <Milestones milestones={item.milestones} kauriUsersCompleted={item.kauriUsersCompleted}/>
                         <LineSeparator/>
                         <ChipSystem data={chipData} screenState={(key:any)=>{setPageState(key)}}/>
@@ -392,9 +397,11 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
                                 {geti18n('actions.noHistory')}
                             </Text>
                         </View>}
-                        <View style={{width: '100%', height:50}}/>
+                        <View style={{width: '100%', height:100}}/>
+                        </View>
                     </Animated.ScrollView>
-                    <Header style={'light'} backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title}(${item.kauriUsersCompleted} ${geti18n('common.completed').toLowerCase()})`} translationY={translationY}/>
+                    <CrossBtn/>
+                    {/* <Header style={'light'} backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title}(${item.kauriUsersCompleted} ${geti18n('common.completed').toLowerCase()})`} translationY={translationY}/> */}
                 </>
                 }
         </View>
@@ -402,7 +409,7 @@ export const ActionDetails:FC<ActionDetailsProps> = observer((_props) =>{
 })
 
 const $container:ViewStyle ={
-    backgroundColor:"#fff",
+    backgroundColor:"#000",
     flex: 1,
 }
 

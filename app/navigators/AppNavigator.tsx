@@ -1,8 +1,6 @@
 import {NavigationContainer, NavigatorScreenParams} from '@react-navigation/native';
-import type {StackNavigationOptions} from '@react-navigation/stack';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
-import { Easing } from 'react-native-reanimated';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import {InterestSelectionHive, Tabs, TabStackParamList} from '../screens';
 import { ActionDetails } from '../screens/Actions/ActionDetails';
@@ -10,7 +8,7 @@ import { CollectionDetails } from '../screens/Actions/CollectionDetails';
 import { Trail } from '../screens/Home/Trail';
 import { ReadDetail } from '../screens/Read/ReadDetail';
 import { ProductDetail } from '../screens/Shop/ProductDetails';
-import { options } from '../utils/cardTransitionOptions';
+import { fadeInTransition } from '../utils/cardTransitionOptions';
 
 type mainScreens = 'home' | 'actions' | 'shop' | 'read' | 'you'
 export type AppStackParamList = {
@@ -58,26 +56,27 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen
           name="actionDetails"
           component={ActionDetails}
-          options={{...options, detachPreviousScreen: false}}
+          options={{ detachPreviousScreen: false, ...fadeInTransition as any}}
       />
       <Stack.Screen
           name="collectionDetails"
           component={CollectionDetails} 
-          options={{...options, detachPreviousScreen: false}}
+          options={{ detachPreviousScreen: false, ...fadeInTransition as any}}
       />
       <Stack.Screen
         name="trail"
         component={Trail}
-        options={options}
+        options={{...fadeInTransition as any}}
       />
       <Stack.Screen
         name="readDetail"
         component={ReadDetail}
+        options={{...fadeInTransition as any}}
       />
       <Stack.Screen
         name="productDetail"
         component={ProductDetail}
-        options={{...options, detachPreviousScreen: false}}
+        options={{ detachPreviousScreen: false,...fadeInTransition as any}}
       />
     </Stack.Navigator>
   );

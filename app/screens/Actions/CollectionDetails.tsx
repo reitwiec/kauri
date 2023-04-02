@@ -5,8 +5,8 @@ import { observer } from "mobx-react-lite";
 import { FC, useCallback, useEffect, useState } from "react";
 import type { AppStackParamList } from "../../navigators";
 import type { TabStackParamList } from "../Tabs/Tabs";
-import {Text, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
-import { BusyIndicator, Header, PlaylistListItem, Thumbnail } from "../../components";
+import {StatusBar, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
+import { BusyIndicator, CrossBtn, Header, PlaylistListItem, Thumbnail } from "../../components";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { collectionDetail, getCollectionDetails } from "../../mockdata/collectionDetails";
 import Animated, { useSharedValue } from "react-native-reanimated";
@@ -73,7 +73,8 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
 
     const HeaderComponent = () =>{
         return (
-            <View style={{paddingTop: 40, marginBottom: 24}}>
+            <View style={{paddingTop: 40, paddingBottom: 24, borderTopLeftRadius:32,
+                borderTopRightRadius: 32, backgroundColor: "#fff"}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                         <View style={[{flexBasis:"50%",}]}>
                                 <View style={{flexDirection: "row", flexWrap: 'wrap', justifyContent: 'center'}}>
@@ -149,8 +150,12 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
     
     return (
         <View style={{...$container, paddingTop: $containerInsets.paddingTop}}>
+            <StatusBar backgroundColor={"#000"} barStyle="light-content"/>
             { busy?
-                <BusyIndicator style="light"/>:
+            <View style={{width: '100%', minHeight: '100%', backgroundColor: '#fff'}}>
+                <BusyIndicator style="light"/>
+            </View>
+                :
                 <>
                     <Animated.View style={{ height: windowHeight}}>
                         <FlatList
@@ -158,16 +163,20 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
                             data={item.resources}
                             keyExtractor={(item, index) => index + ""}
                             ListHeaderComponent={HeaderComponent}
-                            ListFooterComponent={<View style={{height: $containerInsets.paddingBottom, width: '100%', marginBottom: 36}}/>}
+                            ListFooterComponent={<View style={{height: $containerInsets.paddingBottom, width: '100%', backgroundColor:"#fff"}}/>}
                             initialNumToRender={30}
                             // estimatedItemSize={80}
-                            ItemSeparatorComponent={() => <View style={{height: 1.25, backgroundColor: kauriColors.primary.light, width: '80%', marginLeft: '10%', marginRight: '10%'}}/>}
+                            ItemSeparatorComponent={() =><View style={{backgroundColor: "#fff"}}>   
+                                    <View style={{height: 1.25, backgroundColor: kauriColors.primary.light, width: '80%', marginLeft: '10%', marginRight: '10%'}}/>
+                                </View> 
+                            }
                             onScroll={scrollHandler}
                             scrollEventThrottle={16}
                             renderItem={_renderItem}
                         />
                     </Animated.View>
-                    <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title} • ${item.owner}`} translationY={translationY}/>
+                    <CrossBtn/>
+                    {/* <Header backTitle={geti18n(`common.${cameFrom}`)} onBackPress={()=>_props.navigation.goBack()} title={`${item.title} • ${item.owner}`} translationY={translationY}/> */}
                 </>
             }
         </View>
@@ -175,6 +184,6 @@ export const CollectionDetails:FC<CollectionDetails> = observer(function Collect
 })
 
 const $container:ViewStyle ={
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
     flex: 1,
 }

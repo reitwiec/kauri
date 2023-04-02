@@ -64,3 +64,4 @@ What milestones have you helped achieve?
 # Product detail section
 
 - add hsl conversion and custom brand logo color
+= add tap and zoom feature
