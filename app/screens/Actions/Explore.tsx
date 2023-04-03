@@ -124,7 +124,7 @@ const SkeletonItem = ({item:sectionItem, index: sectionIndex, goToActionDetails,
     if(sectionItem.type === 'singleton'){
         return (
             <View key={sectionIndex}>
-                <View style={{paddingHorizontal: 16, marginBottom: 8}}>
+                <View style={{paddingHorizontal: 16, marginBottom: 16}}>
                     <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
                         {sectionItem.title}
                     </Text>
@@ -217,6 +217,18 @@ export const Explore:FC<ExploreProps> = observer(function explore({translationY,
                     ItemSeparatorComponent={LineSeparator}
                     keyExtractor={(item, index) => index + ""}
                     showsVerticalScrollIndicator={false}
+                    ListHeaderComponent={()=>{
+                        return (
+                            <View style={{ width: '100%', alignItems: 'center', paddingHorizontal: 16, marginBottom: 32}}>
+                                <Text style={{...designSystem.textStyles.superTitleSans, color: kauriColors.primary.dark, marginBottom: 8}}>
+                                    explore.
+                                </Text>
+                                <Text style={{textAlign: 'center', ...designSystem.textStyles.captions, width: '80%', color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                                    Here you will see an exhaustive list of actions that will help build a more sustainable lifestyle.
+                                </Text>
+                            </View>
+                        )
+                    }}
                     renderItem={({item, index}) => <SkeletonItem item={item} index={index} goToActionDetails={goToActionDetails} goToCollectionDetails={goToCollectionDetails} windowWidth={windowWidth}/>}
                     ListFooterComponent={<View style={{height:230*667/windowHeight, width:'100%'}}/>}
                 />

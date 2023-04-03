@@ -27,7 +27,7 @@ type textStyles =
 type textStylesMap = {[style in textStyles]: TextStyle};
 
 const letterSpacings = {
-  32:0.41,
+  32:-1.41,
   28:0.38,
   24:0.07,
   22: -0.26,
@@ -45,7 +45,7 @@ const textStyles: textStylesMap = {
   },
   superTitleSans:{
     fontSize: 32,
-    fontFamily: kauriTypography.primary.bold,
+    fontFamily: kauriTypography.primary.extraBold,
     letterSpacing: letterSpacings[32]
   },
   titleBigger: {

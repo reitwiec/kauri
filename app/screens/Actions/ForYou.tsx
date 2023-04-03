@@ -43,12 +43,16 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
     return(
         <View style={{ width: '100%', alignItems: 'center'}}>
             <View style={{ width: '100%', alignItems: 'center'}}>
-                    <View style={{ width: '100%', alignItems: 'flex-start', paddingHorizontal: 16}}>
-                        <Text style={{...designSystem.textStyles.titleSans, color: kauriColors.primary.dark}}>
-                            Your complete roadmap
+                    <View style={{ width: '100%', alignItems: 'center', paddingHorizontal: 16, marginBottom: 32}}>
+                        <Text style={{...designSystem.textStyles.superTitleSans, color: kauriColors.primary.dark, marginBottom: 8}}>
+                            roadmap.
+                        </Text>
+                        <Text style={{textAlign: 'center', ...designSystem.textStyles.captions, width: '80%', color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                            Here you will see a personalised roadmap for you based on what sustainability means to you.
                         </Text>
                     </View>
-                    <View style={{width: '100%', marginBottom: 24}}>
+                    <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
+                    <View style={{width: '100%', marginTop: 24}}>
                                 <Completion total={roadMap.count} completed={roadMap.completed}/>
                                 <Pressable style={{marginTop: 8, flexDirection: 'row', paddingHorizontal: 16}}>
                                     <View style={{opacity: 0.6}}>
@@ -59,9 +63,13 @@ const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
                                     </Text>
                                 </Pressable>
                     </View>
-                    <FeatureThumbnail data={roadMap.nextAction} progress={progress} onPress={onPress}/>
             </View>
             <LineSeparator/>
+            <View style={{ width: '100%', alignItems: 'center', paddingHorizontal: 16, marginBottom: 16}}>
+                        <Text style={{...designSystem.textStyles.smallTextsBold, color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                            YOUR COMPLETE ROADMAP
+                        </Text>
+            </View>
         </View>
     )
 }

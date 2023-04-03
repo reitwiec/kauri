@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
     "@shopify/flash-list": "^1.4.1",
+    "@shopify/react-native-skia": "^0.1.181",
     "i18n-js": "^4.2.2",
     "lodash.debounce": "^4.0.8",
     "lottie-react-native": "^5.1.5",

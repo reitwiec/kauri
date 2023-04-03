@@ -23,7 +23,7 @@ export const Completion:FC<CompletionProps> = ({total, completed}) => {
                     </Text>
                 </View>
                 <View style={{flex:1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'baseline'}}>
-                    <Text style={{...designSystem.textStyles.superTitleSans, color:kauriColors.primary.dark}}>
+                    <Text style={{...designSystem.textStyles.titleSans, color:kauriColors.primary.dark}}>
                         {(completed*100/total).toFixed(1)}
                     </Text>
                     <Text style={{...designSystem.textStyles.captions, color: hexToRGBA(kauriColors.primary.dark, 0.6)}}>

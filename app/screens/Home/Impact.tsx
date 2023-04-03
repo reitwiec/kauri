@@ -114,8 +114,15 @@ export const Impact:FC<ImpactProps> = observer(function impact({riveHeight, navi
                 false?
                     <BusyIndicator style="light"/>:
                     <View style={{width: '100%', paddingHorizontal: 16}}>
-
-                        <View style={{...designSystem.card, padding:16, marginTop:24,}}>
+                <View style={{ width: '100%', alignItems: 'center', paddingHorizontal: 16, marginBottom: 32}}>
+                                <Text style={{...designSystem.textStyles.superTitleSans, color: kauriColors.primary.dark, marginBottom: 8}}>
+                                    impact.
+                                </Text>
+                                <Text style={{textAlign: 'center', ...designSystem.textStyles.captions, width: '80%', color: hexToRGBA(kauriColors.primary.dark, 0.7)}}>
+                                    Here you will see all the positive impact that you have made with us.
+                                </Text>
+                            </View>
+                        <View style={{...designSystem.card, padding:16,}}>
                             <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                                 <View style={{width: 16}}>
                                     <ActiveHome/>

@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { FC, useCallback, useRef, useState } from "react";
-import { Button, StatusBar, Text, View, ViewStyle } from "react-native";
+import { Button, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 import { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import type { AppStackParamList } from "../../navigators";
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
@@ -12,6 +12,7 @@ import debounce from "lodash.debounce";
 import useIsReady from "../../utils/useIsReady";
 import { RiveHeader } from "../../components";
 import { readChips, shopChips } from "../../mockdata";
+import { Canvas, Fill, Rect, RoundedRect, Shader, Skia, useClockValue, useComputedValue, useTouchHandler, useValue, vec } from "@shopify/react-native-skia";
 
 type ReadProps = CompositeScreenProps<
     BottomTabScreenProps<TabStackParamList, "read">,
@@ -19,6 +20,7 @@ type ReadProps = CompositeScreenProps<
 >
 export const Read:FC<ReadProps> = observer(function Read(_props){
     const $containerInsets = useSafeAreaInsetsStyle(["top"])
+    const {width: winWidth, height: winHeight} = useWindowDimensions()
     const riveHeight = 240
     const translationY = useSharedValue(0)
     const [filterState, setFilterState] = useState({})
@@ -91,13 +93,71 @@ export const Read:FC<ReadProps> = observer(function Read(_props){
         }
     }, [translationY])
 
+    const source = Skia.RuntimeEffect.Make(`
+        uniform float4 colors[4];
+        uniform float2 center;
+        uniform float2 pointer;
+        uniform float2 canvasDimensions;
+        uniform float clock;
+        const float4 black = vec4(0, 0, 0, 1);
+
+        vec4 main(vec2 xy) {
+        vec2 cPos = -1 + 2*xy/canvasDimensions;
+        float cLength = length(cPos);
+        float4 color = black;
+        // return vec4(
+        //     (sin(xy.x + clock/40) +1)/2,
+        //     (cos(xy.y + clock/40) +1)/2,
+        //     (cos(xy.x + xy.y + clock/40)+1)/2,
+        //     1
+        // ); 
+        // float tex = cos(cLength*12 - clock/150)*0.08/cLength;
+        // float tex2 = -1 * exp(1 * -cLength)*cos(6*cLength -clock/75);
+        // float trans = exp(-cLength + 2.0) * sin(0.5 * cLength);
+        return vec4(0, 0, 0, 1);
+        }`)!;
+
+    const center = vec(winWidth / 2, winHeight / 2);
+    const canvasDimensions = vec(winWidth, winHeight)
+    const pointer = useValue(vec(0, 0));
+    const onTouch = useTouchHandler({
+        onStart: (e) => {
+            console.log('start', e.id)
+            pointer.current = e
+        },
+        onActive: (e) => {
+            console.log('active',e.id)
+            pointer.current = e;
+        },
+        onEnd: (e) => {
+            //when tap, see if end id === active id
+            // if not same then its tap
+            // else dont do anything
+            console.log('end',e.id)
+        }
+
+    });
+    const colors = ["#dafb61", "#61DAFB", "#fb61da", "#61fbcf"].map((c) =>
+        Skia.Color(c)
+    );
+    const clock = useClockValue();
+    const uniforms = useComputedValue(
+        () => ({colors, center, pointer: pointer.current, canvasDimensions, clock: clock.current}),
+        [pointer, clock]
+    );
+
     return (
         <View style={[$container, $containerInsets]}>
             <StatusBar barStyle={'dark-content'} backgroundColor="#fff"/>
-            <RiveHeader translationY={translationY} data={readChips} config={{right: ['customise'],left:["filter", "search"], height: riveHeight}} screenState={updateReadState} isSearching={isSearching} searchClicked={searchClicked} updateSearchPhrase={updateSearchPhrase}/>
-            <Button title="Go to onboarding" onPress={()=>{
+            {/* <RiveHeader translationY={translationY} data={readChips} config={{right: ['customise'],left:["filter", "search"], height: riveHeight}} screenState={updateReadState} isSearching={isSearching} searchClicked={searchClicked} updateSearchPhrase={updateSearchPhrase}/> */}
+            {/* <Button title="Go to onboarding" onPress={()=>{
                 _props.navigation.navigate('onboarding_interests_hive',{totalDimensions: 23})
-            }}/>
+            }}/> */}
+            <Canvas style={{ width: winWidth, height: winHeight, backgroundColor: '#fff'}} onTouch={onTouch}>
+            <Fill>
+                <Shader source={source} uniforms={uniforms} />
+            </Fill>
+            </Canvas>
         </View>
     )
 })
