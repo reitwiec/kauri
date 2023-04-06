@@ -1,19 +1,17 @@
 import { observer } from "mobx-react-lite";
-import { FC, useEffect, useState } from "react";
-import { FlatList, Pressable, Text, useWindowDimensions, View, StyleSheet, Platform } from "react-native";
+import { FC, useEffect } from "react";
+import { Pressable, Text, useWindowDimensions, View, Platform } from "react-native";
 import { designSystem, kauriColors } from "../../theme";
 import { translate as geti18n } from "../../i18n"
-import { roadMap as mockRoadmap } from "../../mockdata";
 import React from "react";
 import { Easing, SharedValue, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { FeatureThumbnail } from "./FeatureThumbnail";
 import { RetryIcon } from "../../svgs";
 import { hexToRGBA } from "../../utils/hexToRGBA";
-import { BusyIndicator, LineSeparator, PlaylistListItem, StylisedTitle } from "../../components";
+import { BusyIndicator, LineSeparator, PlaylistListItem } from "../../components";
 import { Completion } from "./Completion";
-import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { CompositeNavigationProp, useIsFocused } from "@react-navigation/native";
-import { withPause } from "react-native-redash";
+import {withPause } from "react-native-redash";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { TabStackParamList } from "../Tabs/Tabs";
@@ -37,7 +35,6 @@ interface HeaderProps {
     onPress: (actionId: string) => void,
     progress: SharedValue<number>,
     roadMap: any
-
 }
 const Header:FC<HeaderProps> = ({onPress, progress, roadMap})=>{
     return(

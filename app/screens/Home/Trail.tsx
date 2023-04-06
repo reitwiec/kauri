@@ -13,6 +13,7 @@ import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { shadowGenerator } from "../../utils/shadowGenerator";
 import {translate as geti18n} from '../../i18n';
+import { Canvas } from "@shopify/react-native-skia";
 
 type TrailProps = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, 'trail'>,
@@ -62,7 +63,10 @@ export const Trail:FC<TrailProps> = observer(function Trail(_props){
                     <>
                         <ScrollView style={{backgroundColor: "#222222",}} bounces={false}>
                             <View style={{paddingTop: $containerInsets.paddingTop, alignItems: 'center', justifyContent: 'center'}}>
-                                <View style={{width: windowWidth-32, padding: 16, backgroundColor: "#FFFDEC", borderRadius: 12, marginTop: 24, ...shadowGenerator(10)}}>
+                                {/* <Canvas style={{width: 318, height: 480}}>
+
+                                </Canvas> */}
+                                <View style={{width: windowWidth-16, padding: 16, backgroundColor: "#FFFDEC", borderRadius: 12, marginTop: 24, ...shadowGenerator(10)}}>
                                     <Treering cumulativeSeconds={cumulativeSeconds} total={total}/>
                                     <View>
                                         <Text style={{...designSystem.textStyles.superTitle, color: selectedColor}}>

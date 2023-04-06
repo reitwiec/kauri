@@ -1,7 +1,7 @@
 import type { StackNavigationOptions } from "@react-navigation/stack"
 import { Easing } from "react-native-reanimated"
 
-const springConfig = {damping: 15, mass: 1, stiffness: 200, overshootClamping: false, restDisplacementThreshold: 0.001, restSpeedThreshold: 0.001}
+export const springConfig = {damping: 15, mass: 1, stiffness: 200, overshootClamping: false, restDisplacementThreshold: 0.001, restSpeedThreshold: 0.001}
 
 const springTransitionSpec =  {
   open: {

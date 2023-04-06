@@ -78,10 +78,10 @@ export const Tabs:FC<TabsProps> = observer(function Tabs(_props){
             >
                 <Tab.Screen name="home" component={Home} />
                 <Tab.Screen name="actions" component={Actions}/>
-                <Tab.Screen name="assistant" component={Assistant}/>
+                {/* <Tab.Screen name="assistant" component={Assistant}/> */}
                 <Tab.Screen name="shop" component={Shop}/>
                 <Tab.Screen name="read" component={Read}/>
-                {/* <Tab.Screen name="you" component={You}/> */}
+                <Tab.Screen name="you" component={You}/>
 
             </Tab.Navigator>
         </View>

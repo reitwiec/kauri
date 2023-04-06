@@ -2,7 +2,7 @@ const palette = {
   primary: {
     dark: '#3c3a38',
     yellow: '#FFBB00',
-    yelllow_disabled: '#F0CF75',
+    yelllow_disabled: '#FFD666',
     light: '#F6F6F2',
     chipBar: '#E0E0D2',
     unselectedLight: '#B8B8AC',

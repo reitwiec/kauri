@@ -48,7 +48,7 @@ const en = {
   interestHive: {
     title: 'What does sustainability mean for you?',
     description:
-      "Get ready to explore a world of sustainable possibilities!\n\nThe following screen showcases various causes aligned with the United Nations Sustainable Development Guidelines.\n\n By understanding your personal understanding of sustainability, we'll create a tailored roadmap for your journey towards a more sustainable future.",
+      "In the next screen, select the causes that are important to you.\n\nThis will allow us to personalize your experience and suggest opportunities for you to get involved.",
   },
   actions: {
     personalisedRoadmap: 'Personalised Roadmap',

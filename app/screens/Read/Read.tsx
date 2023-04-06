@@ -2,7 +2,7 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, memo, useCallback, useRef, useState } from "react";
 import { Button, StatusBar, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 import { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import type { AppStackParamList } from "../../navigators";
@@ -12,7 +12,75 @@ import debounce from "lodash.debounce";
 import useIsReady from "../../utils/useIsReady";
 import { RiveHeader } from "../../components";
 import { readChips, shopChips } from "../../mockdata";
-import { Canvas, Fill, Rect, RoundedRect, Shader, Skia, useClockValue, useComputedValue, useTouchHandler, useValue, vec } from "@shopify/react-native-skia";
+import { Canvas, Fill, Group, Rect, RoundedRect, runTiming, Shader, Skia, SkiaMutableValue, SweepGradient, useClockValue, useComputedValue, useTouchHandler, useValue, vec } from "@shopify/react-native-skia";
+
+
+  type RoundedItemProps = {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    point: SkiaMutableValue<{
+      x: number;
+      y: number;
+    } | null>;
+    progress: SkiaMutableValue<number>;
+  };
+  
+  const RoundedItem: React.FC<RoundedItemProps> = memo(
+    ({ point, progress, ...squareProps }) => {
+      const { x, y, width, height } = squareProps;
+      const {width: winWidth, height: winHeight} = useWindowDimensions()
+      const MAX_DISTANCE = Math.sqrt(winWidth ** 2 + winHeight ** 2);
+      const previousDistance = useValue(MAX_DISTANCE/2);
+      const previousTouchedPoint = useValue({
+        x: winWidth / 2,
+        y: winHeight / 2,
+      });
+  
+      const distance = useComputedValue(() => {
+        if (point.current == null) return previousDistance.current;
+        previousDistance.current = Math.sqrt(
+          (point.current.x - x) ** 2 + (point.current.y - y) ** 2
+        );
+        return previousDistance.current;
+      }, [point]);
+  
+      const scale = useComputedValue(() => {
+        return interpolate(
+          distance.current,
+          [0, MAX_DISTANCE],
+          [0, 1],
+          {
+            extrapolateLeft: Extrapolate.CLAMP,
+            extrapolateRight: Extrapolate.CLAMP,
+          }
+        );
+      }, [distance, progress]);
+  
+      const transform = useComputedValue(() => {
+        return [{ scale: scale.current }];
+      }, [scale]);
+  
+      const origin = useComputedValue(() => {
+        if (point.current == null) {
+          return previousTouchedPoint.current;
+        }
+        previousTouchedPoint.current = point.current;
+        return previousTouchedPoint.current;
+      }, [point]);
+  
+      return (
+        <Group origin={origin} transform={transform}>
+          <RoundedRect {...squareProps} r={4} />
+        </Group>
+      );
+    }
+  );
+  
+  export { RoundedItem };
+
+
 
 type ReadProps = CompositeScreenProps<
     BottomTabScreenProps<TabStackParamList, "read">,
@@ -146,6 +214,28 @@ export const Read:FC<ReadProps> = observer(function Read(_props){
         [pointer, clock]
     );
 
+    const SQUARE_CONTAINER_SIZE = winWidth / 5
+    const PADDING = 20
+    const SQUARE_SIZE = SQUARE_CONTAINER_SIZE - PADDING
+
+    const touchedPoint = useValue<{ x: number; y: number } | null>(null);
+
+    const progress = useValue(0);
+
+    const touchHandler = useTouchHandler({
+        onStart: (event) => {
+        runTiming(progress, 1, { duration: 300 });
+        touchedPoint.current = { x: event.x, y: event.y };
+        },
+        onActive: (event) => {
+        touchedPoint.current = { x: event.x, y: event.y };
+        },
+        onEnd: () => {
+        runTiming(progress, 0, { duration: 300 });
+        touchedPoint.current = null;
+        },
+    });
+
     return (
         <View style={[$container, $containerInsets]}>
             <StatusBar barStyle={'dark-content'} backgroundColor="#fff"/>
@@ -153,10 +243,28 @@ export const Read:FC<ReadProps> = observer(function Read(_props){
             {/* <Button title="Go to onboarding" onPress={()=>{
                 _props.navigation.navigate('onboarding_interests_hive',{totalDimensions: 23})
             }}/> */}
-            <Canvas style={{ width: winWidth, height: winHeight, backgroundColor: '#fff'}} onTouch={onTouch}>
-            <Fill>
-                <Shader source={source} uniforms={uniforms} />
-            </Fill>
+            <Canvas style={{ width: winWidth, height: winHeight, backgroundColor: '#fff'}} onTouch={touchHandler}>
+            <Group>
+                {new Array(5).fill(0).map((_, i) => {
+                    return new Array(11).fill(0).map((_, j) => {
+                    return (
+                        <RoundedItem
+                        progress={progress}
+                        point={touchedPoint}
+                        key={`i${i}-j${j}`}
+                        x={i * SQUARE_CONTAINER_SIZE + PADDING / 2}
+                        y={j * SQUARE_CONTAINER_SIZE + PADDING / 2}
+                        width={SQUARE_SIZE}
+                        height={SQUARE_SIZE}
+                        />
+                    );
+                    });
+                })}
+                <SweepGradient
+                    c={vec(winWidth / 2, winHeight / 2)}
+                    colors={['cyan', 'magenta', 'yellow', 'cyan']}
+                />
+                </Group>
             </Canvas>
         </View>
     )

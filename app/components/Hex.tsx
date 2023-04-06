@@ -34,7 +34,7 @@ export const Hex:FC<HexProps> = React.memo(({title, dimension, size, type, title
 
     return (
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <View>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <Svg width={svgFeatures.width} height={svgFeatures.height} fill={dimensionColorMap()[dimension]}>
                 <Path
                     d={svgFeatures.path}
@@ -43,8 +43,19 @@ export const Hex:FC<HexProps> = React.memo(({title, dimension, size, type, title
             {type === 'small' && title && <View style={{width: svgFeatures.width-20, position: 'absolute', alignSelf: 'center', top:0, bottom:0, justifyContent: 'center'}}>
                 {CausesSelector(title)}
             </View>}
+
+            {type === 'large' && title && 
+            <View style={{position: 'absolute', alignSelf: 'center', justifyContent: 'center', alignItems: 'center',width:svgFeatures.width, height: 0.75*svgFeatures.height}}>
+                <View style={{flexBasis: "50%", padding:4}}>
+                    {CausesSelector(title)}
+                </View>
+                
+                 <Text style={{ ...designSystem.textStyles.smallTextsBold, color:"#fff", flexBasis: '50%', textAlign: 'center', padding:4, fontSize:10}} numberOfLines={2}>
+                    {title}
+                </Text>
+            </View>}
         </View>
-        {title && titleVisible &&<Text style={{...designSystem.textStyles.smallTexts, color:color}}>
+        {title && titleVisible &&<Text style={{...designSystem.textStyles.smallTexts, color:color, textAlign: 'center'}}>
             {title}
         </Text>}
         </View>
