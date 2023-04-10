@@ -2,6 +2,7 @@ export * from './BackArrow';
 export * from './ActionsIcon';
 export * from './HomeIcon';
 export * from './ReadIcon';
+export * from './YouIcon';
 export * from './ShopIcon';
 export * from './CustomiseIcon';
 export * from './FilterIcon';
@@ -23,3 +24,4 @@ export * from './RefillIcon'
 export * from './AssistantIcon'
 export * from './HistoryIcon'
 export * from './causes/CausesSelector'
+export * from './TickIcon'

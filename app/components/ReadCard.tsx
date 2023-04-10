@@ -23,7 +23,6 @@ export const ReadCard:FC<ReadCardProps> = ({image, title, description, onPress})
     }, [$pressing])
     return (
         <TouchableOpacity activeOpacity={0.9} onPressIn={()=> $pressing.value = true} onPressOut={()=> $pressing.value = false}  onPress={() => {
-            console.log('clicked')
             onPress("1")
             }} style={{paddingHorizontal: 16}}>
                     <Animated.View style={[{ overflow:'hidden' , backgroundColor: kauriColors.primary.light, width: windowWidth-32, height: 4*(windowWidth-32)/3, borderRadius:12}, $pressingAnim]}>

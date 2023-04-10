@@ -255,7 +255,6 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
     useScrollToTop(scrollRef, () => scrollToTop())
 
     const updateShopState = useCallback((key:any)=>{
-        console.log(key)
         let rand;
         if(key === 'refillAvailable'){
             rand = shopDataRefills
@@ -281,10 +280,6 @@ export const Shop:FC<ShopProps> = observer(function Shop(_props){
 
     const isReady = useIsReady()
     const filteredData = []
-    const onViewableItemsChanged = useRef(() => {
-        // console.log("Visible items are", viewChange.viewableItems);
-        // console.log("Changed in this iteration", changed);
-    })
 
     const fetchFilteredData = () =>{
         // console.log("API call here")

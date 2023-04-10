@@ -127,8 +127,6 @@ export const Actions:FC<ActionsProps> = observer(function Actions(_props){
     const isReady = useIsReady()
     const filteredData = []
     const onViewableItemsChanged = useRef(() => {
-        // console.log("Visible items are", viewChange.viewableItems);
-        // console.log("Changed in this iteration", changed);
     })
 
     const fetchFilteredData = () =>{

@@ -12,7 +12,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useSafeAreaInsetsStyle} from '../utils/useSafeAreaInsetsStyle';
-import {ActionsIcon, HomeIcon, ReadIcon, ShopIcon, AssistantIcon} from '../svgs';
+import {ActionsIcon, HomeIcon, ReadIcon, ShopIcon, AssistantIcon, YouIcon} from '../svgs';
 import {designSystem, kauriColors} from '../theme';
 import {hexToRGBA} from '../utils/hexToRGBA';
 
@@ -27,7 +27,7 @@ const TabIconSelector = ({route, active}: tabIconSelectorProps) => {
     actions: <ActionsIcon active={active} />,
     shop: <ShopIcon active={active} />,
     read: <ReadIcon active={active} />,
-    you: <HomeIcon active={active} />,
+    you: <YouIcon active={active} />,
   };
   return map[route];
 };

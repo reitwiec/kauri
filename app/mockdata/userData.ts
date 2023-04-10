@@ -5,13 +5,13 @@ export const userDataSummary = {
     totalSubdimensions: 55,
     subdimensionsImpacted: 10,
     totalContributions: 437,
-    contributionsPerDimension: [
-        {dimension: "dimension1", value: 78,},
-        {dimension: "dimension2", value: 127,},
-        {dimension: "dimension3", value: 93,},
-        {dimension: "dimension4", value: 62,},
-        {dimension: "dimension5", value: 77,},
-    ],
+    contributionsPerDimension: {
+        "dimension1": 78,
+        "dimension2": 127,
+        "dimension3": 93,
+        "dimension4": 62,
+        "dimension5": 77,
+    },
     subdimensionDistribution: [
         {
             dimension: "dimension1",

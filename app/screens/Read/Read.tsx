@@ -101,10 +101,6 @@ export const Read:FC<ReadProps> = observer(function Read(_props){
 
     const isReady = useIsReady()
     const filteredData = []
-    const onViewableItemsChanged = useRef(() => {
-        // console.log("Visible items are", viewChange.viewableItems);
-        // console.log("Changed in this iteration", changed);
-    })
 
     const fetchFilteredData = () =>{
         // console.log("API call here")

@@ -8,7 +8,7 @@ import { hexToRGBA } from "../../utils/hexToRGBA";
 import { MindfulIcons } from "../../svgs";
 import LinearGradient from 'react-native-linear-gradient';
 import { dimensionColorMap, dimensionNameMap } from "../../utils/hexDetails";
-import { BusyIndicator, LineSeparator, ReadCard, Thumbnail, TryBtn } from "../../components";
+import { BusyIndicator, ContributionBar, LineSeparator, ReadCard, Thumbnail, TryBtn } from "../../components";
 import { Hex } from "../../components/Hex";
 import type { CompositeNavigationProp } from "@react-navigation/native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
@@ -214,42 +214,6 @@ const ProgressBar = memo(({width}:{width:number}) =>{
     )
 })
 
-const ContributionBar = memo(({contributions, totalContributions}:{contributions: any[], totalContributions: number}) => {
-    const height = 6
-    let previousContribution = 0;
-    return (
-        <View
-        style={{
-            width: '100%',
-            height: height,
-            backgroundColor: 'transparent',
-            borderRadius: height,
-            overflow: 'hidden',
-        }}
-    >
-        {
-            contributions.map((contribution, index)=>{
-                const contributionPercentage = contribution.value*100/totalContributions 
-                const width = previousContribution + contribution.value*100/totalContributions;
-                const tempPrevContribution = previousContribution
-                previousContribution = width;
-                return (<Animated.View
-                key={index}
-                style={[{
-                    height: height,
-                    backgroundColor: dimensionColorMap()[contribution.dimension],
-                    position: 'absolute',
-                    top: 0,
-                    left: `${tempPrevContribution}%`,
-                    width: `${contributionPercentage}%`,
-                }, ]}
-            />)
-            })
-        }
-    </View> 
-    );
-})
-
 export const Overview:FC<OverviewProps> = observer(function overview({riveHeight, Greeting, userData, navigationProps, data}){
     const {width:windowWidth, height: windowHeight} = useWindowDimensions()
     const mostImpacted = data.mostImpacted
@@ -349,12 +313,12 @@ export const Overview:FC<OverviewProps> = observer(function overview({riveHeight
                     </View>
                     <View style={{marginTop: 8, marginBottom: 8}}>
                         {
-                            userData.contributionsPerDimension.map((contribution, index)=>{
+                            Object.keys(userData.contributionsPerDimension).map((dimension, index)=>{
                                 return (
                                     <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 2}} key={index}>
-                                        <View style={{width: 6, height: 6, borderRadius: 6, backgroundColor: dimensionColorMap()[contribution.dimension]}}/>
+                                        <View style={{width: 6, height: 6, borderRadius: 6, backgroundColor: dimensionColorMap()[dimension]}}/>
                                         <Text style={{marginHorizontal: 8, ...designSystem.textStyles.smallTextsSemi, color: hexToRGBA((kauriColors.primary.dark), 0.7)}}>
-                                            {dimensionNameMap(contribution.dimension)}
+                                            {dimensionNameMap(dimension)}
                                         </Text>
                                     </View>
                                 )

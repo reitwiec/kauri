@@ -13,9 +13,16 @@ interface HexProps {
     dimension:string,
     size?:number,
     type?: 'small' | 'large',
-    titleVisible?:boolean
+    titleVisible?:boolean,
+    svgFeatures?: {
+        height: number;
+        width: number;
+        viewBox: string;
+        path: string;
+        circumference: number;
+    }
 }
-export const Hex:FC<HexProps> = React.memo(({title, dimension, size, type, titleVisible}) =>{
+export const Hex:FC<HexProps> = React.memo(({title, dimension, size, type, titleVisible, svgFeatures}) =>{
     if(!size){
         size = 32
     }
@@ -26,7 +33,10 @@ export const Hex:FC<HexProps> = React.memo(({title, dimension, size, type, title
     if(!titleVisible){
         titleVisible = false
     }
-    const svgFeatures = hex(size, size/4)
+
+    if(!svgFeatures){
+        svgFeatures = hex(size, size/4)
+    }
 
     const color = useMemo(() => {
         return hexToRGBA((kauriColors.primary.dark), 0.7)

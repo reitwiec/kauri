@@ -266,7 +266,6 @@ export const RiveHeader: FC<RiveHeaderProps> = ({
   const { height:winHeight, width: winWidth} = useWindowDimensions()
   const minRiveHeight = short? $containerInsets.paddingTop?150:120 : 200*winHeight/844
   const $animated_container = useAnimatedStyle(() => {
-    // console.log("=>",translationY.value)
     const height = interpolate(
       translationY.value,
       [0, short?(config?.height || (winWidth +48))+100: 240],

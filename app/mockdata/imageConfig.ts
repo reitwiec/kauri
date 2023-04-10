@@ -648,11 +648,11 @@ export const roadMap:thumbnail = {
     ],
     nextAction: {
         id: 0,
-        url: require("./thumb1.png"),
-        title: "Wash on cold cycle",
-        type: "habit",
+        url: require("./thumb5.png"),
+        title: "Remove unused cloud storage",
+        type: "onetime",
         description: "Fugiat in non cillum ut aliqua anim anim ut cupidatat. Quis reprehenderit consequat sunt pariatur proident ipsum id cupidatat ipsum. Et eu dolor proident commodo dolore aute dolor aliqua esse non laborum deserunt esse. Aliquip consequat quis exercitation sunt ea enim do in reprehenderit non culpa dolor labore amet. Qui veniam ullamco qui incididunt adipisicing. Non ea irure veniam in dolor consectetur aliquip est. Excepteur aliqua anim culpa nisi ad ex ad id laborum.",
-        totalCauses: 15,
+        totalCauses: 4,
         status: 'completed',
         impactDist: {
             effort: 'minimal',
@@ -660,10 +660,6 @@ export const roadMap:thumbnail = {
             impact: 'minimal',
         },
         topCauses: [
-            {
-                dimension: "dimension1",
-                subdimension: "female led",
-            } ,
             {
                 dimension: "dimension2",
                 subdimension: "renewable energy",
