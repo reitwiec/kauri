@@ -1,3 +1,4 @@
+![Kauri Logo](./logo.png)
 A sustainable superapp [Work in Progress]
 
 ## To understand the how navigator is setup in TypeScript checkout the following links: 
